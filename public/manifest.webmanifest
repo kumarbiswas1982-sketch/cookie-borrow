@@ -1,0 +1,12 @@
+{
+  "name": "Cookie's Learning Burrow",
+  "short_name": "Cookie's Burrow",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFD9EC",
+  "theme_color": "#FFD9EC",
+  "icons": [
+    { "src": "/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

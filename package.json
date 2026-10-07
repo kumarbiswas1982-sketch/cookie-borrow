@@ -1,0 +1,7 @@
+{
+  "name": "cookies-learning-burrow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookie's Learning Burrow: a Year 2 maths, English and science game with account sync.",
+  "engines": { "node": ">=18" }
+}
