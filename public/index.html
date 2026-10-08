@@ -351,6 +351,14 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .shopc{background:var(--paper);border:3px solid var(--ink);border-radius:20px;padding:10px;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;box-shadow:0 5px 0 var(--ink)}
 .shopc.on{background:var(--sun-soft)}
 .shopc b{font-family:var(--display);font-size:1.05rem;line-height:1.15}
+.shophead{margin:18px 0 10px;font-size:1.3rem}
+.bbc{align-items:flex-start;text-align:left;gap:6px}.bbc .bbh{display:flex;gap:8px;align-items:center}.bbc .bbg{font-size:1.7rem;line-height:1}.bbc .bnow{margin:0;font-size:.98rem}.bbc .bnext{margin:0;font-size:.9rem;opacity:.75}.bbc .bbbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.bbc .bbbtns .btn{white-space:nowrap}.bbc .bbbtns .btn .ic{flex:none}
+.lvpips{display:flex;gap:5px}.lvpip{width:14px;height:14px;border-radius:50%;border:2.5px solid var(--ink);background:var(--paper);display:block}.lvpip.on{background:var(--sun)}
+.ready{color:#C0392B}
+.ithumb.swatch{width:100%;height:84px;border:3px solid var(--ink);border-radius:12px}
+.sail{transform-box:fill-box;transform-origin:center;animation:sailspin 9s linear infinite}
+@keyframes sailspin{to{transform:rotate(360deg)}}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -1091,7 +1099,7 @@ const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}}});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
@@ -1126,7 +1134,7 @@ const dayIdx=()=>{const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),
 function weekId(){const d=new Date(),dow=(d.getDay()+6)%7;return dayStr(new Date(d.getFullYear(),d.getMonth(),d.getDate()-dow))}
 function touchWeek(){const id=weekId();if(SAVE.week.id!==id)SAVE.week={id,stars:0,goal:SAVE.week.goal||30,done:false}}
 function gainStars(n,m){
-  m=m||1;SAVE.stars+=n;SAVE.coins+=n*m;touchWeek();SAVE.week.stars+=n;
+  m=m==null?1:m;SAVE.stars+=n;SAVE.coins+=n*m;touchWeek();SAVE.week.stars+=n;
   if(!SAVE.week.done&&SAVE.week.stars>=SAVE.week.goal){
     SAVE.week.done=true;SAVE.coins+=10;
     SAVE.certs.push({id:SAVE.week.id,stars:SAVE.week.stars,goal:SAVE.week.goal,name:(PROF.list.find(p=>p.id===PROF.active)||{}).name||''});
@@ -1219,11 +1227,47 @@ const HATS=[
   {id:'chef',name:'Chef hat',cost:20,svg:'<g fill="#fff"><circle cx="46" cy="32" r="11"/><circle cx="60" cy="23" r="13"/><circle cx="74" cy="32" r="11"/><rect x="45" y="34" width="30" height="17" rx="3"/></g>'},
   {id:'tophat',name:'Top hat',cost:25,svg:'<rect x="44" y="16" width="32" height="34" rx="3" fill="#33334A"/><rect x="33" y="48" width="54" height="9" rx="4" fill="#33334A"/><rect x="44" y="37" width="32" height="8" fill="#FF6B5E"/>'},
   {id:'wizard',name:'Wizard hat',cost:30,svg:'<path d="M60 -6 L40 50 H80Z" fill="#5B3FD1"/><ellipse cx="60" cy="50" rx="31" ry="6" fill="#5B3FD1"/><path d="M60 18l2.6 5.2 5.8.8-4.2 4 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.2-4 5.8-.8z" fill="#FFC933" stroke-width="1.5"/>'},
-  {id:'crown',name:'Golden crown',cost:40,svg:'<path d="M42 50 L44 26 L52 38 L60 18 L68 38 L76 26 L78 50Z" fill="#FFC933"/><circle cx="60" cy="38" r="3" fill="#FF6B5E" stroke="none"/>'}
+  {id:'crown',name:'Golden crown',cost:40,svg:'<path d="M42 50 L44 26 L52 38 L60 18 L68 38 L76 26 L78 50Z" fill="#FFC933"/><circle cx="60" cy="38" r="3" fill="#FF6B5E" stroke="none"/>'},
+  {id:'beanie',name:'Cosy beanie',cost:14,svg:'<path d="M26 56 Q28 24 60 24 Q92 24 94 56Z" fill="#3FA7F5"/><rect x="24" y="50" width="72" height="11" rx="5" fill="#2D7FD0"/><circle cx="60" cy="19" r="8" fill="#fff"/>'},
+  {id:'sunhat',name:'Sun hat',cost:16,svg:'<ellipse cx="60" cy="50" rx="50" ry="9" fill="#FFE08A"/><path d="M38 50 Q40 26 60 26 Q80 26 82 50Z" fill="#FFE08A"/><rect x="39" y="41" width="42" height="7" fill="#FF78AD"/>'},
+  {id:'catears',name:'Kitty ears',cost:18,svg:'<path d="M28 54 L32 26 L52 46Z" fill="#FFB066"/><path d="M92 54 L88 26 L68 46Z" fill="#FFB066"/><path d="M34 46 L36 34 L45 44Z M86 46 L84 34 L75 44Z" fill="#FFB6C8" stroke="none"/>'},
+  {id:'cowboy',name:'Cowboy hat',cost:22,svg:'<ellipse cx="60" cy="52" rx="48" ry="8" fill="#B5773E"/><path d="M38 52 Q38 24 60 28 Q82 24 82 52Z" fill="#B5773E"/><rect x="38" y="42" width="44" height="7" fill="#7A4B22" stroke="none"/>'},
+  {id:'grad',name:'Graduation cap',cost:24,svg:'<path d="M42 52 V64 Q60 72 78 64 V52Z" fill="#33334A"/><path d="M20 48 L60 32 L100 48 L60 64Z" fill="#33334A"/><path d="M94 49 V68" fill="none" stroke="#FFC933" stroke-width="3"/><circle cx="94" cy="70" r="4" fill="#FFC933"/>'},
+  {id:'pirate',name:'Pirate hat',cost:26,svg:'<path d="M16 54 Q60 8 104 54 Q60 44 16 54Z" fill="#33334A"/><circle cx="60" cy="33" r="6" fill="#fff"/><circle cx="57.5" cy="32" r="1.4" fill="#22304A" stroke="none"/><circle cx="62.5" cy="32" r="1.4" fill="#22304A" stroke="none"/>'},
+  {id:'viking',name:'Viking helmet',cost:30,svg:'<path d="M28 58 Q30 24 60 24 Q90 24 92 58Z" fill="#AAB3C5"/><path d="M30 44 Q10 42 10 20 Q22 32 34 34Z M90 44 Q110 42 110 20 Q98 32 86 34Z" fill="#FFF2B8"/><rect x="27" y="50" width="66" height="8" fill="#8892A8" stroke="none"/>'},
+  {id:'tiara',name:'Sparkle tiara',cost:34,svg:'<path d="M36 52 L40 32 L50 44 L60 24 L70 44 L80 32 L84 52Z" fill="#E8F4FF"/><circle cx="60" cy="38" r="3.5" fill="#FF78AD" stroke="none"/><circle cx="43" cy="44" r="2.3" fill="#8A63F2" stroke="none"/><circle cx="77" cy="44" r="2.3" fill="#8A63F2" stroke="none"/>'},
+  {id:'halo',name:'Angel halo',cost:36,svg:'<ellipse cx="60" cy="28" rx="26" ry="7" fill="none" stroke="#FFC933" stroke-width="6"/>'},
+  {id:'unicorn',name:'Unicorn horn',cost:42,svg:'<path d="M60 -4 L51 48 H69Z" fill="#FFE08A"/><path d="M55 30 L65 24 M53 40 L67 34 M57 18 L63 14" fill="none" stroke-width="2"/><circle cx="40" cy="48" r="5" fill="#FF78AD"/><circle cx="80" cy="48" r="5" fill="#8A63F2"/>'},
+  {id:'helmet',name:'Space helmet',cost:55,svg:'<ellipse cx="60" cy="76" rx="54" ry="50" fill="rgba(190,230,255,.38)"/><path d="M22 74 Q36 50 52 48" fill="none" stroke="#fff" stroke-width="4" opacity=".8"/><rect x="26" y="116" width="68" height="9" rx="4" fill="#C9D2E6"/>'}
 ];
+/* clothes: "back" is drawn behind Cookie (capes, wings), "front" is drawn on the body under the head */
+const BODY='<ellipse cx="60" cy="118" rx="30" ry="14"';
+const OUTFITS=[
+  {id:'none',name:'No clothes',cost:0,back:'',front:''},
+  {id:'tee',name:'Red T-shirt',cost:10,back:'',front:`${BODY} fill="#FF6B5E"/><path d="M60 122 l2.6 5.2 5.8.8-4.2 4 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.2-4 5.8-.8z" fill="#FFC933" stroke-width="1.6" transform="translate(0 -8) scale(.9) translate(6 12)"/>`},
+  {id:'sailor',name:'Sailor top',cost:12,back:'',front:`${BODY} fill="#fff"/><path d="M34 112 Q60 126 86 112 M31 119 Q60 133 89 119 M32 126 Q60 139 88 126" fill="none" stroke="#3FA7F5" stroke-width="3.4"/><path d="M52 112 L60 122 L68 112" fill="#3FA7F5"/>`},
+  {id:'pjs',name:'Moon pyjamas',cost:14,back:'',front:`${BODY} fill="#7C8CF0"/><path d="M44 124 a5 5 0 1 0 6 -7 a4 4 0 0 1 -6 7z" fill="#FFF2B8" stroke-width="1.6"/><circle cx="70" cy="119" r="1.6" fill="#fff" stroke="none"/><circle cx="76" cy="126" r="1.6" fill="#fff" stroke="none"/>`},
+  {id:'hoodie',name:'Purple hoodie',cost:16,back:'',front:`${BODY} fill="#8A63F2"/><path d="M42 114 Q60 124 78 114" fill="none"/><path d="M54 118 V130 M66 118 V130" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M46 128 H74" fill="none" stroke-width="2"/>`},
+  {id:'ladybird',name:'Ladybird suit',cost:18,back:'',front:`${BODY} fill="#FF4F4F"/><path d="M60 106 V132" fill="none"/><circle cx="46" cy="120" r="3.4" fill="#22304A" stroke="none"/><circle cx="74" cy="120" r="3.4" fill="#22304A" stroke="none"/><circle cx="52" cy="128" r="2.6" fill="#22304A" stroke="none"/><circle cx="68" cy="128" r="2.6" fill="#22304A" stroke="none"/>`},
+  {id:'rainbow',name:'Rainbow jumper',cost:20,back:'',front:`${BODY} fill="#FF6B5E"/><path d="M31 116 Q60 128 89 116 L89 119 Q60 131 31 119Z" fill="#FFC933" stroke="none"/><path d="M31 119 Q60 131 89 119 L88 124 Q60 136 32 124Z" fill="#2DBE7B" stroke="none"/><path d="M32 124 Q60 136 88 124 L86 129 Q60 140 34 129Z" fill="#3FA7F5" stroke="none"/>`},
+  {id:'overalls',name:'Denim overalls',cost:20,back:'',front:`${BODY} fill="#4D8BEA"/><path d="M42 112 V124 M78 112 V124" fill="none" stroke="#4D8BEA" stroke-width="5"/><rect x="50" y="118" width="20" height="10" rx="2" fill="#3A74CC" stroke-width="2"/><circle cx="42" cy="114" r="2.4" fill="#FFC933" stroke="none"/><circle cx="78" cy="114" r="2.4" fill="#FFC933" stroke="none"/>`},
+  {id:'raincoat',name:'Yellow raincoat',cost:22,back:'',front:`${BODY} fill="#FFD84D"/><path d="M60 108 V132" fill="none"/><circle cx="55" cy="116" r="2" fill="#22304A" stroke="none"/><circle cx="55" cy="124" r="2" fill="#22304A" stroke="none"/><circle cx="65" cy="116" r="2" fill="#22304A" stroke="none"/><circle cx="65" cy="124" r="2" fill="#22304A" stroke="none"/>`},
+  {id:'jersey',name:'Sports jersey',cost:24,back:'',front:`${BODY} fill="#2DBE7B"/><path d="M31 117 Q60 129 89 117" fill="none" stroke="#fff" stroke-width="3"/><text x="60" y="130" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" stroke="none" font-family="sans-serif">7</text>`},
+  {id:'dress',name:'Pink dress',cost:26,back:'',front:`<ellipse cx="60" cy="121" rx="40" ry="12" fill="#FF8FAB"/>${BODY} fill="#FF78AD"/><circle cx="40" cy="123" r="2.4" fill="#fff" stroke="none"/><circle cx="52" cy="128" r="2.4" fill="#fff" stroke="none"/><circle cx="68" cy="128" r="2.4" fill="#fff" stroke="none"/><circle cx="80" cy="123" r="2.4" fill="#fff" stroke="none"/><path d="M52 112 Q60 118 68 112" fill="none"/>`},
+  {id:'tutu',name:'Ballet tutu',cost:28,back:'',front:`<ellipse cx="60" cy="123" rx="42" ry="9" fill="#FFC1DA"/><ellipse cx="60" cy="120" rx="36" ry="8" fill="#FFD9EA"/><ellipse cx="60" cy="117" rx="30" ry="7" fill="#FFF0F7"/><path d="M30 123 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0 q4 6 8 0" fill="none" stroke-width="2"/>`},
+  {id:'tux',name:'Fancy tuxedo',cost:32,back:'',front:`${BODY} fill="#33334A"/><path d="M52 108 L60 124 L68 108Z" fill="#fff" stroke-width="2"/><path d="M60 114 L52 110 V118Z M60 114 L68 110 V118Z" fill="#FF4F4F" stroke-width="2"/><circle cx="60" cy="114" r="2" fill="#FF4F4F" stroke="none"/>`},
+  {id:'pirate',name:'Pirate coat',cost:34,back:'',front:`${BODY} fill="#B53A3A"/><path d="M33 115 Q60 130 87 115" fill="none" stroke="#FFC933" stroke-width="2.6"/><rect x="30" y="124" width="60" height="6" fill="#33334A" stroke="none"/><rect x="55" y="123" width="10" height="8" rx="1.5" fill="#FFC933" stroke-width="1.6"/>`},
+  {id:'fairy',name:'Fairy wings',cost:36,back:`<g opacity=".92"><ellipse cx="22" cy="108" rx="17" ry="24" fill="#CFEFFF" transform="rotate(-24 22 108)"/><ellipse cx="98" cy="108" rx="17" ry="24" fill="#CFEFFF" transform="rotate(24 98 108)"/><ellipse cx="26" cy="124" rx="11" ry="14" fill="#E8D9FF" transform="rotate(-10 26 124)"/><ellipse cx="94" cy="124" rx="11" ry="14" fill="#E8D9FF" transform="rotate(10 94 124)"/></g>`,front:`${BODY} fill="#C9F5DD"/><circle cx="48" cy="122" r="2" fill="#FF78AD" stroke="none"/><circle cx="72" cy="124" r="2" fill="#FFC933" stroke="none"/>`},
+  {id:'cape',name:'Hero cape',cost:40,back:`<path d="M30 104 Q4 128 10 142 Q60 130 110 142 Q116 128 90 104Z" fill="#FF4F4F"/>`,front:`${BODY} fill="#3FA7F5"/><path d="M60 114 l2.6 5.2 5.8.8-4.2 4 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.2-4 5.8-.8z" fill="#FFC933" stroke-width="1.5" transform="translate(0 -3)"/><circle cx="36" cy="110" r="3.4" fill="#FFC933"/><circle cx="84" cy="110" r="3.4" fill="#FFC933"/>`},
+  {id:'knight',name:'Knight armour',cost:46,back:'',front:`${BODY} fill="#C9D2E6"/><path d="M36 114 Q60 124 84 114 M60 108 V132 M44 126 H76" fill="none" stroke-width="2.2"/><circle cx="36" cy="116" r="5" fill="#AAB3C5" stroke-width="2"/><circle cx="84" cy="116" r="5" fill="#AAB3C5" stroke-width="2"/>`},
+  {id:'space',name:'Astronaut suit',cost:52,back:'',front:`${BODY} fill="#F0F2F8"/><rect x="48" y="116" width="24" height="12" rx="3" fill="#FF9A3C" stroke-width="2"/><circle cx="54" cy="122" r="2" fill="#3FA7F5" stroke="none"/><circle cx="62" cy="122" r="2" fill="#FF4F4F" stroke="none"/><path d="M32 112 Q60 126 88 112" fill="none" stroke="#3FA7F5" stroke-width="4"/>`},
+  {id:'gown',name:'Sparkle gown',cost:60,back:'',front:`<ellipse cx="60" cy="122" rx="44" ry="11" fill="#A98AF7"/>${BODY} fill="#8A63F2"/><path d="M40 128 l1.6 3 3.4.4-2.5 2.3.6 3.3-3.1-1.6-3.1 1.6.6-3.3-2.5-2.3 3.4-.4z" fill="#FFC933" stroke-width="1" transform="translate(4 -6) scale(.8)"/><circle cx="70" cy="126" r="2" fill="#fff" stroke="none"/><circle cx="80" cy="121" r="1.6" fill="#FFC933" stroke="none"/><circle cx="48" cy="120" r="1.6" fill="#fff" stroke="none"/><path d="M50 112 Q60 118 70 112" fill="none"/>`}
+];
+const outfitOf=id=>OUTFITS.find(o=>o.id===id)||OUTFITS[0];
 const hatSvg=id=>(HATS.find(h=>h.id===id)||HATS[0]).svg;
-function mascot(mood,wear){
+function mascot(mood,wear,outfit){
   if(wear===undefined)wear=SAVE.wear;
+  const oc=outfitOf(outfit===undefined?SAVE.outfit:outfit);
   const I='#22304A';
   const ear=(cx,rot)=>`<g transform="rotate(${rot} ${cx} 56)"><ellipse cx="${cx}" cy="28" rx="13" ry="30" fill="#fff"/><ellipse cx="${cx}" cy="31" rx="6.5" ry="21" fill="#FFB6C8" stroke="none"/></g>`;
   const er=mood==='cheer'?[-14,14]:mood==='oops'?[-62,62]:[-7,7];
@@ -1238,7 +1282,7 @@ function mascot(mood,wear){
   const extra=mood==='cheer'?`<path d="M106 26l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z M12 38l2 4.5 4.5 2-4.5 2-2 4.5-2-4.5-4.5-2 4.5-2z" fill="#FFC933" stroke="${I}" stroke-width="2"/>`
     :mood==='oops'?`<path d="M104 42 q8 11 0 16 q-8-5 0-16z" fill="#7CC7F5" stroke="${I}" stroke-width="2.5"/>`:'';
   return `<svg viewBox="0 0 120 130" aria-hidden="true"><g stroke="${I}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-  <ellipse cx="60" cy="118" rx="30" ry="14" fill="#fff"/><circle cx="92" cy="122" r="8" fill="#fff"/>
+  ${oc.back}<ellipse cx="60" cy="118" rx="30" ry="14" fill="#fff"/><circle cx="92" cy="122" r="8" fill="#fff"/>${oc.front}
   ${ear(38,er[0])}${ear(82,er[1])}
   <ellipse cx="60" cy="78" rx="43" ry="38" fill="#fff"/>
   ${eyes}${brows}
@@ -1284,6 +1328,38 @@ function creature(i){
   <circle cx="27" cy="66" r="5" fill="#FF9AA2" opacity=".7" stroke="none"/><circle cx="73" cy="66" r="5" fill="#FF9AA2" opacity=".7" stroke="none"/>${mouth}${acc}</g></svg>`;
 }
 
+/* ---------- decorating helpers: bunting, wallpapers and floors ---------- */
+function BUNT(){
+  const cols=['#FF6B5E','#FFC933','#2DBE7B','#3FA7F5','#8A63F2','#FF78AD'];
+  let s='<path d="M24 30 Q200 70 376 30" fill="none"/>';
+  for(let i=0;i<9;i++){const t=(i+.5)/9,x=24+352*t,y=30+80*t*(1-t);s+=`<path d="M${(x-10).toFixed(1)} ${y.toFixed(1)} L${(x+10).toFixed(1)} ${y.toFixed(1)} L${x.toFixed(1)} ${(y+22).toFixed(1)}Z" fill="${cols[i%6]}"/>`}
+  return s;
+}
+function dotsPat(c){let s='';for(let y=0;y<6;y++)for(let x=0;x<11;x++)s+=`<circle cx="${34+x*36+(y%2?18:0)}" cy="${34+y*32}" r="5.5" fill="${c}"/>`;return s}
+function stripePat(c){let s='';for(let x=0;x<10;x++)s+=`<rect x="${14+x*40}" y="14" width="20" height="190" fill="${c}"/>`;return s}
+function starsPat(){let s='';for(let i=0;i<34;i++){const x=24+(i*97)%350,y=24+(i*61)%160,r=1.4+(i%3)*.7;s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF2B8"/>`}return s}
+function checkerPat(c){let s='';for(let r=0;r<3;r++)for(let k=0;k<16;k++)if((r+k)%2)s+=`<rect x="${14+k*24}" y="${196+r*24}" width="24" height="24" fill="${c}"/>`;return s}
+const WALLS=[
+  {id:'dirt',name:'Cosy brown',cost:0,col:'#F0C79A',pat:''},
+  {id:'pink',name:'Bubblegum',cost:15,col:'#FFD3E6',pat:''},
+  {id:'sky',name:'Sky blue',cost:15,col:'#BFE6FF',pat:''},
+  {id:'mint',name:'Fresh mint',cost:15,col:'#CFF3DC',pat:''},
+  {id:'lilac',name:'Lilac',cost:15,col:'#E3D6FF',pat:''},
+  {id:'sun',name:'Sunshine',cost:15,col:'#FFF0A8',pat:''},
+  {id:'dots',name:'Polka dots',cost:30,col:'#FFE9F3',pat:dotsPat('#FF78AD')},
+  {id:'stripes',name:'Candy stripes',cost:30,col:'#FFFFFF',pat:stripePat('#FFB6C8')},
+  {id:'night',name:'Starry night',cost:50,col:'#2B3A67',pat:starsPat()}
+];
+const FLOORS=[
+  {id:'wood',name:'Warm wood',cost:0,col:'#C98F5B',pat:''},
+  {id:'grass',name:'Grassy',cost:15,col:'#8FD694',pat:''},
+  {id:'pinkc',name:'Pink carpet',cost:15,col:'#FFB6C8',pat:''},
+  {id:'blue',name:'Blue tiles',cost:25,col:'#CFEFFF',pat:checkerPat('#9FD8FF')},
+  {id:'check',name:'Checkerboard',cost:25,col:'#FFFFFF',pat:checkerPat('#33334A')},
+  {id:'midnight',name:'Midnight',cost:35,col:'#33334A',pat:''}
+];
+const wallOf=()=>WALLS.find(w=>w.id===SAVE.wallp)||WALLS[0];
+const floorOf=()=>FLOORS.find(w=>w.id===SAVE.floorp)||FLOORS[0];
 const ITEMS=[
   {id:'rug',name:'Pink rug',slot:'rug',cost:15,vb:'90 205 220 45',svg:'<ellipse cx="200" cy="228" rx="100" ry="15" fill="#FF78AD"/><ellipse cx="200" cy="228" rx="68" ry="8" fill="#FFC1DA" stroke="none"/>'},
   {id:'rug2',name:'Rainbow rug',slot:'rug',cost:30,vb:'90 205 220 45',svg:'<ellipse cx="200" cy="228" rx="104" ry="16" fill="#FF6B5E"/><ellipse cx="200" cy="228" rx="84" ry="12" fill="#FFC933"/><ellipse cx="200" cy="228" rx="64" ry="8" fill="#2DBE7B"/><ellipse cx="200" cy="228" rx="44" ry="5" fill="#3FA7F5"/>'},
@@ -1296,16 +1372,39 @@ const ITEMS=[
   {id:'shelf',name:'Bookshelf',slot:'fl',cost:28,vb:'30 100 90 135',svg:'<rect x="40" y="108" width="72" height="120" rx="4" fill="#B5773E"/><path d="M40 148H112 M40 188H112" fill="none"/><rect x="48" y="120" width="10" height="26" fill="#FF6B5E" stroke-width="2"/><rect x="60" y="124" width="10" height="22" fill="#3FA7F5" stroke-width="2"/><rect x="72" y="118" width="10" height="28" fill="#FFC933" stroke-width="2"/><rect x="50" y="160" width="12" height="26" fill="#8A63F2" stroke-width="2"/><rect x="64" y="164" width="10" height="22" fill="#2DBE7B" stroke-width="2"/>'},
   {id:'chair',name:'Cosy armchair',slot:'fr',cost:30,vb:'270 120 105 112',svg:'<path d="M292 154 Q292 130 316 130 H338 Q362 130 362 154 V200 H292Z" fill="#8A63F2"/><rect x="280" y="176" width="90" height="46" rx="16" fill="#A98AF7"/><rect x="282" y="152" width="20" height="60" rx="9" fill="#8A63F2"/><rect x="350" y="152" width="20" height="60" rx="9" fill="#8A63F2"/>'},
   {id:'bed',name:'Bunny bed',slot:'fr',cost:40,vb:'260 150 130 82',svg:'<rect x="268" y="168" width="22" height="60" rx="6" fill="#B5773E"/><rect x="270" y="192" width="112" height="34" rx="8" fill="#FFB6C8"/><ellipse cx="296" cy="190" rx="22" ry="9" fill="#fff"/><path d="M318 192 V224" fill="none"/>'},
-  {id:'piano',name:'Mini piano',slot:'fr',cost:55,vb:'260 140 130 92',svg:'<rect x="270" y="150" width="110" height="76" rx="6" fill="#33334A"/><rect x="278" y="192" width="94" height="22" fill="#fff" stroke-width="2"/><path d="M293 192V214 M308 192V214 M323 192V214 M338 192V214 M353 192V214" fill="none" stroke-width="1.5"/><rect x="288" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/><rect x="318" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/><rect x="333" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/>'}
+  {id:'piano',name:'Mini piano',slot:'fr',cost:55,vb:'260 140 130 92',svg:'<rect x="270" y="150" width="110" height="76" rx="6" fill="#33334A"/><rect x="278" y="192" width="94" height="22" fill="#fff" stroke-width="2"/><path d="M293 192V214 M308 192V214 M323 192V214 M338 192V214 M353 192V214" fill="none" stroke-width="1.5"/><rect x="288" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/><rect x="318" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/><rect x="333" y="192" width="8" height="12" fill="#33334A" stroke-width="1"/>'},
+  {id:'rug3',name:'Star rug',slot:'rug',cost:22,vb:'90 205 220 45',svg:'<ellipse cx="200" cy="228" rx="100" ry="15" fill="#8A63F2"/><ellipse cx="200" cy="228" rx="66" ry="9" fill="#A98AF7" stroke="none"/><path d="M200 218l5 7 9 .5-7 5 3 8-10-4-10 4 3-8-7-5 9-.5z" fill="#FFC933" stroke-width="2" transform="translate(0 -2) scale(1 .6) translate(0 88)"/>'},
+  {id:'rug4',name:'Meadow rug',slot:'rug',cost:12,vb:'90 205 220 45',svg:'<ellipse cx="200" cy="228" rx="100" ry="15" fill="#5DCB7A"/><ellipse cx="200" cy="228" rx="72" ry="9" fill="#8FD694" stroke="none"/><circle cx="160" cy="226" r="4" fill="#FFC933" stroke-width="2"/><circle cx="196" cy="231" r="4" fill="#FF78AD" stroke-width="2"/><circle cx="236" cy="226" r="4" fill="#fff" stroke-width="2"/>'},
+  {id:'window2',name:'Curtain window',slot:'wc',cost:26,vb:'150 40 100 90',svg:'<rect x="158" y="48" width="84" height="74" rx="4" fill="#BFE6FF" stroke-width="5"/><path d="M200 48V122M158 85H242" fill="none"/><path d="M158 48H182Q172 85 182 122H158Z" fill="#FF78AD"/><path d="M242 48H218Q228 85 218 122H242Z" fill="#FF78AD"/><circle cx="214" cy="68" r="6" fill="#FFC933" stroke="none"/>'},
+  {id:'window3',name:'Moonlit window',slot:'wc',cost:38,vb:'150 36 100 100',svg:'<circle cx="200" cy="86" r="38" fill="#2B3A67" stroke-width="5"/><circle cx="214" cy="72" r="11" fill="#FFF2B8" stroke="none"/><circle cx="170" cy="96" r="2" fill="#fff" stroke="none"/><circle cx="185" cy="70" r="2" fill="#fff" stroke="none"/><circle cx="196" cy="108" r="2" fill="#fff" stroke="none"/><circle cx="224" cy="104" r="2" fill="#fff" stroke="none"/><path d="M200 48V124M162 86H238" fill="none"/>'},
+  {id:'map',name:'Treasure map',slot:'wl',cost:16,vb:'50 46 76 70',svg:'<rect x="58" y="56" width="60" height="46" rx="3" fill="#FFE9B8"/><path d="M66 72 Q74 62 84 70 Q80 82 68 80Z" fill="#8FD694"/><path d="M92 80 Q104 70 112 82 Q104 94 94 90Z" fill="#8FD694"/><path d="M98 62 l9 9 m0 -9 l-9 9" fill="none" stroke="#FF4F4F" stroke-width="3"/><path d="M72 92 Q84 86 90 94" fill="none" stroke-dasharray="3 3" stroke-width="2"/>'},
+  {id:'poster',name:'Rocket poster',slot:'wl',cost:20,vb:'50 46 76 76',svg:'<rect x="62" y="54" width="52" height="58" rx="4" fill="#2B3A67"/><path d="M88 64 Q97 78 95 94 H81 Q79 78 88 64Z" fill="#fff"/><path d="M81 90 L74 101 L81 98Z M95 90 L102 101 L95 98Z" fill="#FF6B5E"/><circle cx="88" cy="78" r="4.5" fill="#3FA7F5"/><path d="M85 96 Q88 108 91 96Z" fill="#FFC933"/><circle cx="72" cy="66" r="1.6" fill="#fff" stroke="none"/><circle cx="104" cy="72" r="1.6" fill="#fff" stroke="none"/><circle cx="100" cy="104" r="1.6" fill="#fff" stroke="none"/>'},
+  {id:'mirror',name:'Gold mirror',slot:'wl',cost:24,vb:'50 40 76 84',svg:'<ellipse cx="88" cy="80" rx="26" ry="34" fill="#FFC933"/><ellipse cx="88" cy="80" rx="19" ry="27" fill="#CFEFFF" stroke-width="2.4"/><path d="M78 66 Q80 58 88 56" fill="none" stroke="#fff" stroke-width="3"/>'},
+  {id:'banner',name:'Party banner',slot:'wr',cost:15,vb:'276 30 90 50',svg:'<path d="M282 38 Q322 56 362 38" fill="none"/><path d="M290 43 L302 47 L295 61Z" fill="#FF6B5E"/><path d="M308 48 L320 51 L314 65Z" fill="#FFC933"/><path d="M326 50 L338 49 L333 64Z" fill="#2DBE7B"/><path d="M343 46 L355 42 L352 58Z" fill="#3FA7F5"/>'},
+  {id:'shelf2',name:'Jam shelf',slot:'wr',cost:20,vb:'276 44 94 52',svg:'<rect x="284" y="80" width="78" height="8" rx="2" fill="#B5773E"/><rect x="290" y="58" width="15" height="22" rx="3" fill="#FF9A3C"/><rect x="311" y="62" width="15" height="18" rx="3" fill="#8A63F2"/><rect x="338" y="64" width="18" height="16" rx="3" fill="#E07A4F"/><path d="M347 64 Q340 54 343 48 M347 64 Q354 54 351 48" fill="none" stroke="#3FA85B"/>'},
+  {id:'portrait',name:'Cookie portrait',slot:'wr',cost:28,vb:'286 36 66 74',svg:'<rect x="294" y="44" width="50" height="58" rx="4" fill="#FFE9B8"/><ellipse cx="311" cy="62" rx="4" ry="11" fill="#fff"/><ellipse cx="327" cy="62" rx="4" ry="11" fill="#fff"/><circle cx="319" cy="82" r="14" fill="#fff"/><circle cx="314" cy="80" r="1.8" fill="#22304A" stroke="none"/><circle cx="324" cy="80" r="1.8" fill="#22304A" stroke="none"/><path d="M317 86 H321 L319 88Z" fill="#FF8FAB" stroke="none"/>'},
+  {id:'bunting',name:'Bunny bunting',slot:'ceil',cost:18,vb:'20 26 360 60',svg:BUNT()},
+  {id:'mobile',name:'Star mobile',slot:'ceil',cost:30,vb:'20 26 360 80',svg:'<path d="M30 32 H370" fill="none"/><path d="M100 32 V58 M200 32 V74 M300 32 V54" fill="none" stroke-width="2"/>'+[[100,66],[200,82],[300,62]].map(function(p){return '<path d="M0 -10 L3 -3.5 L10 -3 L4.5 2 L6 9.5 L0 5.5 L-6 9.5 L-4.5 2 L-10 -3 L-3 -3.5Z" fill="#FFC933" transform="translate('+p[0]+' '+p[1]+')"/>'}).join('')},
+  {id:'lantern',name:'Paper lantern',slot:'lamp',cost:16,vb:'172 10 56 56',svg:'<path d="M200 14 V26" fill="none"/><rect x="186" y="26" width="28" height="28" rx="9" fill="#FF6B5E"/><rect x="192" y="32" width="16" height="16" rx="5" fill="#FFE9A8" stroke="none"/><path d="M200 54 V62" fill="none"/>'},
+  {id:'disco',name:'Disco ball',slot:'lamp',cost:42,vb:'172 10 56 62',svg:'<path d="M200 14 V30" fill="none"/><circle cx="200" cy="44" r="14" fill="#C9D2E6"/><path d="M188 38 H212 M187 46 H213 M190 53 H210 M194 31 V57 M200 30 V58 M206 31 V57" fill="none" stroke-width="1.5"/><path d="M174 24 l3 -3 l3 3 l-3 3z M222 52 l3 -3 l3 3 l-3 3z" fill="#FFC933" stroke-width="1.5"/>'},
+  {id:'cactus',name:'Smiley cactus',slot:'fl',cost:10,vb:'40 150 70 90',svg:'<rect x="62" y="166" width="20" height="48" rx="10" fill="#5DCB7A"/><path d="M62 192 H54 Q48 192 48 186 V178 Q48 172 54 172 Q58 172 58 178 V184 H62Z" fill="#5DCB7A"/><path d="M82 188 H88 Q94 188 94 182 V174 Q94 168 88 168 Q84 168 84 174 V180 H82Z" fill="#5DCB7A"/><path d="M52 212 H92 L88 230 H56Z" fill="#E07A4F"/><circle cx="68" cy="184" r="1.6" fill="#22304A" stroke="none"/><circle cx="76" cy="184" r="1.6" fill="#22304A" stroke="none"/><path d="M69 190 Q72 193 75 190" fill="none" stroke-width="1.8"/><circle cx="72" cy="164" r="4" fill="#FF78AD" stroke-width="2"/>'},
+  {id:'floorlamp',name:'Floor lamp',slot:'fl',cost:18,vb:'40 116 64 120',svg:'<ellipse cx="72" cy="226" rx="16" ry="5" fill="#33334A"/><rect x="70" y="156" width="5" height="70" fill="#33334A"/><path d="M50 156 L58 124 H88 L96 156Z" fill="#FFE08A"/>'},
+  {id:'globe',name:'Spinning globe',slot:'fl',cost:24,vb:'40 150 64 86',svg:'<path d="M52 226 H92 M72 214 V226" fill="none"/><circle cx="72" cy="190" r="24" fill="#3FA7F5"/><path d="M60 178 Q68 170 76 178 Q72 188 62 186Z" fill="#8FD694"/><path d="M78 196 Q90 192 92 202 Q86 210 78 206Z" fill="#8FD694"/><path d="M50 176 A26 26 0 0 0 52 206" fill="none" stroke-width="2.4"/>'},
+  {id:'tree',name:'Indoor tree',slot:'fl',cost:32,vb:'30 130 90 105',svg:'<rect x="68" y="176" width="9" height="40" fill="#8B5E3C"/><circle cx="72" cy="158" r="22" fill="#3FA85B"/><circle cx="52" cy="176" r="17" fill="#5DCB7A"/><circle cx="94" cy="176" r="17" fill="#5DCB7A"/><circle cx="64" cy="152" r="4" fill="#FF4F4F" stroke-width="2"/><circle cx="82" cy="166" r="4" fill="#FF4F4F" stroke-width="2"/><path d="M54 214 H92 L88 230 H58Z" fill="#E07A4F"/>'},
+  {id:'fishtank',name:'Fish tank',slot:'fl',cost:40,vb:'36 160 76 76',svg:'<rect x="44" y="172" width="60" height="42" rx="5" fill="#BFE6FF"/><path d="M44 184 H104" fill="none" stroke-width="1.5" opacity=".6"/><ellipse cx="66" cy="194" rx="8" ry="5" fill="#FF9A3C"/><path d="M74 194 L82 189 V199Z" fill="#FF9A3C"/><ellipse cx="88" cy="202" rx="5" ry="3" fill="#FF78AD"/><path d="M52 214 Q50 204 54 200 M58 214 Q60 206 56 202" fill="none" stroke="#3FA85B" stroke-width="3"/><rect x="46" y="214" width="56" height="14" rx="3" fill="#B5773E"/>'},
+  {id:'sofa',name:'Snuggly sofa',slot:'fr',cost:45,vb:'260 140 130 100',svg:'<rect x="282" y="150" width="92" height="40" rx="14" fill="#FF8FAB"/><rect x="278" y="176" width="100" height="34" rx="12" fill="#FF6B8E"/><rect x="268" y="160" width="22" height="52" rx="10" fill="#FF8FAB"/><rect x="366" y="160" width="22" height="52" rx="10" fill="#FF8FAB"/><rect x="290" y="168" width="26" height="22" rx="7" fill="#FFC933" stroke-width="2.4"/><path d="M280 212 V224 M376 212 V224" fill="none" stroke-width="5"/>'},
+  {id:'toybox',name:'Toy box',slot:'fr',cost:26,vb:'270 150 105 82',svg:'<rect x="286" y="182" width="72" height="44" rx="5" fill="#3FA7F5"/><rect x="282" y="172" width="80" height="14" rx="4" fill="#FFC933"/><circle cx="302" cy="170" r="8" fill="#B5773E"/><circle cx="296" cy="164" r="3.4" fill="#B5773E"/><circle cx="308" cy="164" r="3.4" fill="#B5773E"/><path d="M332 170 L340 156 L348 170Z" fill="#FF6B5E"/><path d="M296 200 l3 5 5 1-4 3 1 5-5-3-5 3 1-5-4-3 5-1z" fill="#FFC933" stroke-width="1.6"/>'},
+  {id:'dresser',name:'Cosy dresser',slot:'fr',cost:32,vb:'270 150 100 85',svg:'<rect x="284" y="160" width="76" height="66" rx="5" fill="#B5773E"/><path d="M284 182 H360 M284 204 H360" fill="none"/><circle cx="322" cy="171" r="3" fill="#FFC933" stroke-width="1.6"/><circle cx="322" cy="193" r="3" fill="#FFC933" stroke-width="1.6"/><circle cx="322" cy="215" r="3" fill="#FFC933" stroke-width="1.6"/><rect x="294" y="146" width="14" height="14" rx="2" fill="#FF78AD"/>'},
+  {id:'caketable',name:'Carrot cake table',slot:'fr',cost:36,vb:'270 150 100 85',svg:'<path d="M318 206 V228 M298 228 H338" fill="none" stroke-width="5"/><ellipse cx="318" cy="204" rx="36" ry="9" fill="#FFE9B8"/><rect x="298" y="178" width="40" height="22" rx="4" fill="#FF9A3C"/><path d="M298 186 Q304 194 310 186 Q316 194 322 186 Q328 194 334 186" fill="none" stroke="#fff" stroke-width="3"/><path d="M318 178 V168 M318 168 Q313 162 316 158 M318 168 Q323 162 320 158" fill="none" stroke="#3FA85B" stroke-width="2.4"/>'}
 ];
-const SLOT_ORDER=['wl','wc','wr','ceil','fl','fr','rug'];
+const SLOT_ORDER=['wl','wc','wr','lamp','ceil','fl','fr','rug'];
 function sceneSvg(small,live){
-  const I='#22304A',on=SLOT_ORDER.map(sl=>ITEMS.find(x=>x.id===SAVE.use[sl])).filter(Boolean);
+  const I='#22304A',wl=wallOf(),fl=floorOf(),on=SLOT_ORDER.map(sl=>ITEMS.find(x=>x.id===SAVE.use[sl])).filter(Boolean);
   const cook=mascot('happy').replace('<svg viewBox="0 0 120 130" aria-hidden="true">','<svg x="146" y="104" width="108" height="117" viewBox="0 0 120 130" overflow="visible">');
   const rug=on.filter(x=>x.slot==='rug'),rest=on.filter(x=>x.slot!=='rug');
-  return `<svg class="scene-svg" viewBox="0 0 400 250" role="img" aria-label="Cookie's burrow"><rect width="400" height="250" fill="#A9703F"/>
-  <path d="M14 250 V120 Q14 14 200 14 Q386 14 386 120 V250Z" fill="#F0C79A" stroke="${I}" stroke-width="5"/>
-  <path d="M14 196 H386 V250 H14Z" fill="#C98F5B" stroke="${I}" stroke-width="4"/>
+  return `<svg class="scene-svg" viewBox="0 0 400 250" role="img" aria-label="Cookie's burrow"><defs><clipPath id="wclip"><path d="M14 250 V120 Q14 14 200 14 Q386 14 386 120 V250Z"/></clipPath><clipPath id="fclip"><path d="M14 196 H386 V250 H14Z"/></clipPath></defs><rect width="400" height="250" fill="#A9703F"/>
+  <path d="M14 250 V120 Q14 14 200 14 Q386 14 386 120 V250Z" fill="${wl.col}"/><g clip-path="url(#wclip)">${wl.pat}</g><path d="M14 250 V120 Q14 14 200 14 Q386 14 386 120 V250Z" fill="none" stroke="${I}" stroke-width="5"/>
+  <path d="M14 196 H386 V250 H14Z" fill="${fl.col}"/><g clip-path="url(#fclip)">${fl.pat}</g><path d="M14 196 H386 V250 H14Z" fill="none" stroke="${I}" stroke-width="4"/>
   <g stroke="${I}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${rug.map(x=>x.svg).join('')}${rest.map(x=>`<g>${x.svg}</g>`).join('')}</g>${cook}${petsSvg(live)}</svg>`;
 }
 function itemThumb(x){return `<svg viewBox="${x.vb}" class="ithumb" aria-hidden="true"><g stroke="#22304A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${x.svg}</g></svg>`}
@@ -1440,7 +1539,7 @@ function weekCard(){
   return `<div class="weekc"><div class="wtop"><h2>This week's goal</h2><span class="wnum">${Math.min(w.stars,w.goal)} / ${w.goal} stars</span></div><div class="meter" role="img" aria-label="${pct} percent of the weekly goal"><i style="width:${Math.max(3,pct)}%"></i></div><p>${w.done?'Goal reached! You earned a Maths Star certificate this week.':`${w.goal-w.stars} more star${w.goal-w.stars===1?'':'s'} to win a Maths Star certificate.`}${SAVE.certs.length?` <button class="link" data-act="burrow">My certificates (${SAVE.certs.length})</button>`:''}</p></div>`;
 }
 function burrowCard(){
-  return `<div class="burrowc"><div class="bsc">${sceneSvg()}</div><div class="bt"><h2>Cookie's Burrow</h2><p>You have ${SAVE.coins} carrots. Spend them on hats, furniture and pets!</p><button class="btn" data-act="burrow">Visit the burrow</button></div></div>`;
+  return `<div class="burrowc"><div class="bsc">${sceneSvg()}</div><div class="bt"><h2>Cookie's Burrow</h2><p>You have ${SAVE.coins} carrots. Spend them on clothes, furniture, pets and garden upgrades!${bbReady().length?` <b class="ready">${bbReady().length} garden reward${bbReady().length>1?'s':''} ready to collect!</b>`:''}</p><button class="btn" data-act="burrow">Visit the burrow</button></div></div>`;
 }
 function dailyStreak(){const l=SAVE.daily.last;return l===dayStr(new Date())||l===dayStr(new Date(Date.now()-864e5))?SAVE.daily.n:0}
 function dailyCard(){
@@ -1593,7 +1692,7 @@ function quiz(){
   const mood=S.done?(r.ok?'cheer':'oops'):(S.hintOn?'think':'happy');
   const line=S.done?S.line:S.hintOn?'Here is a clue to help you!':S.intro;
   const anim=S.anim;S.anim='';
-  const gainHtml=S.done&&r.ok?`<span class="gain">+${S.lastGain} ${icon('star')}${S.lastBonus?' Combo!':''}${S.lastX2?` <b class="x2">${icon('carrot')} ×2 carrots!</b>`:''}</span>`:'';
+  const gainHtml=S.done&&r.ok?`<span class="gain">+${S.lastGain} ${icon('star')}${S.lastBonus?' Combo!':''} <b class="x2">+${S.lastCarr||3} ${icon('carrot')}${S.lastX2?' ×2!':''}</b></span>`:'';
   const fb=S.done
     ?`<div class="fb ${r.ok?'ok':'no'}"><div class="fbtop"><span>${r.ok?'Correct!':`Not quite. The answer is ${esc(q.show)}.`}</span>${gainHtml}</div><p class="how"><b>How it works:</b> ${q.why}</p>${q.pic&&!r.ok?`<div class="pic">${q.pic}</div>`:''}</div>`
     :S.hintOn?`<div class="fb hint"><p class="how"><b>Clue:</b> ${q.hint}</p>${q.pic?`<div class="pic">${q.pic}</div>`:''}</div>`:'';
@@ -1638,7 +1737,8 @@ function settle(ok){
     if(!q.bonus)S.score++;S.streak++;
     S.lastGain=1;
     if(S.streak>=3&&!S.hintUsed){S.lastGain=2;S.lastBonus=true}
-    const m2=isY34(q)?2:1;gainStars(S.lastGain,m2);S.earn+=S.lastGain;S.carr=(S.carr||0)+S.lastGain*m2;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
+    /* every right answer is worth 3 carrots (plus the windmill upgrade), doubled on Year 3 and 4 work */
+    const m2=isY34(q)?2:1,cg=(3+bbLv('mill'))*m2;gainStars(S.lastGain,0);SAVE.coins+=cg;S.lastCarr=cg;S.earn+=S.lastGain;S.carr=(S.carr||0)+cg;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
     S.line=S.streak===3?'Three in a row! You are on a roll, like a carrot cake roll!':S.streak===5?'FIVE in a row! Cookie is dizzy with joy!':S.streak>=7?'Unstoppable! Not even the foxes can catch you!':pick(YES);
     S.anim='bounce';
   }else{
@@ -1665,8 +1765,9 @@ function next(){
 
 function finish(){
   const before=rankOf(S.starsAtStart);
-  S.sticker=null;S.bonus5=false;
+  S.sticker=null;S.bonus5=false;S.ghGain=0;
   const ratio=S.score/S.mainN;
+  const gh=bbLv('green');if(gh&&ratio>=.6){S.ghGain=3*gh;SAVE.coins+=S.ghGain}
   if(ratio>=.6){
     const locked=STICKERS.map((_,i)=>i).filter(i=>!SAVE.stickers.includes(i));
     if(locked.length){S.sticker=pick(locked);SAVE.stickers.push(S.sticker)}
@@ -1699,7 +1800,7 @@ function results(){
     <p class="meta"><span>${S.topicName}</span><span>Round finished</span></p>
     <div class="scorebig"><div class="big">${s}<small> / ${n}</small></div><div class="stars" role="img" aria-label="${starsFor(s,n)} out of 3 stars">${starRow(starsFor(s,n))}</div></div>
     <div class="earn">${icon('star')}<span>+${S.earn+(S.bonus5?5:0)} stars this round${S.bonus5?' (sticker book full bonus!)':''}</span></div>
-    <div class="earn">${icon('carrot')}<span>+${S.carr||0} carrots${S.y3n?` (${S.y3n} question${S.y3n===1?'':'s'} earned double!)`:''}</span></div>${nudgeHtml()}
+    <div class="earn">${icon('carrot')}<span>+${S.carr||0} carrots${S.y3n?` (${S.y3n} question${S.y3n===1?'':'s'} earned double!)`:''}${S.ghGain?` (Greenhouse bonus: +${S.ghGain})`:''}</span></div>${nudgeHtml()}
     <div class="reward pass"><div><h3>${S.gotPass==='max'?'Your playtime bank is full!':'Playtime unlocked!'}</h3><p>${S.gotPass==='max'?'Use a pass to play for 5 minutes.':'You earned 5 minutes in the Bunny Playground.'}</p><button class="btn small sun" data-act="play">Play now</button></div></div>
     ${S.dailyInfo?`<div class="rankup daily">${S.dailyInfo.first?`Daily Challenge done! +3 stars and +5 carrots. Streak: ${S.dailyInfo.n} day${S.dailyInfo.n===1?'':'s'}!`:'Daily Challenge practice. Your reward is already collected today!'}</div>`:''}
     ${S.weekWin?`<div class="rankup weekwin">Weekly goal reached! You earned a Maths Star certificate and 10 carrots!<br><button class="btn small" data-act="cert" data-i="${SAVE.certs.length-1}">See my certificate</button></div>`:''}
@@ -1844,49 +1945,151 @@ function report(){
 
 /* ---------- burrow, dress-up, certificates ---------- */
 const fmtDate=id=>{const [y,m,d]=id.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})};
+/* ---------- Cookie's Garden: parts to unlock and upgrade with carrots ---------- */
+const BB=[
+  {id:'patch',name:'Carrot Patch',glyph:'🥕',max:5,costs:[40,80,140,220,320],daily:l=>3*l,
+    what:'Grows carrots. Come back every day to harvest them!',perk:l=>`Harvest ${3*l} carrots a day`,up:'The carrots are growing!'},
+  {id:'well',name:'Wishing Well',glyph:'⛲',max:3,costs:[60,120,220],daily:l=>R(2,2+3*l),
+    what:'Make a wish once a day for a surprise gift of carrots.',perk:l=>`Wish for 2 to ${2+3*l} carrots a day`,up:'I wish for even more carrots!'},
+  {id:'mill',name:'Carrot Windmill',glyph:'🌬️',max:3,costs:[100,200,350],
+    what:'Every right answer in a quiz gives you extra carrots.',perk:l=>`+${l} extra carrot${l>1?'s':''} on every right answer`,up:'Round and round it goes!'},
+  {id:'tree',name:'Pet Treehouse',glyph:'🌳',max:2,costs:[120,240],
+    what:'A cosy home so more pets can play in the burrow.',perk:l=>`${3+l} pets can play in the burrow at once`,up:'There is room for another friend!'},
+  {id:'green',name:'Star Greenhouse',glyph:'🌱',max:3,costs:[90,180,300],
+    what:'Finish a round with most answers right to get bonus carrots.',perk:l=>`+${3*l} bonus carrots after a good round`,up:'Everything is blooming!'},
+  {id:'bridge',name:'Rainbow Bridge',glyph:'🌈',max:1,costs:[200],
+    what:'Just for fun! A rainbow over the whole garden.',perk:()=>'Makes the garden extra pretty',up:'So colourful!'}
+];
+function bbLv(id){return Math.max(0,Math.min(9,((SAVE.bb||{}).lv||{})[id]|0))}
+const bbDone=id=>((SAVE.bb||{}).got||{})[id]===todayTag();
+const bbReady=()=>BB.filter(p=>p.daily&&bbLv(p.id)&&!bbDone(p.id));
+const maxPets=()=>3+bbLv('tree');
+function groundsSvg(){
+  const I='#22304A',L=bbLv,op=id=>L(id)?1:.28;
+  const cook=mascot('happy').replace('<svg viewBox="0 0 120 130" aria-hidden="true">','<svg x="176" y="122" width="48" height="52" viewBox="0 0 120 130" overflow="visible">');
+  const rb=['#FF6B5E','#FFA24C','#FFD84D','#5DCB7A','#3FA7F5','#8A63F2'].map((c,i)=>`<path d="M${30+i*9} 178 A${170-i*9} ${150-i*9} 0 0 1 ${370-i*9} 178" fill="none" stroke="${c}" stroke-width="9"/>`).join('');
+  const sails=(c)=>[0,90,180,270].map(r=>`<rect x="-3" y="-38" width="9" height="32" rx="2" fill="${c}" transform="rotate(${r})"/>`).join('');
+  const crots=[];const n=L('patch')*4;
+  for(let i=0;i<20;i++){const x=34+i*17.6;crots.push(i<n?`<path d="M${x} 210 L${x-4} 198 L${x+4} 198Z" fill="#FF9A3C" stroke-width="1.6"/><path d="M${x} 198 Q${x-5} 191 ${x-3} 188 M${x} 198 Q${x+5} 191 ${x+3} 188 M${x} 198 V189" fill="none" stroke="#3FA85B" stroke-width="2"/>`:`<ellipse cx="${x}" cy="209" rx="4" ry="2" fill="#6E4A2E" stroke="none"/>`)}
+  const th=L('tree'),gh=L('green'),wl=L('well');
+  return `<svg class="scene-svg" viewBox="0 0 400 230" role="img" aria-label="Cookie's garden"><rect width="400" height="230" fill="#BFE6FF"/>
+  <circle cx="354" cy="32" r="16" fill="#FFE08A" stroke="${I}" stroke-width="3"/><ellipse cx="70" cy="34" rx="26" ry="9" fill="#fff"/><ellipse cx="88" cy="28" rx="18" ry="8" fill="#fff"/><ellipse cx="270" cy="48" rx="22" ry="8" fill="#fff"/>
+  <g opacity="${L('bridge')?1:.18}"${L('bridge')?'':' stroke-dasharray="3 5"'}>${rb}</g>
+  <g stroke="${I}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M0 168 Q100 128 200 162 T400 156 V230 H0Z" fill="#8FD694"/>
+  <path d="M0 190 Q120 166 230 188 T400 182 V230 H0Z" fill="#5DCB7A"/>
+  <g opacity="${op('tree')}"><rect x="36" y="108" width="15" height="82" fill="#8B5E3C"/><circle cx="44" cy="88" r="27" fill="#3FA85B"/><circle cx="22" cy="106" r="17" fill="#5DCB7A"/><circle cx="67" cy="106" r="17" fill="#5DCB7A"/>
+   <rect x="28" y="94" width="30" height="24" fill="#FFC933"/><path d="M24 94 L43 78 L62 94Z" fill="#FF6B5E"/><rect x="38" y="102" width="10" height="16" fill="#8B5E3C" stroke-width="2"/>${th>=2?'<path d="M43 78 V62" fill="none"/><path d="M43 62 L58 68 L43 74Z" fill="#8A63F2" stroke-width="2"/><path d="M62 110 Q80 118 84 140" fill="none" stroke-width="4"/>':''}</g>
+  <g opacity="${op('green')}"><rect x="90" y="150" width="54" height="36" fill="rgba(207,239,255,.75)"/><path d="M85 150 L117 126 L149 150Z" fill="rgba(207,239,255,.9)"/><path d="M117 126 V186 M104 150 V186 M130 150 V186" fill="none" stroke-width="2"/>
+   <circle cx="98" cy="178" r="5" fill="#3FA85B" stroke-width="2"/><circle cx="111" cy="176" r="5" fill="${gh>=2?'#FF78AD':'#3FA85B'}" stroke-width="2"/><circle cx="124" cy="178" r="5" fill="${gh>=2?'#FFC933':'#3FA85B'}" stroke-width="2"/><circle cx="137" cy="177" r="5" fill="${gh>=3?'#FFC933':'#3FA85B'}" stroke-width="2"/>${gh>=3?'<path d="M117 112 l2 5 5 .5-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3 5-.5z" fill="#FFC933" stroke-width="1.6"/>':''}</g>
+  <ellipse cx="200" cy="184" rx="38" ry="24" fill="#C98F5B"/><path d="M186 192 Q186 164 200 164 Q214 164 214 192Z" fill="#3a2a1c"/>
+  <g opacity="${op('well')}"><rect x="260" y="162" width="30" height="24" rx="3" fill="${wl>=3?'#E8D9FF':'#B8BCC8'}"/><path d="M262 162 V144 M288 162 V144" fill="none" stroke-width="3"/><path d="M256 146 L275 130 L294 146Z" fill="${wl>=3?'#FFC933':'#FF6B5E'}"/><path d="M275 146 V158" fill="none" stroke-width="2"/><rect x="271" y="157" width="8" height="7" fill="#B5773E" stroke-width="2"/>${wl>=2?'<path d="M300 150 l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1z" fill="#FFC933" stroke-width="1.4"/>':''}</g>
+  <g opacity="${op('mill')}"><path d="M322 190 L330 120 H344 L352 190Z" fill="#F6E2C8"/><path d="M326 120 L337 104 L348 120Z" fill="#FF6B5E"/><rect x="333" y="150" width="9" height="16" rx="3" fill="#8B5E3C" stroke-width="2"/><g transform="translate(337 116)"><g class="sail">${sails(L('mill')>=3?'#FFC933':L('mill')>=2?'#FF78AD':'#fff')}<circle r="4" fill="#B5773E" stroke-width="2"/></g></g></g>
+  </g>
+  ${cook}
+  <g stroke="${I}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="203" width="372" height="22" rx="8" fill="#8B5E3C" opacity="${L('patch')?1:.35}"/><g opacity="${L('patch')?1:.35}">${crots.join('')}</g></g>
+  </svg>`;
+}
+function bbCards(){
+  const poor=c=>SAVE.coins<c;
+  return BB.map(p=>{
+    const lv=bbLv(p.id),full=lv>=p.max,cost=full?0:p.costs[lv];
+    const pips=Array.from({length:p.max},(_,i)=>`<i class="lvpip${i<lv?' on':''}"></i>`).join('');
+    const now=lv?`<p class="bnow">Now: ${p.perk(lv)}</p>`:`<p class="bnow">${p.what}</p>`;
+    const nxt=full?`<p class="bnext">Fully upgraded!</p>`:`<p class="bnext">${lv?'Next':'Unlocks'}: ${p.perk(lv+1)}</p>`;
+    const buy=full?`<span class="state">Maxed out ⭐</span>`:`<button class="btn small sun" data-act="bbbuy" data-id="${p.id}"${poor(cost)?' disabled':''}>${icon('carrot')}<span>${lv?'Upgrade':'Unlock'} ${cost}</span></button>`;
+    const col=p.daily&&lv?(bbDone(p.id)?`<span class="state">Done for today ✓</span>`:`<button class="btn small" data-act="bbget" data-id="${p.id}">${p.id==='patch'?'Harvest +'+p.daily(lv):'Make a wish'}</button>`):'';
+    return `<div class="shopc bbc${lv?' on':''}"><div class="bbh"><span class="bbg" aria-hidden="true">${p.glyph}</span><b>${p.name}</b></div><div class="lvpips" aria-label="Level ${lv} of ${p.max}">${pips}</div>${now}${nxt}<div class="bbbtns">${col}${buy}</div></div>`;
+  }).join('');
+}
+function bbAct(a,b){
+  const id=b.dataset.id,p=BB.find(x=>x.id===id);if(!p)return;
+  SAVE.bb=SAVE.bb||{lv:{},got:{}};SAVE.bb.lv=SAVE.bb.lv||{};SAVE.bb.got=SAVE.bb.got||{};
+  const y=window.scrollY,lv=bbLv(id);
+  if(a==='bbbuy'){
+    if(lv>=p.max)return;
+    const cost=p.costs[lv];if(SAVE.coins<cost){snd.no();return}
+    SAVE.coins-=cost;SAVE.bb.lv[id]=lv+1;
+    S.burrowLine=`${lv?p.name+' is now level '+(lv+1)+'!':p.name+' is built!'} ${p.up}`;snd.yes();
+  }else{
+    if(!lv||bbDone(id)){snd.no();return}
+    const n=p.daily(lv);SAVE.coins+=n;SAVE.bb.got[id]=todayTag();
+    S.burrowLine=id==='patch'?`You harvested ${n} carrots! Come back tomorrow for more.`:`Your wish came true: ${n} carrots! Come back tomorrow.`;snd.yes();
+  }
+  persist();render();window.scrollTo(0,y);confettiAt($v.querySelector('.scene'),30,200);
+}
+const OWN={hat:()=>SAVE.hats,item:()=>SAVE.items,outfit:()=>SAVE.outfits};
+const KDEF={hat:()=>HATS,item:()=>ITEMS,outfit:()=>OUTFITS,wall:()=>WALLS,floor:()=>FLOORS};
+function isOwned(k,x){
+  if(!x.cost)return true;
+  if(k==='wall')return (SAVE.paints||[]).includes('w:'+x.id);
+  if(k==='floor')return (SAVE.paints||[]).includes('f:'+x.id);
+  return (OWN[k]()||[]).includes(x.id);
+}
 function burrow(){
   const tab=S.btab||'hats',poor=c=>SAVE.coins<c;
+  const price=x=>`<button class="btn small sun" data-act="buy" data-k="@K" data-id="${x.id}"${poor(x.cost)?' disabled':''}>${icon('carrot')}<span>${x.cost}</span></button>`;
   let cards;
   if(tab==='pets'){cards=petCards()}
+  else if(tab==='build'){cards=bbCards()}
   else if(tab==='hats'){
     cards=HATS.map(h=>{
-      const own=SAVE.hats.includes(h.id),wear=SAVE.wear===h.id;
-      const btn=wear?`<span class="state">Wearing</span>`:own?`<button class="btn small" data-act="equip" data-k="hat" data-id="${h.id}">Wear</button>`:`<button class="btn small sun" data-act="buy" data-k="hat" data-id="${h.id}"${poor(h.cost)?' disabled':''}>${icon('carrot')}<span>${h.cost}</span></button>`;
+      const own=isOwned('hat',h),wear=SAVE.wear===h.id;
+      const btn=wear?`<span class="state">Wearing</span>`:own?`<button class="btn small" data-act="equip" data-k="hat" data-id="${h.id}">Wear</button>`:price(h).replace('@K','hat');
       return `<div class="shopc${wear?' on':''}"><div class="sprev">${mascot('happy',h.id)}</div><b>${h.name}</b>${btn}</div>`;
     }).join('');
+  }else if(tab==='outfits'){
+    cards=OUTFITS.map(o=>{
+      const own=isOwned('outfit',o),wear=(SAVE.outfit||'none')===o.id;
+      const btn=wear?`<span class="state">Wearing</span>`:own?`<button class="btn small" data-act="equip" data-k="outfit" data-id="${o.id}">Wear</button>`:price(o).replace('@K','outfit');
+      return `<div class="shopc${wear?' on':''}"><div class="sprev">${mascot('happy',SAVE.wear,o.id)}</div><b>${o.name}</b>${btn}</div>`;
+    }).join('');
+  }else if(tab==='paint'){
+    const sw=(k,x,vb,sel)=>{
+      const own=isOwned(k,x),btn=sel?`<span class="state">In use</span>`:own?`<button class="btn small" data-act="equip" data-k="${k}" data-id="${x.id}">Use</button>`:price(x).replace('@K',k);
+      return `<div class="shopc${sel?' on':''}"><div class="sprev wide"><svg viewBox="${vb}" class="ithumb swatch" aria-hidden="true"><rect x="0" y="0" width="400" height="260" fill="${x.col}"/>${x.pat}</svg></div><b>${x.name}</b>${btn}</div>`;
+    };
+    cards=`<h3 class="shophead">Walls</h3><div class="shop">${WALLS.map(w=>sw('wall',w,'14 14 372 182',SAVE.wallp===w.id)).join('')}</div><h3 class="shophead">Floors</h3><div class="shop">${FLOORS.map(w=>sw('floor',w,'14 196 372 54',SAVE.floorp===w.id)).join('')}</div>`;
   }else{
     cards=ITEMS.map(x=>{
-      const own=SAVE.items.includes(x.id),inuse=SAVE.use[x.slot]===x.id;
-      const btn=inuse?`<button class="btn small alt" data-act="equip" data-k="item" data-id="${x.id}">Put away</button>`:own?`<button class="btn small" data-act="equip" data-k="item" data-id="${x.id}">Use</button>`:`<button class="btn small sun" data-act="buy" data-k="item" data-id="${x.id}"${poor(x.cost)?' disabled':''}>${icon('carrot')}<span>${x.cost}</span></button>`;
+      const own=isOwned('item',x),inuse=SAVE.use[x.slot]===x.id;
+      const btn=inuse?`<button class="btn small alt" data-act="equip" data-k="item" data-id="${x.id}">Put away</button>`:own?`<button class="btn small" data-act="equip" data-k="item" data-id="${x.id}">Use</button>`:price(x).replace('@K','item');
       return `<div class="shopc${inuse?' on':''}"><div class="sprev wide">${itemThumb(x)}</div><b>${x.name}</b>${btn}</div>`;
     }).join('');
   }
   const certs=SAVE.certs.length?`<h3>My certificates</h3><div class="chipsrow">${SAVE.certs.map((c,i)=>`<button class="btn small alt" data-act="cert" data-i="${i}">Week of ${fmtDate(c.id)}</button>`).join('')}</div>`:'';
+  const rd=bbReady().length,T=(id,label)=>`<button class="gtab${tab===id?' on':''}" data-act="btab" data-t="${id}">${label}</button>`;
   $v.innerHTML=`
-  <div class="qhead">${mascotBtn('cheer','big bounce',false)}${bubble(S.burrowLine||'Welcome to my burrow! Spend your carrots on hats, furniture and pets.')}</div>
+  <div class="qhead">${mascotBtn('cheer','big bounce',false)}${bubble(S.burrowLine||'Welcome to my burrow! Spend your carrots on clothes, furniture, pets and garden upgrades.')}</div>
   <section class="card">
-    <div class="scene">${sceneSvg(0,true)}</div>
-    <p class="meta"><span>Cookie's Burrow</span><span>${icon('carrot')} ${SAVE.coins} carrots</span></p>
-    <div class="gtabs"><button class="gtab${tab==='hats'?' on':''}" data-act="btab" data-t="hats">Hats and clothes</button><button class="gtab${tab==='home'?' on':''}" data-act="btab" data-t="home">Furniture</button><button class="gtab${tab==='pets'?' on':''}" data-act="btab" data-t="pets">Pets</button></div>
-    <div class="shop">${cards}</div>
-    <p class="sub">You earn carrots with every star, plus extras for daily challenges, speed rounds and weekly goals.</p>
+    <div class="scene">${tab==='build'?groundsSvg():sceneSvg(0,true)}</div>
+    <p class="meta"><span>${tab==='build'?"Cookie's Garden":"Cookie's Burrow"}</span><span>${icon('carrot')} ${SAVE.coins} carrots</span></p>
+    <div class="gtabs">${T('hats','Hats')}${T('outfits','Clothes')}${T('home','Furniture')}${T('pets','Pets')}${T('paint','Walls and floors')}${T('build','Garden upgrades'+(rd?` (${rd} ready!)`:''))}</div>
+    <div class="${tab==='paint'?'':'shop'}">${cards}</div>
+    <p class="sub">${tab==='build'?'Unlock garden parts, then upgrade them with carrots. Some give carrots every day, and some help you earn faster!':'You earn 3 carrots for every right answer, plus extras for daily challenges, speed rounds, weekly goals and garden upgrades.'}</p>
     ${certs}
   </section>`;
 }
 function buyItem(k,id){
-  const def=(k==='hat'?HATS:ITEMS).find(x=>x.id===id);if(!def)return;
-  const list=k==='hat'?SAVE.hats:SAVE.items;
-  if(!list.includes(id)){
+  const def=KDEF[k]().find(x=>x.id===id);if(!def)return;
+  if(!isOwned(k,def)){
     if(SAVE.coins<def.cost){snd.no();return}
-    SAVE.coins-=def.cost;list.push(id);S.burrowLine=`Yay! ${def.name}! I love it!`;snd.yes();
+    SAVE.coins-=def.cost;
+    if(k==='wall'||k==='floor'){SAVE.paints=SAVE.paints||[];SAVE.paints.push((k==='wall'?'w:':'f:')+id)}
+    else{const key=k==='hat'?'hats':k==='outfit'?'outfits':'items';SAVE[key]=SAVE[key]||[];SAVE[key].push(id)}
+    S.burrowLine=`Yay! ${def.name}! I love it!`;snd.yes();
   }
   equipItem(k,id,true);
 }
 function equipItem(k,id,fresh){
   if(k==='hat')SAVE.wear=id;
+  else if(k==='outfit')SAVE.outfit=id;
+  else if(k==='wall')SAVE.wallp=id;
+  else if(k==='floor')SAVE.floorp=id;
   else{const def=ITEMS.find(x=>x.id===id);SAVE.use[def.slot]=SAVE.use[def.slot]===id&&!fresh?'':id}
   if(!fresh)snd.tap();
-  persist();render();
+  const y=window.scrollY;
+  persist();render();window.scrollTo(0,y);
   if(fresh)confettiAt($v.querySelector('.scene'),30,200);
 }
 function cert(){
@@ -2275,6 +2478,7 @@ document.body.addEventListener('click',e=>{
   if(accountAct(a,b))return;
   if(a.startsWith('lab')&&labAct(a,b))return;
   if(a==='petbuy'||a==='petout'||a==='petpat'){petAct(a,b);return}
+  if(a==='bbbuy'||a==='bbget'){bbAct(a,b);return}
   if(a==='gate'){snd.tap();if(S.gateOk){S.view='report';render();window.scrollTo(0,0)}else{S.gateQ=null;S.gateMsg='';S.view='gate';render();window.scrollTo(0,0)}return}
   if(a==='subject'){SAVE.sub=b.dataset.s;persist();snd.tap();render();return}
   if(a==='start')start(b.dataset.id);
@@ -2496,14 +2700,24 @@ const PETS=[
  {id:'koala',name:'Kenny the koala',cost:30,say:'Zzz... gum leaves!',hz:300,svg:'<ellipse cx="30" cy="42" rx="15" ry="8" fill="#B8BCC8"/><circle cx="12" cy="15" r="9" fill="#B8BCC8"/><circle cx="48" cy="15" r="9" fill="#B8BCC8"/><circle cx="12" cy="15" r="4.5" fill="#F3C9D4" stroke="none"/><circle cx="48" cy="15" r="4.5" fill="#F3C9D4" stroke="none"/><circle cx="30" cy="27" r="15" fill="#B8BCC8"/><circle cx="23" cy="24" r="2" fill="#22304A" stroke="none"/><circle cx="37" cy="24" r="2" fill="#22304A" stroke="none"/><ellipse cx="30" cy="30" rx="5" ry="7" fill="#3A3F4F"/>'},
  {id:'joey',name:'Hoppy the joey',cost:35,say:'Boing boing!',hz:600,svg:'<path d="M12 40 Q2 42 4 49" fill="none" stroke-width="4"/><ellipse cx="26" cy="35" rx="13" ry="13" fill="#D9A066"/><circle cx="27" cy="38" r="5" fill="#F0C89A"/><path d="M16 47 H30" fill="none" stroke-width="3"/><circle cx="35" cy="17" r="9" fill="#D9A066"/><path d="M31 10 L28 0 L36 8Z M39 10 L43 1 L44 12Z" fill="#D9A066"/><ellipse cx="42" cy="20" rx="5.5" ry="4.2" fill="#F0C89A"/><circle cx="45" cy="19" r="1.6" fill="#22304A" stroke="none"/><circle cx="36" cy="14" r="1.7" fill="#22304A" stroke="none"/>'},
  {id:'penguin',name:'Pip the penguin',cost:35,say:'Waddle waddle!',hz:440,svg:'<ellipse cx="30" cy="28" rx="15" ry="21" fill="#33334A"/><ellipse cx="30" cy="32" rx="9.5" ry="15" fill="#fff"/><circle cx="25" cy="18" r="2.2" fill="#fff"/><circle cx="35" cy="18" r="2.2" fill="#fff"/><circle cx="25" cy="18" r="1" fill="#22304A" stroke="none"/><circle cx="35" cy="18" r="1" fill="#22304A" stroke="none"/><path d="M26 22 H34 L30 27Z" fill="#FF9A3C"/><path d="M15 26 Q8 34 14 40 M45 26 Q52 34 46 40" fill="none"/><ellipse cx="23" cy="49" rx="6" ry="2.5" fill="#FF9A3C"/><ellipse cx="37" cy="49" rx="6" ry="2.5" fill="#FF9A3C"/>'},
- {id:'platypus',name:'Plato the platypus',cost:45,say:'Splish splash!',hz:380,svg:'<path d="M10 36 Q-2 34 3 44 Q8 46 14 42Z" fill="#6A5A4A"/><ellipse cx="26" cy="36" rx="19" ry="10" fill="#8A7767"/><circle cx="40" cy="28" r="9" fill="#8A7767"/><ellipse cx="51" cy="31" rx="8.5" ry="3.8" fill="#F0A94A"/><circle cx="41" cy="25" r="1.8" fill="#22304A" stroke="none"/><path d="M14 44 H22 M32 44 H40" fill="none" stroke-width="3.5"/>'}
+ {id:'platypus',name:'Plato the platypus',cost:45,say:'Splish splash!',hz:380,svg:'<path d="M10 36 Q-2 34 3 44 Q8 46 14 42Z" fill="#6A5A4A"/><ellipse cx="26" cy="36" rx="19" ry="10" fill="#8A7767"/><circle cx="40" cy="28" r="9" fill="#8A7767"/><ellipse cx="51" cy="31" rx="8.5" ry="3.8" fill="#F0A94A"/><circle cx="41" cy="25" r="1.8" fill="#22304A" stroke="none"/><path d="M14 44 H22 M32 44 H40" fill="none" stroke-width="3.5"/>'},
+ {id:'ladybird',name:'Dotty the ladybird',cost:10,say:'Bzzz, spots are lucky!',hz:880,svg:'<path d="M24 12 L20 4 M36 12 L40 4" fill="none"/><path d="M20 18 Q30 6 40 18Z" fill="#33334A"/><ellipse cx="30" cy="31" rx="20" ry="16" fill="#FF4F4F"/><path d="M30 17 V47" fill="none"/><circle cx="20" cy="28" r="3.4" fill="#22304A" stroke="none"/><circle cx="40" cy="28" r="3.4" fill="#22304A" stroke="none"/><circle cx="23" cy="39" r="3" fill="#22304A" stroke="none"/><circle cx="37" cy="39" r="3" fill="#22304A" stroke="none"/><circle cx="26" cy="15" r="1.6" fill="#fff" stroke="none"/><circle cx="34" cy="15" r="1.6" fill="#fff" stroke="none"/>'},
+ {id:'bee',name:'Buzzy the bee',cost:12,say:'Buzz buzz, honey time!',hz:760,svg:'<ellipse cx="22" cy="14" rx="9" ry="6" fill="#DDF3FF" transform="rotate(-25 22 14)"/><ellipse cx="38" cy="14" rx="9" ry="6" fill="#DDF3FF" transform="rotate(25 38 14)"/><ellipse cx="29" cy="31" rx="19" ry="14" fill="#FFD84D"/><path d="M22 18 V44 M30 17 V45 M38 20 V42" fill="none" stroke-width="4"/><circle cx="43" cy="27" r="2" fill="#22304A" stroke="none"/><path d="M47 33 Q50 35 53 32" fill="none"/><path d="M10 31 L3 31" fill="none"/>'},
+ {id:'hamster',name:'Nibbles the hamster',cost:16,say:'Nom nom nom!',hz:640,svg:'<circle cx="14" cy="14" r="7" fill="#F2C48D"/><circle cx="46" cy="14" r="7" fill="#F2C48D"/><circle cx="14" cy="14" r="3.2" fill="#FFB6C8" stroke="none"/><circle cx="46" cy="14" r="3.2" fill="#FFB6C8" stroke="none"/><ellipse cx="30" cy="31" rx="22" ry="17" fill="#F2C48D"/><ellipse cx="30" cy="38" rx="13" ry="9" fill="#FFF2DC" stroke="none"/><circle cx="22" cy="26" r="2.2" fill="#22304A" stroke="none"/><circle cx="38" cy="26" r="2.2" fill="#22304A" stroke="none"/><path d="M28 31 H32 L30 33.5Z" fill="#FF8FAB"/><path d="M30 33.5 V36 M26 37 Q30 39 30 36 Q30 39 34 37" fill="none"/><circle cx="14" cy="34" r="4" fill="#FFB6C8" opacity=".7" stroke="none"/><circle cx="46" cy="34" r="4" fill="#FFB6C8" opacity=".7" stroke="none"/>'},
+ {id:'lamb',name:'Woolly the lamb',cost:24,say:'Baa baa!',hz:410,svg:'<path d="M20 44 V49 M38 44 V49" fill="none" stroke-width="3.4"/><circle cx="18" cy="30" r="10" fill="#fff"/><circle cx="30" cy="24" r="11" fill="#fff"/><circle cx="40" cy="31" r="10" fill="#fff"/><circle cx="29" cy="37" r="11" fill="#fff"/><path d="M43 17 Q56 16 56 28 Q55 37 47 36 Q41 30 43 17Z" fill="#4A4A5E"/><circle cx="50" cy="24" r="1.6" fill="#fff" stroke="none"/><path d="M44 16 Q40 12 38 17Z" fill="#4A4A5E"/>'},
+ {id:'owl',name:'Hoot the owl',cost:28,say:'Hoo hoo! Whooo is clever?',hz:340,svg:'<path d="M16 15 L19 6 L25 12 M44 15 L41 6 L35 12" fill="#A9794B"/><ellipse cx="30" cy="30" rx="17" ry="19" fill="#A9794B"/><ellipse cx="30" cy="37" rx="10" ry="11" fill="#F3D3A8" stroke="none"/><circle cx="23" cy="23" r="7" fill="#fff"/><circle cx="37" cy="23" r="7" fill="#fff"/><circle cx="24" cy="24" r="2.8" fill="#22304A" stroke="none"/><circle cx="36" cy="24" r="2.8" fill="#22304A" stroke="none"/><path d="M27 28 H33 L30 33Z" fill="#FF9A3C"/><path d="M22 48 H27 M33 48 H38" fill="none" stroke="#FF9A3C" stroke-width="3.4"/>'},
+ {id:'fox',name:'Rusty the fox',cost:32,say:'Yip yip! I am friendly!',hz:520,svg:'<path d="M12 44 Q-2 32 8 18 Q10 32 20 38Z" fill="#FF8A3C"/><path d="M8 18 Q4 24 6 28 Q9 24 9 20Z" fill="#fff" stroke="none"/><ellipse cx="33" cy="41" rx="17" ry="8" fill="#FF8A3C"/><path d="M20 26 L17 6 L28 14 H36 L47 6 L44 26 Q44 38 32 40 Q20 38 20 26Z" fill="#FF8A3C"/><path d="M23 29 Q32 44 41 29 Q32 33 23 29Z" fill="#fff" stroke="none"/><circle cx="26" cy="23" r="1.8" fill="#22304A" stroke="none"/><circle cx="38" cy="23" r="1.8" fill="#22304A" stroke="none"/><circle cx="32" cy="33" r="2.2" fill="#22304A" stroke="none"/>'},
+ {id:'panda',name:'Bamboo the panda',cost:40,say:'Munch munch bamboo!',hz:280,svg:'<ellipse cx="30" cy="41" rx="19" ry="9" fill="#fff"/><circle cx="14" cy="10" r="6.5" fill="#33334A"/><circle cx="46" cy="10" r="6.5" fill="#33334A"/><circle cx="30" cy="24" r="17" fill="#fff"/><ellipse cx="22.5" cy="22" rx="4.4" ry="5.6" fill="#33334A" transform="rotate(20 22.5 22)"/><ellipse cx="37.5" cy="22" rx="4.4" ry="5.6" fill="#33334A" transform="rotate(-20 37.5 22)"/><circle cx="23" cy="22" r="1.5" fill="#fff" stroke="none"/><circle cx="37" cy="22" r="1.5" fill="#fff" stroke="none"/><ellipse cx="30" cy="29" rx="3.4" ry="2.4" fill="#33334A"/><path d="M30 31 V34 M26 35 Q30 38 30 34 Q30 38 34 35" fill="none"/>'},
+ {id:'dino',name:'Rex the baby dino',cost:45,say:'Rawr! (a tiny one)',hz:200,svg:'<path d="M12 36 Q-2 36 3 46 Q12 42 17 40Z" fill="#6FD18B"/><ellipse cx="28" cy="33" rx="18" ry="14" fill="#6FD18B"/><path d="M17 21 L20 12 L24 20 M26 18 L30 8 L34 18 M35 20 L39 12 L42 22" fill="#FFC933"/><ellipse cx="44" cy="21" rx="11" ry="9" fill="#6FD18B"/><circle cx="46" cy="18" r="2" fill="#22304A" stroke="none"/><path d="M42 26 Q48 29 53 25" fill="none"/><path d="M20 46 V50 M34 46 V50" fill="none" stroke-width="4"/><ellipse cx="28" cy="39" rx="9" ry="6" fill="#C9F2D3" stroke="none"/>'},
+ {id:'unicorn',name:'Starlight the unicorn',cost:60,say:'Neigh! Sparkles everywhere!',hz:900,svg:'<path d="M10 28 Q-2 32 4 46 Q12 38 14 30Z" fill="#8A63F2"/><ellipse cx="28" cy="34" rx="18" ry="10" fill="#fff"/><path d="M16 42 V50 M23 44 V50 M34 44 V50 M41 42 V50" fill="none" stroke-width="3.4"/><path d="M38 30 L42 11 Q53 8 56 19 L53 28 Q46 32 38 30Z" fill="#fff"/><path d="M47 10 L50 0 L52 11Z" fill="#FFC933"/><path d="M42 12 Q33 15 36 29 Q40 21 44 14Z" fill="#FF78AD"/><circle cx="50" cy="19" r="1.7" fill="#22304A" stroke="none"/>'},
+ {id:'dragon',name:'Ember the dragon',cost:75,say:'Puff! Only warm toast, I promise.',hz:240,svg:'<path d="M12 38 Q-2 40 2 49 Q10 45 14 42Z" fill="#FF6B5E"/><path d="M14 27 Q4 8 22 9 Q22 20 25 26Z" fill="#FFA3A3"/><path d="M26 25 Q24 6 40 9 Q36 20 34 27Z" fill="#FFA3A3"/><ellipse cx="27" cy="36" rx="17" ry="12" fill="#FF6B5E"/><ellipse cx="27" cy="41" rx="9" ry="7" fill="#FFD9C9" stroke="none"/><ellipse cx="44" cy="24" rx="10" ry="8" fill="#FF6B5E"/><path d="M40 17 L38 8 L45 15 M48 16 L52 8 L53 18" fill="#FFC933"/><circle cx="46" cy="22" r="1.8" fill="#22304A" stroke="none"/><path d="M54 24 Q58 20 59 25 Q56 28 59 31 Q54 31 53 27" fill="#FFB02E" stroke-width="1.4"/><path d="M20 46 V50 M34 46 V50" fill="none" stroke-width="3.6"/>'}
 ];
-const PET_X=[16,72,262];
+const PET_X=[[16,178,1.15],[72,178,1.15],[262,178,1.15],[322,176,1.1],[190,204,.95]];
 function petSvgIn(p){return `<g stroke="#22304A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${p.svg}</g>`}
 function petsSvg(live){
-  return (SAVE.petOut||[]).slice(0,3).map((id,i)=>{
+  return (SAVE.petOut||[]).slice(0,maxPets()).map((id,i)=>{
     const p=PETS.find(x=>x.id===id);if(!p)return '';
-    const g=`<g transform="translate(${PET_X[i]},178) scale(1.15)">${petSvgIn(p)}</g>`;
+    const px=PET_X[i]||PET_X[0],g=`<g transform="translate(${px[0]},${px[1]}) scale(${px[2]})">${petSvgIn(p)}</g>`;
     return live?`<g class="petg" data-act="petpat" data-id="${id}" role="button" aria-label="Pat ${esc(p.name)}" style="cursor:pointer">${g}</g>`:g;
   }).join('');
 }
@@ -2512,7 +2726,7 @@ function petCards(){
     const own=(SAVE.pets||[]).includes(p.id),out=(SAVE.petOut||[]).includes(p.id);
     const btn=own?`<button class="btn small${out?' alt':''}" data-act="petout" data-id="${p.id}">${out?'Let it rest':'Bring out'}</button>`:`<button class="btn small sun" data-act="petbuy" data-id="${p.id}"${SAVE.coins<p.cost?' disabled':''}>${icon('carrot')}<span>${p.cost}</span></button>`;
     return `<div class="shopc${out?' on':''}"><div class="sprev wide"><svg viewBox="0 0 60 50" class="ithumb" aria-hidden="true">${petSvgIn(p)}</svg></div><b>${p.name}</b>${btn}</div>`;
-  }).join('')+`<p class="sub petnote">Up to 3 pets can play in the burrow at once. Tap a pet to pat it. Pat each pet once a day to get a free carrot!</p>`;
+  }).join('')+`<p class="sub petnote">Up to ${maxPets()} pets can play in the burrow at once. Build the Pet Treehouse in Garden upgrades for more room. Tap a pet to pat it. Pat each pet once a day to get a free carrot!</p>`;
 }
 function petAct(a,b){
   const id=b.dataset.id,p=PETS.find(x=>x.id===id);if(!p)return;
@@ -2522,11 +2736,11 @@ function petAct(a,b){
     if(SAVE.pets.includes(id))return;
     if(SAVE.coins<p.cost){snd.no();return}
     SAVE.coins-=p.cost;SAVE.pets.push(id);
-    if(SAVE.petOut.length>=3)SAVE.petOut.shift();SAVE.petOut.push(id);
+    while(SAVE.petOut.length>=maxPets())SAVE.petOut.shift();SAVE.petOut.push(id);
     S.burrowLine=`${p.name} has come to live with me! ${p.say}`;snd.yes();persist();render();window.scrollTo(0,y);confettiAt($v.querySelector('.scene'),30,200);
   }else if(a==='petout'){
     const k=SAVE.petOut.indexOf(id);
-    if(k>=0)SAVE.petOut.splice(k,1);else{if(SAVE.petOut.length>=3)SAVE.petOut.shift();SAVE.petOut.push(id)}
+    if(k>=0)SAVE.petOut.splice(k,1);else{while(SAVE.petOut.length>=maxPets())SAVE.petOut.shift();SAVE.petOut.push(id)}
     snd.tap();persist();render();window.scrollTo(0,y);
   }else{
     const d=todayTag();if(!SAVE.petDay||SAVE.petDay.d!==d)SAVE.petDay={d,ids:[]};

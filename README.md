@@ -25,7 +25,7 @@ When the account is first created she gets a **100 carrot gift**.
 
 ## How syncing works
 - The app saves on the device first (so it works with no internet), then sends to the server a moment later.
-- If two devices both played, the server merges them: stars and carrots add up, stickers/pets/hats are combined,
+- If two devices both played, the server merges them: stars and carrots add up, stickers/pets/hats/clothes/paints are combined, garden upgrade levels keep the higher value,
   best scores keep the higher value. Nothing is overwritten with an older copy.
 - The server keeps a safety copy once a day for seven days. Restore one in **Grown-ups corner > Account and sync**.
 - **Log out** is inside Grown-ups corner (behind the multiplication question). It saves first, then clears the device.
@@ -35,6 +35,11 @@ Set `RESET_KEY` in Vercel, redeploy, then run (replace the address, key and pass
 ```
 curl -X POST https://YOUR-SITE.vercel.app/api/reset -H "content-type: application/json" -d '{"key":"YOUR_RESET_KEY","password":"a new password"}'
 ```
+
+## Carrots and the burrow
+- Every right answer earns **3 carrots** (6 on Year 3 and 4 work). The Carrot Windmill upgrade adds more.
+- Burrow shop: hats, clothes, furniture, pets, wall and floor paints. **Garden upgrades** (carrot patch, wishing well, windmill, pet treehouse, star greenhouse, rainbow bridge) are unlocked and upgraded with carrots.
+- New save fields all have safe defaults, so existing progress loads unchanged.
 
 ## Privacy
 Only the email, a salted password hash (scrypt), and the game progress are stored. No analytics, no tracking, no ads.

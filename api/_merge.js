@@ -18,10 +18,17 @@ function mergeSaves(server, client, base) {
   out.stars = num('stars');
   out.coins = num('coins');
   out.passes = Math.min(3, Math.max(server.passes || 0, client.passes || 0));
-  for (const k of ['stickers', 'hats', 'items', 'pets']) out[k] = uniq(server[k], client[k]);
+  for (const k of ['stickers', 'hats', 'items', 'pets', 'outfits', 'paints']) out[k] = uniq(server[k], client[k]);
   for (const k of ['best', 'hi', 'speed', 'labs']) out[k] = maxMap(server[k], client[k]);
-  out.petOut = (win.petOut || []).filter((id) => (out.pets || []).includes(id)).slice(0, 3);
+  out.petOut = (win.petOut || []).filter((id) => (out.pets || []).includes(id)).slice(0, 5);
   if (!(out.hats || []).includes(out.wear)) out.wear = 'none';
+  if (!(out.outfits || []).includes(out.outfit)) out.outfit = 'none';
+  if (out.wallp && out.wallp !== 'dirt' && !(out.paints || []).includes('w:' + out.wallp)) out.wallp = 'dirt';
+  if (out.floorp && out.floorp !== 'wood' && !(out.paints || []).includes('f:' + out.floorp)) out.floorp = 'wood';
+  // garden upgrades: levels only go up; a daily reward counts as collected if either device collected it today
+  const sb = server.bb || {}, cb = client.bb || {}, got = { ...(sb.got || {}) };
+  for (const k in (cb.got || {})) if (String(cb.got[k]) > String(got[k] || '')) got[k] = cb.got[k];
+  out.bb = { lv: maxMap(sb.lv, cb.lv), got };
   const certs = [...(server.certs || []), ...(client.certs || [])], seen = new Set();
   out.certs = certs.filter((c) => (seen.has(c.id) ? false : seen.add(c.id)));
   out.facts = { ...(lose.facts || {}) };
