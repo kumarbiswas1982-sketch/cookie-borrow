@@ -1095,7 +1095,7 @@ const TOPICS=[
   {id:'change',sub:'science',name:'Heating and cooling',glyph:'🧊',desc:'Melting, freezing and steam',tc:'#7FE3DA',gen:gChange},
   {id:'earth',sub:'science',name:'Earth and Sun',glyph:'🌍',desc:'Resources, shadows, days and seasons',tc:'#A9B8FF',gen:gEarth}
 ];
-const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science mix':id==='daily'?"Cookie's Daily Challenge":id==='review'?"Cookie's Review":id==='mixed'?'Surprise Mix':id.startsWith('tt:')?(id==='tt:all'?'Times tables mix':`The ${id.slice(3)} times table`):TOPICS.find(t=>t.id===id).name;
+const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science mix':id==='daily'?"Cookie's Maths Daily Challenge":id==='daily:english'?"Cookie's English Daily Challenge":id==='daily:science'?"Cookie's Science Daily Challenge":id==='review'?"Cookie's Review":id==='mixed'?'Surprise Mix':id.startsWith('tt:')?(id==='tt:all'?'Times tables mix':`The ${id.slice(3)} times table`):TOPICS.find(t=>t.id===id).name;
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
@@ -1480,12 +1480,24 @@ function reviewPlan(){
   while(plan.length<10){const t=pick(pool);plan.push({tid:t.id,mk:t.gen})}
   return shuffle(plan);
 }
+const isDailyId=id=>id==='daily'||String(id).startsWith('daily:');
+const dailySubOf=id=>id==='daily'?'maths':String(id).slice(6);
+const dailyIdOf=sub=>sub==='maths'?'daily':'daily:'+sub;
 function planFor(id,n=10){
   const T=x=>TOPICS.find(t=>t.id===x),mk=x=>({tid:x,mk:T(x).gen});
   if(id==='mixed'){const pool=TOPICS.filter(t=>!t.y&&!t.sub),out=[];while(out.length<n)out.push(...shuffle(pool).map(t=>mk(t.id)));return out.slice(0,n)}
   if(id.startsWith('mix:')){const pool=TOPICS.filter(t=>t.sub===id.slice(4));const out=[];while(out.length<n)out.push(...shuffle(pool).map(t=>mk(t.id)));return out.slice(0,n)}
   if(id.startsWith('tt:')){const tn=id.slice(3);return Array.from({length:n},()=>{const n=tn==='all'?(R(0,9)===0?1:R(2,12)):+tn;return {tid:'tt',mk:()=>gTT(n)}})}
   if(id==='review')return reviewPlan();
+  if(id==='daily:english'){
+    /* five different parts of English, in a new order every day, always with a story question */
+    const rest=shuffle(['spell','sounds','grammar','punct','vocab','build']).slice(0,4);
+    return shuffle(['read',...rest]).map(mk);
+  }
+  if(id==='daily:science'){
+    /* one question from each of the five science topics, in a new order every day */
+    return shuffle(['living','forces','materials','change','earth']).map(mk);
+  }
   if(id==='daily'){const n=pick([2,3,4,5,6,7,8,9,10,11,12]);return [{tid:'tt',mk:()=>gTT(n)},mk('addsub'),mk(pick(['place','skip'])),mk(pick(['multi','frac','money','time','length','shapes','data'])),mk(pick(['div','big','time3']))]}
   return Array.from({length:n},()=>mk(id));
 }
@@ -1496,8 +1508,8 @@ function start(id){
     planFor(id).forEach(p=>{let q,g=0;do{q=p.mk();q.tid=p.tid;if(!q.mk)q.mk=p.mk}while(seen.has(q.q+q.vis)&&g++<12);seen.add(q.q+q.vis);qs.push(q)});
     return qs;
   };
-  const qs=id==='daily'?withSeed('daily'+dayStr(new Date()),build):build();
-  Object.assign(S,{padOpen:false,strokes:[],view:'quiz',topic:id,topicName:topicName(id),mode:id==='daily'?'daily':id==='review'?'review':'topic',qs,mainN:qs.length,bonusN:0,i:0,score:0,streak:0,done:false,given:null,entry:'',res:[],hintOn:false,hintUsed:false,earn:0,carr:0,y3n:0,starsAtStart:SAVE.stars,sticker:null,rankUp:null,bonus5:false,gotPass:false,anim:'',dailyInfo:null,weekWin:false,autoSpeak:!!SAVE.autoread});
+  const qs=isDailyId(id)?withSeed(id+dayStr(new Date()),build):build();
+  Object.assign(S,{padOpen:false,strokes:[],view:'quiz',topic:id,topicName:topicName(id),mode:isDailyId(id)?'daily':id==='review'?'review':'topic',qs,mainN:qs.length,bonusN:0,i:0,score:0,streak:0,done:false,given:null,entry:'',res:[],hintOn:false,hintUsed:false,earn:0,carr:0,y3n:0,starsAtStart:SAVE.stars,sticker:null,rankUp:null,bonus5:false,gotPass:false,anim:'',dailyInfo:null,weekWin:false,autoSpeak:!!SAVE.autoread});
   S.intro=`Question 1. ${pick(PEP)}`;
   render();window.scrollTo(0,0);
 }
@@ -1541,10 +1553,12 @@ function weekCard(){
 function burrowCard(){
   return `<div class="burrowc"><div class="bsc">${sceneSvg()}</div><div class="bt"><h2>Cookie's Burrow</h2><p>You have ${SAVE.coins} carrots. Spend them on clothes, furniture, pets and garden upgrades!${bbReady().length?` <b class="ready">${bbReady().length} garden reward${bbReady().length>1?'s':''} ready to collect!</b>`:''}</p><button class="btn" data-act="burrow">Visit the burrow</button></div></div>`;
 }
-function dailyStreak(){const l=SAVE.daily.last;return l===dayStr(new Date())||l===dayStr(new Date(Date.now()-864e5))?SAVE.daily.n:0}
+function dailyRec(sub){return sub==='maths'||!sub?SAVE.daily:((SAVE.daily.subs||{})[sub]||{last:'',n:0})}
+function dailyStreak(sub){const r=dailyRec(sub||'maths'),l=r.last;return l===dayStr(new Date())||l===dayStr(new Date(Date.now()-864e5))?r.n:0}
+const DAILY_BLURB={maths:'5 mixed maths questions: a times table, adding and taking away, and more.',english:'5 English questions from different parts of English, with a story question.',science:'5 science questions, one from each science topic.'};
 function dailyCard(){
-  const done=SAVE.daily.last===dayStr(new Date()),n=dailyStreak();
-  return `<div class="mix daily"><div><h2>Cookie's Daily Challenge</h2><p>${done?`Done for today! Streak: ${n} day${n===1?'':'s'}. Come back tomorrow.`:`5 mixed questions, new every day. Finish for 3 bonus stars and 5 carrots.${n?` Streak: ${n} day${n===1?'':'s'}.`:''}`}</p></div><button class="btn${done?' alt':''}" data-act="start" data-id="daily">${done?'Play again':'Start'}</button></div>`;
+  const sub=SAVE.sub||'maths',done=dailyRec(sub).last===dayStr(new Date()),n=dailyStreak(sub);
+  return `<div class="mix daily"><div><h2>Cookie's ${SUBS[sub]} Daily Challenge</h2><p>${done?`Done for today! Streak: ${n} day${n===1?'':'s'}. Come back tomorrow.`:`${DAILY_BLURB[sub]} New every day. Finish for 3 bonus stars and 5 carrots.${n?` Streak: ${n} day${n===1?'':'s'}.`:''}`}</p></div><button class="btn${done?' alt':''}" data-act="start" data-id="${dailyIdOf(sub)}">${done?'Play again':'Start'}</button></div>`;
 }
 function reviewCard(){
   const n=dueFacts().length;if(!n)return '';
@@ -1776,11 +1790,14 @@ function finish(){
   if(S.mode==='topic'){const b=SAVE.best[S.topic];if(b==null||S.score>b)SAVE.best[S.topic]=S.score}
   S.dailyInfo=null;
   if(S.mode==='daily'){
-    const today=dayStr(new Date());
-    if(SAVE.daily.last!==today){
-      SAVE.daily.n=SAVE.daily.last===dayStr(new Date(Date.now()-864e5))?SAVE.daily.n+1:1;SAVE.daily.last=today;SAVE.daily.best=Math.max(SAVE.daily.best||0,SAVE.daily.n);
-      gainStars(3);SAVE.coins+=5;S.dailyInfo={first:true,n:SAVE.daily.n};
-    }else S.dailyInfo={first:false,n:SAVE.daily.n};
+    const today=dayStr(new Date()),sub=dailySubOf(S.topic);
+    let rec=SAVE.daily;
+    if(sub!=='maths'){SAVE.daily.subs=SAVE.daily.subs||{};rec=SAVE.daily.subs[sub]||(SAVE.daily.subs[sub]={last:'',n:0})}
+    if(rec.last!==today){
+      rec.n=rec.last===dayStr(new Date(Date.now()-864e5))?rec.n+1:1;rec.last=today;
+      if(sub==='maths')SAVE.daily.best=Math.max(SAVE.daily.best||0,rec.n);
+      gainStars(3);SAVE.coins+=5;S.dailyInfo={first:true,n:rec.n,sub};
+    }else S.dailyInfo={first:false,n:rec.n,sub};
   }
   touchDay();if(SAVE.passes<3){SAVE.passes++;S.gotPass=true}else S.gotPass='max';persist();
   const after=rankOf(SAVE.stars);
@@ -1802,7 +1819,7 @@ function results(){
     <div class="earn">${icon('star')}<span>+${S.earn+(S.bonus5?5:0)} stars this round${S.bonus5?' (sticker book full bonus!)':''}</span></div>
     <div class="earn">${icon('carrot')}<span>+${S.carr||0} carrots${S.y3n?` (${S.y3n} question${S.y3n===1?'':'s'} earned double!)`:''}${S.ghGain?` (Greenhouse bonus: +${S.ghGain})`:''}</span></div>${nudgeHtml()}
     <div class="reward pass"><div><h3>${S.gotPass==='max'?'Your playtime bank is full!':'Playtime unlocked!'}</h3><p>${S.gotPass==='max'?'Use a pass to play for 5 minutes.':'You earned 5 minutes in the Bunny Playground.'}</p><button class="btn small sun" data-act="play">Play now</button></div></div>
-    ${S.dailyInfo?`<div class="rankup daily">${S.dailyInfo.first?`Daily Challenge done! +3 stars and +5 carrots. Streak: ${S.dailyInfo.n} day${S.dailyInfo.n===1?'':'s'}!`:'Daily Challenge practice. Your reward is already collected today!'}</div>`:''}
+    ${S.dailyInfo?`<div class="rankup daily">${S.dailyInfo.first?`${SUBS[S.dailyInfo.sub]||'Maths'} Daily Challenge done! +3 stars and +5 carrots. Streak: ${S.dailyInfo.n} day${S.dailyInfo.n===1?'':'s'}!`:`${SUBS[S.dailyInfo.sub]||'Maths'} Daily Challenge practice. Your reward is already collected today!`}</div>`:''}
     ${S.weekWin?`<div class="rankup weekwin">Weekly goal reached! You earned a Maths Star certificate and 10 carrots!<br><button class="btn small" data-act="cert" data-i="${SAVE.certs.length-1}">See my certificate</button></div>`:''}
     ${S.rankUp?`<div class="rankup">New rank! You are now a ${S.rankUp}!</div>`:''}
     ${S.sticker!=null?`<div class="reward"><div class="sticker pop" style="--rot:${ROT[S.sticker]}deg">${creature(S.sticker)}</div><div><h3>You won a sticker!</h3><p>Meet ${STICKERS[S.sticker].name}.</p><button class="btn small" data-act="book">See my sticker book</button></div></div>`:(s10<6?`<p class="sub">Get 6 out of 10 (or 60%) to win a sticker. You can do it!</p>`:'')}
@@ -1857,7 +1874,7 @@ function reportData(){
 function reportText(){
   const r=reportData(),rk=rankOf(SAVE.stars),L=[];
   L.push(`Cookie's Learning Burrow progress: ${curName()||'Player'} (${fmtDate(dayStr(new Date()))})`);
-  L.push(`Stars: ${SAVE.stars}. Rank: ${rk.name}. Day streak: ${SAVE.day.n||0}. Daily challenge streak: ${dailyStreak()}.`);
+  L.push(`Stars: ${SAVE.stars}. Rank: ${rk.name}. Day streak: ${SAVE.day.n||0}. Daily challenge streaks: Maths ${dailyStreak('maths')}, English ${dailyStreak('english')}, Science ${dailyStreak('science')}.`);
   L.push(`Times tables at 3 stars: ${r.done} of 12. Facts known well: ${r.known}. Facts due for review: ${dueFacts().length}.`);
   L.push('');L.push('Accuracy by topic:');
   r.list.forEach(([id,name,lvl])=>{const s=r.stat(id);L.push(`- ${name} (${lvl}): ${s?`${s.p}% of ${s.t} questions`:'not tried yet'}`)});
@@ -1895,7 +1912,7 @@ function report(){
     <h3>Next steps</h3><p>${r.advice}</p>
     ${weak.length?`<h3>Facts to practise</h3><div class="chipsrow">${weak.map(([k])=>`<span class="fchip">${k.replace('x',' × ')}</span>`).join('')}</div>`:''}
     <h3>Times tables</h3><p>${r.done} of 12 tables at 3 stars (9 or more out of 10 in a practice round). Facts known well: ${r.known}. Facts due for review today: ${dueFacts().length}.</p>
-    <h3>Streaks and goals</h3><p>Day streak: ${SAVE.day.n||0}. Daily Challenge streak: ${dailyStreak()}. Weekly star goal: ${SAVE.week.stars} of ${SAVE.week.goal}. Certificates earned: ${SAVE.certs.length}.</p>
+    <h3>Streaks and goals</h3><p>Day streak: ${SAVE.day.n||0}. Daily Challenge streaks: Maths ${dailyStreak('maths')}, English ${dailyStreak('english')}, Science ${dailyStreak('science')}. Weekly star goal: ${SAVE.week.stars} of ${SAVE.week.goal}. Certificates earned: ${SAVE.certs.length}.</p>
     <div class="actions noprint">${[20,30,50].map(n=>`<button class="btn small${SAVE.week.goal===n?'':' alt'}" data-act="wgoal" data-n="${n}">Goal: ${n} stars</button>`).join('')}</div>
     <h3>Playtime</h3><p>Each finished round earns one 5-minute pass for the Bunny Playground games (up to 3 banked). Passes banked now: ${SAVE.passes}.</p>
 
@@ -2607,7 +2624,7 @@ function themeSub(){
   const v=S.view;
   if(v==='lab')return 'science';
   if(v==='quiz'||v==='results'){
-    const id=String(S.topic||'');if(id==='mix:english')return 'english';if(id==='mix:science')return 'science';
+    const id=String(S.topic||'');if(id==='mix:english'||id==='daily:english')return 'english';if(id==='mix:science'||id==='daily:science')return 'science';
     const t=TOPICS.find(x=>x.id===id);return t&&t.sub?t.sub:'maths';
   }
   if(v==='home')return SAVE.sub||'maths';

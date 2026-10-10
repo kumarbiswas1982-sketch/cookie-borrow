@@ -43,6 +43,13 @@ function mergeSaves(server, client, base) {
   }
   out.day = (server.day && client.day && (server.day.last || '') > (client.day.last || '')) ? server.day : (win.day || lose.day);
   out.daily = { ...(win.daily || {}), best: Math.max((server.daily || {}).best || 0, (client.daily || {}).best || 0) };
+  // English and Science daily challenges keep their own streak; the later day wins for each subject
+  const ss = (server.daily || {}).subs || {}, cs = (client.daily || {}).subs || {}, subs = {};
+  for (const k of new Set([...Object.keys(ss), ...Object.keys(cs)])) {
+    const x = ss[k], y = cs[k];
+    subs[k] = !x ? y : !y ? x : (y.last || '') > (x.last || '') || ((y.last || '') === (x.last || '') && (y.n || 0) > (x.n || 0)) ? y : x;
+  }
+  if (Object.keys(subs).length) out.daily.subs = subs;
   out.labDay = { ...(lose.labDay || {}), ...(win.labDay || {}) };
   out.updated = Math.max(sUp, cUp) + 1;
   return out;
