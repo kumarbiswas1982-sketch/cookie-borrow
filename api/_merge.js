@@ -18,7 +18,7 @@ function mergeSaves(server, client, base) {
   out.stars = num('stars');
   out.coins = num('coins');
   out.passes = Math.min(3, Math.max(server.passes || 0, client.passes || 0));
-  for (const k of ['stickers', 'hats', 'items', 'pets', 'outfits', 'paints']) out[k] = uniq(server[k], client[k]);
+  for (const k of ['stickers', 'hats', 'items', 'pets', 'outfits', 'paints', 'gifts']) out[k] = uniq(server[k], client[k]);
   for (const k of ['best', 'hi', 'speed', 'labs']) out[k] = maxMap(server[k], client[k]);
   out.petOut = (win.petOut || []).filter((id) => (out.pets || []).includes(id)).slice(0, 5);
   if (!(out.hats || []).includes(out.wear)) out.wear = 'none';

@@ -1,12 +1,28 @@
 const L = require('./_lib');
 const { mergeSaves } = require('./_merge');
 const DAY = () => Math.floor(Date.now() / 864e5);
+// One-time carrot gifts. Each id is applied once, on the server, the next time the account loads.
+const GIFTS = [{ id: 'gift-2026-10-10-10carrots', carrots: 10 }];
+async function applyGifts(rec) {
+  for (let attempt = 0; attempt < 4 && rec && rec.data; attempt++) {
+    const have = Array.isArray(rec.data.gifts) ? rec.data.gifts : [];
+    const due = GIFTS.filter((g) => !have.includes(g.id));
+    if (!due.length) return rec;
+    const base = rec.data.coins == null ? (rec.data.stars || 0) : rec.data.coins;
+    const data = { ...rec.data, gifts: [...have, ...due.map((g) => g.id)], coins: base + due.reduce((n, g) => n + g.carrots, 0), updated: Date.now() };
+    const next = { ver: rec.ver + 1, at: Date.now(), data };
+    if (await L.cas('srimaa:data', rec.ver, next)) return next;
+    rec = (await L.getJ('srimaa:data')) || rec;
+  }
+  return rec;
+}
 
 module.exports = L.handler(async (req, res) => {
   const acct = await L.auth(req, res); if (!acct) return;
   if (req.method === 'GET') {
-    const rec = await L.getJ('srimaa:data');
+    let rec = await L.getJ('srimaa:data');
     if (!rec) return L.send(res, 200, { ver: 0, data: null });
+    rec = await applyGifts(rec);
     const known = Number(L.query(req).ver || -1);
     if (known === rec.ver) return L.send(res, 200, { ver: rec.ver, same: true });
     return L.send(res, 200, { ver: rec.ver, data: rec.data });

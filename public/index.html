@@ -1099,7 +1099,7 @@ const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}}});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
