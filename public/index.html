@@ -1751,8 +1751,8 @@ function settle(ok){
     if(!q.bonus)S.score++;S.streak++;
     S.lastGain=1;
     if(S.streak>=3&&!S.hintUsed){S.lastGain=2;S.lastBonus=true}
-    /* every right answer is worth 3 carrots (plus the windmill upgrade), doubled on Year 3 and 4 work */
-    const m2=isY34(q)?2:1,cg=(3+bbLv('mill'))*m2;gainStars(S.lastGain,0);SAVE.coins+=cg;S.lastCarr=cg;S.earn+=S.lastGain;S.carr=(S.carr||0)+cg;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
+    /* every right answer is worth 3 carrots, 5 in the times tables trainer (plus the windmill upgrade), doubled on Year 3 and 4 work */
+    const m2=isY34(q)?2:1,cg=((q.tid==='tt'?5:3)+bbLv('mill'))*m2;gainStars(S.lastGain,0);SAVE.coins+=cg;S.lastCarr=cg;S.earn+=S.lastGain;S.carr=(S.carr||0)+cg;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
     S.line=S.streak===3?'Three in a row! You are on a roll, like a carrot cake roll!':S.streak===5?'FIVE in a row! Cookie is dizzy with joy!':S.streak>=7?'Unstoppable! Not even the foxes can catch you!':pick(YES);
     S.anim='bounce';
   }else{
@@ -2083,7 +2083,7 @@ function burrow(){
     <p class="meta"><span>${tab==='build'?"Cookie's Garden":"Cookie's Burrow"}</span><span>${icon('carrot')} ${SAVE.coins} carrots</span></p>
     <div class="gtabs">${T('hats','Hats')}${T('outfits','Clothes')}${T('home','Furniture')}${T('pets','Pets')}${T('paint','Walls and floors')}${T('build','Garden upgrades'+(rd?` (${rd} ready!)`:''))}</div>
     <div class="${tab==='paint'?'':'shop'}">${cards}</div>
-    <p class="sub">${tab==='build'?'Unlock garden parts, then upgrade them with carrots. Some give carrots every day, and some help you earn faster!':'You earn 3 carrots for every right answer, plus extras for daily challenges, speed rounds, weekly goals and garden upgrades.'}</p>
+    <p class="sub">${tab==='build'?'Unlock garden parts, then upgrade them with carrots. Some give carrots every day, and some help you earn faster!':'You earn 3 carrots for every right answer (5 in the times tables trainer), plus extras for daily challenges, speed rounds, weekly goals and garden upgrades.'}</p>
     ${certs}
   </section>`;
 }
@@ -2385,7 +2385,7 @@ function spAnswer(v){
 function spEnd(){
   const sp=S.sp;clearInterval(SPT);SPT=0;sp.phase='done';
   const best=SAVE.speed[sp.n]||0;sp.newBest=sp.score>best&&sp.score>0;if(sp.newBest)SAVE.speed[sp.n]=sp.score;
-  const stars=Math.min(3,Math.floor(sp.score/5)),carrots=Math.floor((sp.score+(sp.y3||0))/3);
+  const stars=Math.min(3,Math.floor(sp.score/5)),carrots=sp.score+(sp.y3||0);
   S.weekWin=false;if(stars)gainStars(stars);SAVE.coins+=carrots;sp.reward={stars,carrots};touchDay();persist();
   speed();
   if(sp.newBest||sp.score>=8){snd.fan();rain()}else snd.boing();
