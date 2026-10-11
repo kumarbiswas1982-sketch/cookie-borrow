@@ -359,6 +359,13 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ithumb.swatch{width:100%;height:84px;border:3px solid var(--ink);border-radius:12px}
 .sail{transform-box:fill-box;transform-origin:center;animation:sailspin 9s linear infinite}
 @keyframes sailspin{to{transform:rotate(360deg)}}
+.pull{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font-family:var(--display);font-weight:800;font-size:2rem}
+.pn{border:3px solid var(--ink);border-radius:14px;padding:6px 16px;background:#fff;box-shadow:0 4px 0 var(--ink)}.pn.t{background:#CFE9FF}.pn.o{background:#FFD6E8}
+.pl{font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1.5;text-align:center}.pl.good{color:#1E8A55}.pl b{background:var(--sun);border-radius:8px;padding:0 6px}
+.pdig b{background:var(--sun);border-radius:6px;padding:0 3px}
+.lvis{background:var(--paper);border:3px dashed var(--line);border-radius:16px;padding:16px 12px;display:flex;flex-direction:column;gap:8px;align-items:center;margin:10px 0 16px}.lvis .pl{width:100%}
+.lpips{display:flex;gap:5px;margin:2px 0 10px;flex-wrap:wrap}.lp{width:16px;height:8px;border-radius:99px;background:rgba(0,0,0,.12);display:block}.lp.done{background:var(--gum)}.lp.cur{background:var(--sun);outline:2px solid var(--ink)}
+.lessonc{background:var(--sun-soft)}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -613,6 +620,31 @@ function gAddSub(){
     return num(`${n} has ${a} ${th}. Oh no! ${pick(THIEVES)} steals ${b} of them. How many are left?`,a-b,'Take the stolen ones away from the bigger group.',subWhy(a,b));
   }
   const a=R(3,17);NEXTPIC=barModel(20,[a,20-a]);return num(`What number goes with ${a} to make 20?`,20-a,`Count up from ${a} to 20.`,`${a} + ${20-a} = 20.`);
+}
+
+/* ---------- pull apart: take away by splitting the second number into tens and ones ---------- */
+function pullNums(){
+  const h=R(2,9),t1=R(1,9),o1=R(0,9),a=h*100+t1*10+o1,t2=R(1,t1),o2=R(1,9),b=t2*10+o2;
+  return {a,b,t2,o2,T:t2*10,O:o2,mid:a-t2*10,ans:a-b};
+}
+const pullChip=(v,c)=>`<span class="pn${c?' '+c:''}">${v}</span>`;
+const pullPic=n=>`<p class="pgt">Pull ${n.b} apart, then take away the tens and the ones one at a time.</p><div class="pull">${pullChip(n.b)}<span class="po">→</span>${pullChip(n.T,'t')}<span class="po">+</span>${pullChip(n.O,'o')}</div><p class="pgt">${n.a} − ${n.b} = ${n.a} − ${n.T} − ${n.O} = ${n.mid} − ${n.O} = ${n.ans}</p>`;
+const pullWhy=n=>`Pull ${n.b} apart into ${n.T} and ${n.O}. First ${n.a} − ${n.T} = ${n.mid}. Then ${n.mid} − ${n.O} = ${n.ans}.`;
+function gPull(){
+  const n=pullNums(),r=R(0,9),t=r<3?0:r-2,{a,b,T,O,t2,mid,ans}=n;
+  NEXTPIC=pullPic(n);
+  if(t===0)return num(`${a} − ${b} = ?`,ans,`Pull ${b} apart into ${T} and ${O}. Take away the ${T} first, then the ${O}.`,pullWhy(n),{vis:`<div class="pull">${pullChip(a)}<span class="po">−</span>${pullChip(b)}</div>`});
+  if(t===1)return num(`Pull ${b} apart: ${a} − ${b} = ${a} − ? − ${O}. What number goes in the gap?`,T,`${b} is ${t2} tens and ${O} ones. How much are the tens worth?`,`${b} = ${T} + ${O}, so ${a} − ${b} = ${a} − ${T} − ${O}.`);
+  if(t===2)return num(`${a} − ${T} = ?`,mid,'Only the tens digit changes. Take the tens away from the tens.',`${a} has ${Math.floor(a/10)%10} tens. ${Math.floor(a/10)%10} tens − ${t2} tens = ${Math.floor(a/10)%10-t2} tens, so ${a} − ${T} = ${mid}.`);
+  if(t===3)return num(`${a} − ${b} = ${a} − ${T} − ?. What number goes in the gap?`,O,`After the tens, what part of ${b} is still to take away?`,`${b} = ${T} + ${O}, so the ones to take away are ${O}.`);
+  if(t===4)return num(`${a} − ${b} = ${a} − ${T} − ${O}. The first step gives ${mid}. What is ${mid} − ${O}?`,ans,'Now take away the ones.',pullWhy(n));
+  if(t===5)return choice(`Which shows ${b} pulled apart into tens and ones?`,tchoices(`${T} and ${O}`,[`${T} and ${O}`,`${t2} and ${O}`,`${b} and 0`,`${T+10} and ${O}`]).map(o=>({label:o.label,value:o.value})),`${T} and ${O}`,`Tens first: how many tens are in ${b}? Then the ones.`,`${b} is ${t2} tens (${T}) and ${O} ones.`);
+  if(t===6){
+    const good=`${a} − ${T} − ${O}`,bad=[`${a} − ${T} + ${O}`,`${a} − ${b} − ${O}`,`${a} − ${T} − ${T}`];
+    return choice(`Which is the Pull Apart way to work out ${a} − ${b}?`,shuffle([good,...bad]).map(v=>({label:v,value:v})),good,'Pull apart the second number, then take away both parts.',`${b} pulled apart is ${T} and ${O}, so ${a} − ${b} = ${good}.`);
+  }
+  const nm=pick(ACTORS),th=pick(THINGS);
+  return num(`${nm} has ${a} ${th}. ${nm} gives ${b} of them to friends. How many ${th} are left?`,ans,`Pull ${b} apart into ${T} and ${O} and take them away one at a time.`,pullWhy(n));
 }
 
 /* ---------- groups and sharing ---------- */
@@ -1080,6 +1112,7 @@ const TOPICS=[
   {id:'shapes',name:'Shapes',glyph:'△▢',desc:'Flat shapes and 3D objects',tc:'#BFE48A',gen:gShapes},
   {id:'data',name:'Picture graphs',glyph:'●●●',desc:'Reading and comparing data',tc:'#A9B8FF',gen:gData},
   {id:'div',y:3,name:'Division facts',glyph:'÷',desc:'Share and group, up to 12 × 12',tc:'#FFC38A',gen:gDiv},
+  {id:'pull',y:3,name:'Pull apart',glyph:'− −',desc:'Take away by splitting tens and ones',tc:'#FFB8D0',gen:gPull},
   {id:'big',y:3,name:'Bigger numbers',glyph:'1000',desc:'Thousands, rounding, 3-digit sums',tc:'#9FD8FF',gen:gBig},
   {id:'time3',y:3,name:'Time to 5 minutes',glyph:'4:20',desc:'Reading the clock minute by minute',tc:'#B6EBA6',gen:gTime3},
   {id:'spell',sub:'english',name:'Spelling',glyph:'Ab',desc:'Build words and spot the right spelling',tc:'#FFB08A',gen:gSpell},
@@ -1099,7 +1132,7 @@ const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
@@ -1465,7 +1498,7 @@ const mascotBtn=(mood,cls,tappable)=>tappable?`<button class="mascot ${cls}" dat
 const starRow=n=>[0,1,2].map(i=>`<svg class="ic${i<n?' on':''}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>`).join('');
 const starsFor=(s,n=10)=>{const r=s/n;return r>=.9?3:r>=.7?2:r>=.4?1:0};
 
-function render(){applyTheme();renderTop();if(S.view!=='play')stopGame();if(S.view!=='speed'){clearInterval(SPT);SPT=0}S.view==='lab'?labView():S.view==='gate'?gate():S.view==='login'?login():S.view==='loading'?loading():S.view==='who'?who():S.view==='ws'?worksheet():S.view==='burrow'?burrow():S.view==='cert'?cert():S.view==='speed'?speed():S.view==='home'?home():S.view==='quiz'?quiz():S.view==='book'?book():S.view==='learn'?learn():S.view==='report'?report():S.view==='play'?play():S.view==='playend'?playend():results()}
+function render(){applyTheme();renderTop();if(S.view!=='play')stopGame();if(S.view!=='speed'){clearInterval(SPT);SPT=0}S.view==='lab'?labView():S.view==='gate'?gate():S.view==='login'?login():S.view==='loading'?loading():S.view==='who'?who():S.view==='ws'?worksheet():S.view==='burrow'?burrow():S.view==='lesson'?lessonView():S.view==='cert'?cert():S.view==='speed'?speed():S.view==='home'?home():S.view==='quiz'?quiz():S.view==='book'?book():S.view==='learn'?learn():S.view==='report'?report():S.view==='play'?play():S.view==='playend'?playend():results()}
 
 function withSeed(str,fn){
   let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
@@ -1537,6 +1570,7 @@ function subBody(){
     <div class="actions"><button class="btn sun" data-act="start" data-id="tt:all">Mixed tables race</button><button class="btn alt" data-act="speed" data-n="all">Speed round</button></div>
   </section>
   <div class="mix"><div><h2>Surprise Mix</h2><p>One question from every Year 2 topic. Who knows what is next?</p></div><button class="btn alt" data-act="start" data-id="mixed">Let's go!</button></div>
+  ${lessonCard()}
   <h2 class="sec">Year 2 topics</h2>
   <div class="grid">${TOPICS.filter(t=>!t.y&&!t.sub).map(tile).join('')}</div>
   <h2 class="sec y3h">Year 3 stretch <span class="lvl">Double carrots on everything here!</span></h2>
@@ -1838,6 +1872,70 @@ function book(){
   </section>`;
 }
 
+/* ---------- Learn with Cookie: Pull Apart lesson ---------- */
+const PL=(parts)=>`<div class="pull">${parts.join('')}</div>`;
+const PULL_STEPS=[
+  {mood:'happy',say:'Hi Srimaa! Today I will teach you my favourite taking-away trick. It is called Pull Apart! Look at this one: 685 − 54.',vis:PL([pullChip('685'),'<span class="po">−</span>',pullChip('54')])},
+  {mood:'think',say:'Big take-aways can feel tricky. So here is the trick: pull the second number apart into tens and ones. 54 is 5 tens and 4 ones, so it splits into 50 and 4.',vis:PL([pullChip('54'),'<span class="po">→</span>',pullChip('50','t'),'<span class="po">+</span>',pullChip('4','o')])},
+  {mood:'happy',say:'Now we take away the 50, and then take away the 4. One small step at a time!',vis:`<div class="pl">685 − 54</div><div class="pl">= 685 − 50 − 4</div>`},
+  {mood:'think',say:'Do the tens first. Only the tens digit changes! 8 tens take away 5 tens leaves 3 tens. So 685 − 50 = 635.',vis:`<div class="pl"><span class="pdig">6<b>8</b>5</span> − <span class="pdig"><b>5</b>0</span> = <span class="pdig">6<b>3</b>5</span></div><p class="pgt">8 tens − 5 tens = 3 tens</p>`},
+  {mood:'happy',say:'Now take away the 4 ones. 635 − 4 = 631.',vis:`<div class="pl">635 − 4 = <b>631</b></div>`},
+  {mood:'cheer',say:'So 685 − 54 = 631! This is how you write it, just like the example on your sheet.',vis:`<div class="pl">685 − 54 = 685 − 50 − 4</div><div class="pl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 635 − 4</div><div class="pl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <b>631</b></div>`},
+  {mood:'think',say:'Careful! Pull apart only the number you are taking away, the second number. Keep the first number in one piece. Pulling apart 685 is a different job.',vis:`<div class="pl">✗ 685 → 600 + 80 + 5</div><div class="pl good">✓ 54 → 50 + 4</div>`},
+  {mood:'happy',say:'Your turn! Let us do 379 − 68 together. Step 1: pull 68 apart. What are its tens and ones?',vis:PL([pullChip('379'),'<span class="po">−</span>',pullChip('68')]),
+    ask:{opts:['60 and 8','6 and 8','68 and 0'],ans:0,hint:'68 is 6 tens and 8 ones. 6 tens is worth 60.',ok:'Yes! 68 = 60 + 8, so 379 − 68 = 379 − 60 − 8.'}},
+  {mood:'think',say:'Step 2: take away the tens. What is 379 − 60?',vis:`<div class="pl">379 − 68 = 379 − 60 − 8</div>`,
+    ask:{opts:['319','373','309'],ans:0,hint:'Only the tens digit changes: 7 tens − 6 tens = 1 ten.',ok:'Yes! 7 tens take away 6 tens leaves 1 ten, so 379 − 60 = 319.'}},
+  {mood:'think',say:'Step 3: now take away the 8 ones. What is 319 − 8?',vis:`<div class="pl">379 − 60 = 319</div><div class="pl">319 − 8 = ?</div>`,
+    ask:{opts:['311','321','301'],ans:0,hint:'Count back 8 from 319: 318, 317, 316 … or take 9 away and give 1 back.',ok:'Yes! 319 − 8 = 311. So 379 − 68 = 311.'}},
+  {mood:'happy',say:'Last one, all on your own. Pull it apart in your head: 424 − 23 = ?',vis:PL([pullChip('424'),'<span class="po">−</span>',pullChip('23')]),
+    ask:{opts:['401','447','421'],ans:0,hint:'23 = 20 + 3. 424 − 20 = 404. Then 404 − 3 = ?',ok:'Yes! 424 − 20 = 404, and 404 − 3 = 401.'}},
+  {mood:'cheer',say:'Hooray! You can do Pull Apart! Ready for some questions? You earn double carrots on these ones!',vis:`<div class="pl good">Pull the second number apart,<br>take away the tens,<br>then take away the ones.</div>`,end:true}
+];
+function lessonStart(){S.view='lesson';S.ls={i:0,pick:-1,ok:false,wrong:false};render();window.scrollTo(0,0)}
+function lessonView(){
+  const L=S.ls||(S.ls={i:0,pick:-1,ok:false,wrong:false}),st=PULL_STEPS[L.i],n=PULL_STEPS.length;
+  const mood=L.ok?'cheer':L.wrong?'oops':st.mood,anim=L.wrong?'shake':L.ok?'bounce':'';
+  const line=st.ask?(L.ok?st.ask.ok:L.wrong?`Not quite. ${st.ask.hint} Try again!`:st.say):st.say;
+  const pips=PULL_STEPS.map((_,k)=>`<i class="lp${k<L.i?' done':k===L.i?' cur':''}"></i>`).join('');
+  let body;
+  if(st.ask){
+    L.perm=L.perm||{};const order=L.perm[L.i]||(L.perm[L.i]=shuffle(st.ask.opts.map((_,k)=>k)));
+    body=`<div class="opts">${order.map(k=>{const o=st.ask.opts[k];return `<button class="opt${L.ok&&k===st.ask.ans?' right':''}${L.wrong&&k===L.pick?' wrong':''}" data-act="lpick" data-k="${k}"${L.ok?' disabled':''}><span>${esc(o)}</span></button>`}).join('')}</div>`;
+  }else body='';
+  const nextBtn=st.end?`<button class="btn" data-act="lend">Practise Pull Apart</button><button class="btn alt" data-act="home">Maybe later</button>`:(!st.ask||L.ok?`<button class="btn" data-act="lnext">${L.i===0?'Show me!':'Next'}</button>`:'');
+  $v.innerHTML=`
+  <div class="qhead">${mascotBtn(mood,'big '+anim,false)}${bubble(line)}</div>
+  <section class="card lesson">
+    <p class="meta"><span>Learn with Cookie: Pull Apart</span><span>Step ${L.i+1} of ${n}</span></p>
+    <div class="lpips" aria-hidden="true">${pips}</div>
+    <div class="lvis">${st.vis}</div>
+    ${st.end&&S.lessonGift?`<div class="rankup daily">Lesson complete! +2 stars and +10 carrots!</div>`:''}
+    ${body}
+    <div class="actions">${L.i>0&&!st.end?'<button class="btn alt small" data-act="lback">Back</button>':''}${nextBtn}</div>
+  </section>`;
+}
+function lessonAct(a,b){
+  const L=S.ls||(S.ls={i:0,pick:-1,ok:false,wrong:false}),st=PULL_STEPS[L.i];
+  if(a==='lnext'){snd.tap();if(L.i<PULL_STEPS.length-1){L.i++;L.pick=-1;L.ok=false;L.wrong=false;lessonDone()}render();window.scrollTo(0,0)}
+  else if(a==='lback'){snd.tap();if(L.i>0){L.i--;L.pick=-1;L.ok=false;L.wrong=false}render();window.scrollTo(0,0)}
+  else if(a==='lpick'){
+    if(!st.ask||L.ok)return;const k=+b.dataset.k;L.pick=k;
+    if(k===st.ask.ans){L.ok=true;L.wrong=false;snd.yes();render();confettiAt($v.querySelector('.opt.right'),22)}
+    else{L.wrong=true;snd.no();render()}
+  }
+  else if(a==='lend'){lessonDone();start('pull')}
+}
+/* first time through the lesson: a small thank-you of 2 stars and 10 carrots */
+function lessonDone(){
+  const L=S.ls;if(!L||L.i<PULL_STEPS.length-1)return;
+  SAVE.lessons=SAVE.lessons||[];
+  if(!SAVE.lessons.includes('pull')){SAVE.lessons.push('pull');gainStars(2,0);SAVE.coins+=10;S.lessonGift=true;persist()}
+}
+function lessonCard(){
+  const done=(SAVE.lessons||[]).includes('pull');
+  return `<div class="mix lessonc"><div><h2>Learn with Cookie: Pull Apart</h2><p>${done?'Watch the lesson again, or practise below in Year 3 stretch.':'New! Cookie teaches you how to take away tens and ones step by step. Earn 2 stars and 10 carrots!'}</p></div><button class="btn${done?' alt':' sun'}" data-act="lesson">${done?'Watch again':'Start lesson'}</button></div>`;
+}
 function learn(){
   const n=S.ttn,k=S.ttk,anim=S.anim;S.anim='';
   const rows=[...Array(12)].map((_,i)=>{const j=i+1;return `<button class="lrow${j===k?' sel':''}" data-act="row" data-k="${j}" data-r="${j}">${n} × ${j} = ${n*j}</button>`}).join('');
@@ -2496,6 +2594,8 @@ document.body.addEventListener('click',e=>{
   if(a.startsWith('lab')&&labAct(a,b))return;
   if(a==='petbuy'||a==='petout'||a==='petpat'){petAct(a,b);return}
   if(a==='bbbuy'||a==='bbget'){bbAct(a,b);return}
+  if(a==='lesson'){snd.tap();lessonStart();return}
+  if(a==='lnext'||a==='lback'||a==='lpick'||a==='lend'){lessonAct(a,b);return}
   if(a==='gate'){snd.tap();if(S.gateOk){S.view='report';render();window.scrollTo(0,0)}else{S.gateQ=null;S.gateMsg='';S.view='gate';render();window.scrollTo(0,0)}return}
   if(a==='subject'){SAVE.sub=b.dataset.s;persist();snd.tap();render();return}
   if(a==='start')start(b.dataset.id);
@@ -2607,7 +2707,7 @@ document.addEventListener('keydown',e=>{
 
 /* ======================= v9 additions ======================= */
 /* ---------- double carrots for Year 3 and 4 work ---------- */
-const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3'];
+const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3','pull'];
 const isY34=q=>!!q&&(Y3IDS.includes(q.tid)||(q.tid==='tt'&&Y34.includes(q.tt)));
 function nudgeHtml(){
   if(S.y3n||S.mode!=='topic'||S.mainN<1)return '';
