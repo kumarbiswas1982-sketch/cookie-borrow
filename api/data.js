@@ -4,7 +4,8 @@ const DAY = () => Math.floor(Date.now() / 864e5);
 // One-time carrot gifts. Each id is applied once, on the server, the next time the account loads.
 const GIFTS = [
   { id: 'gift-2026-10-10-10carrots', carrots: 10 },
-  { id: 'gift-2026-10-13-21carrots', carrots: 21 }
+  { id: 'gift-2026-10-13-21carrots', carrots: 21 },
+  { id: 'gift-2026-10-14-playground-pass', carrots: 0, passes: 1 }
 ];
 async function applyGifts(rec) {
   for (let attempt = 0; attempt < 4 && rec && rec.data; attempt++) {
@@ -12,7 +13,7 @@ async function applyGifts(rec) {
     const due = GIFTS.filter((g) => !have.includes(g.id));
     if (!due.length) return rec;
     const base = rec.data.coins == null ? (rec.data.stars || 0) : rec.data.coins;
-    const data = { ...rec.data, gifts: [...have, ...due.map((g) => g.id)], coins: base + due.reduce((n, g) => n + g.carrots, 0), updated: Date.now() };
+    const data = { ...rec.data, gifts: [...have, ...due.map((g) => g.id)], coins: base + due.reduce((n, g) => n + g.carrots, 0), passes: Math.min(3, (rec.data.passes || 0) + due.reduce((n, g) => n + (g.passes || 0), 0)), updated: Date.now() };
     const next = { ver: rec.ver + 1, at: Date.now(), data };
     if (await L.cas('srimaa:data', rec.ver, next)) return next;
     rec = (await L.getJ('srimaa:data')) || rec;

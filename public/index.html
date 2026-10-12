@@ -2388,6 +2388,9 @@ const GAMES=[
   {id:'dash',name:'Carrot Dash',tag:'Tap the carrot with the right times table answer before the bar runs out. You have three lives!',fn:gameDash},
   {id:'hop',name:'Bunny Hop',tag:'Tap anywhere to hop over the logs.',fn:gameHop}
 ];
+/* the playtime clock lives on this device, so closing the app or the tab never throws away minutes already paid for */
+function setPlayEnd(t){S.playEnd=t;try{if(t)localStorage.setItem('y2m-playend',String(t));else localStorage.removeItem('y2m-playend')}catch(e){}}
+try{const pe=Number(localStorage.getItem('y2m-playend'));if(pe>Date.now()&&pe-Date.now()<=PLAY_MS)S.playEnd=pe}catch(e){}
 const playLeft=()=>Math.max(0,(S.playEnd||0)-Date.now());
 const fmtT=ms=>{const s=Math.ceil(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`};
 function play(){
@@ -2411,11 +2414,11 @@ function tickPlay(){
   if(left<=0){clearInterval(PT);PT=0;endPlay()}
 }
 function endPlay(){
-  stopGame();S.playEnd=0;
+  stopGame();setPlayEnd(0);
   if(S.view==='play'){S.view='playend';render();snd.fan();rain()}
 }
 function openPlay(){
-  if(playLeft()<=0){if(SAVE.passes<1)return;SAVE.passes--;persist();S.playEnd=Date.now()+PLAY_MS}
+  if(playLeft()<=0){if(SAVE.passes<1)return;SAVE.passes--;persist();setPlayEnd(Date.now()+PLAY_MS)}
   clearInterval(PT);PT=setInterval(tickPlay,250);
   S.view='play';render();window.scrollTo(0,0);snd.tap();
 }
