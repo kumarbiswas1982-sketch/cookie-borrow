@@ -2,7 +2,10 @@ const L = require('./_lib');
 const { mergeSaves } = require('./_merge');
 const DAY = () => Math.floor(Date.now() / 864e5);
 // One-time carrot gifts. Each id is applied once, on the server, the next time the account loads.
-const GIFTS = [{ id: 'gift-2026-10-10-10carrots', carrots: 10 }];
+const GIFTS = [
+  { id: 'gift-2026-10-10-10carrots', carrots: 10 },
+  { id: 'gift-2026-10-13-21carrots', carrots: 21 }
+];
 async function applyGifts(rec) {
   for (let attempt = 0; attempt < 4 && rec && rec.data; attempt++) {
     const have = Array.isArray(rec.data.gifts) ? rec.data.gifts : [];
