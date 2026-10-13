@@ -18,7 +18,7 @@ function mergeSaves(server, client, base) {
   out.stars = num('stars');
   out.coins = num('coins');
   out.passes = Math.min(3, Math.max(server.passes || 0, client.passes || 0));
-  for (const k of ['stickers', 'hats', 'items', 'pets', 'outfits', 'paints', 'gifts', 'lessons']) out[k] = uniq(server[k], client[k]);
+  for (const k of ['stickers', 'hats', 'items', 'pets', 'outfits', 'paints', 'gifts', 'lessons', 'ach']) out[k] = uniq(server[k], client[k]);
   for (const k of ['best', 'hi', 'speed', 'labs']) out[k] = maxMap(server[k], client[k]);
   out.petOut = (win.petOut || []).filter((id) => (out.pets || []).includes(id)).slice(0, 5);
   if (!(out.hats || []).includes(out.wear)) out.wear = 'none';
@@ -29,6 +29,25 @@ function mergeSaves(server, client, base) {
   const sb = server.bb || {}, cb = client.bb || {}, got = { ...(sb.got || {}) };
   for (const k in (cb.got || {})) if (String(cb.got[k]) > String(got[k] || '')) got[k] = cb.got[k];
   out.bb = { lv: maxMap(sb.lv, cb.lv), got };
+  // Burrow v2: garden plots keep whichever side changed them last; bonds, stats and level rewards only go up
+  const sp = (server.farm || {}).p || {}, cp = (client.farm || {}).p || {}, plots = {};
+  for (const k of new Set([...Object.keys(sp), ...Object.keys(cp)])) plots[k] = !sp[k] ? cp[k] : !cp[k] ? sp[k] : (cp[k].u || 0) >= (sp[k].u || 0) ? cp[k] : sp[k];
+  out.farm = { p: plots };
+  const pbS = server.pb || {}, pbC = client.pb || {}, pb = {};
+  for (const k of new Set([...Object.keys(pbS), ...Object.keys(pbC)])) {
+    const a = pbS[k], b = pbC[k];
+    if (!a || !b) { pb[k] = a || b; continue; }
+    const later = (b.d || '') > (a.d || '') ? b : a;
+    pb[k] = { x: Math.max(a.x || 0, b.x || 0), d: later.d || '', n: (a.d === b.d) ? Math.max(a.n || 0, b.n || 0) : (later.n || 0), p: (a.p || '') > (b.p || '') ? a.p : (b.p || '') };
+  }
+  out.pb = pb;
+  out.st = maxMap(server.st, client.st);
+  const qs = server.qd || { d: '', c: {}, k: {} }, qc = client.qd || { d: '', c: {}, k: {} };
+  out.qd = qs.d === qc.d ? { d: qs.d, c: maxMap(qs.c, qc.c), k: { ...(qs.k || {}), ...(qc.k || {}) } } : ((qc.d || '') > (qs.d || '') ? qc : qs);
+  const rs = server.rooms || { owned: ['main'], r: {} }, rc = client.rooms || { owned: ['main'], r: {} };
+  out.rooms = { owned: uniq(rs.owned, rc.owned), r: { ...(rs.r || {}), ...(rc.r || {}), ...((win.rooms || {}).r || {}) } };
+  out.vis = (server.vis || '') > (client.vis || '') ? server.vis : (client.vis || '');
+  out.lvClaimed = Math.max(server.lvClaimed || 0, client.lvClaimed || 0);
   const certs = [...(server.certs || []), ...(client.certs || [])], seen = new Set();
   out.certs = certs.filter((c) => (seen.has(c.id) ? false : seen.add(c.id)));
   out.facts = { ...(lose.facts || {}) };
