@@ -41,6 +41,12 @@ curl -X POST https://YOUR-SITE.vercel.app/api/reset -H "content-type: applicatio
 - Burrow shop: hats, clothes, furniture, pets, wall and floor paints. **Garden upgrades** (carrot patch, wishing well, windmill, pet treehouse, star greenhouse, rainbow bridge) are unlocked and upgraded with carrots.
 - New save fields all have safe defaults, so existing progress loads unchanged.
 
+## Burrow v2, Writing Studio and question banks
+- **Burrow v2** (spend carrots): burrow levels from cosiness, 6 rooms, a real-time garden (plant, wait, harvest), pet bonds, daily deals, mystery boxes, daily quests and achievements.
+- **Writing Studio**: narrative planning with beginning, problem, solution and ending, plus recounts, information reports, procedures, persuasive writing, descriptions, letters and poems. Everything written is kept in My Writing book.
+- **Fix-it Box** brings back tricky questions for double carrots. **Topic medals** (bronze, silver, gold) reward steady practice.
+- **Question banks** are much bigger, and any question answered right is remembered so it is not asked again for a long while. Wrong answers are never remembered, so they can come back.
+
 ## Privacy
 Only the email, a salted password hash (scrypt), and the game progress are stored. No analytics, no tracking, no ads.
 The speech feature (Read to me) uses the device's own voice.

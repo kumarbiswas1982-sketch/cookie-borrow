@@ -983,7 +983,7 @@ function gTime3(){
 }
 
 /* ---------- English (Year 2) ---------- */
-const sOpts=(c,ws)=>shuffle([c,...ws]).map(v=>({label:v,value:v}));
+const sOpts=(c,ws)=>shuffle([...new Set([c,...ws])]).map(v=>({label:v,value:v}));
 const SPELL=[['rabbit','a fluffy animal that hops'],['carrot','an orange vegetable bunnies love'],['garden','a place where flowers and vegetables grow'],['friend','someone you like to play with'],['school','where you go to learn'],['people','more than one person'],['because','a word that gives a reason'],['house','a building where you live'],['water','you drink it and swim in it'],['green','the colour of grass'],['yellow','the colour of the sun'],['purple','the colour you get from mixing red and blue'],['window','you look through it and it lets light in'],['kitchen','the room where food is cooked'],['morning','the start of the day'],['family','mum, dad, brothers and sisters'],['bubble','a round soap ball that floats and pops'],['pencil','you write and draw with it'],['teacher','a person who helps you learn'],['rainbow','a colourful arc in the sky after rain'],['beach','sand and waves'],['ocean','a huge body of salty water'],['island','land with water all around it'],['jungle','a hot forest full of animals'],['planet','Earth is one'],['rocket','it flies into space'],['bridge','you cross a river on it'],['castle','a king and queen live in one'],['dragon','a make-believe fire-breathing creature'],['monkey','an animal that swings in trees'],['turtle','a slow animal with a shell'],['spider','it has eight legs and spins a web'],['pirate','a sailor who hunts for treasure'],['little','a word that means small'],['table','you eat dinner at it'],['chair','you sit on it'],['clock','it tells the time'],['night','when it is dark outside'],['light','a lamp gives this'],['thunder','a loud rumble in a storm'],['winter','the coldest season'],['summer','the hottest season'],['sandwich','two slices of bread with a filling'],['banana','a long yellow fruit'],['pizza','a round food with cheese on top'],['market','a place where people buy fruit and vegetables'],['animal','a living thing that is not a plant'],['holiday','a break from school'],['birthday','the day you were born, each year'],['shadow','a dark shape made when light is blocked'],['feather','a bird has many of these'],['flower','a pretty plant with petals'],['circus','clowns and acrobats perform here'],['magic','what wizards do'],['butter','you spread it on toast'],['basket','you can carry shopping in it'],['happy','a word that means glad'],['jumper','a warm top you wear in winter']];
 const MISS=[['friend','freind','frend','freand'],['because','becuase','becos','becawse'],['school','scool','skool','shcool'],['people','peeple','peple','pepole'],['again','agen','agane','agin'],['said','sed','siad','saed'],['they','thay','thei','thy'],['would','wuold','woud','wuld'],['could','cud','coud','cuold'],['water','wotar','watter','warter'],['little','litle','littel','lital'],['house','hous','howse','huose'],['night','nite','nigt','nihgt'],['right','rite','rigth','riht'],['light','lite','ligt','lihgt'],['magic','majic','magik','magick'],['special','speshal','specal','speccial'],['animal','animul','anamal','animel'],['birthday','birthdai','berthday','brithday'],['holiday','holaday','hollidy','holliday'],['teacher','teecher','teachar','techer'],['pencil','pensil','pencel','pencill'],['rabbit','rabit','rabbet','rabbitt'],['garden','gardin','gardan','gardn'],['kitchen','kitchin','kitchun','kitchn'],['window','windo','windoe','windown'],['monkey','monky','munkey','monkee'],['thunder','thundar','thunnder','thundr'],['shadow','shado','shaddow','shadoe']];
 const FAMS=[['at','cat hat mat bat rat flat'],['og','dog log frog fog'],['ight','light night bright right sight'],['ake','cake lake snake bake make'],['ain','rain train brain chain plain'],['eet','feet sheet meet sweet street'],['oat','boat coat goat float'],['un','sun run fun bun'],['ell','bell shell well tell smell'],['ing','ring king sing wing string swing'],['ound','round sound ground found'],['ee','tree bee knee three free'],['oon','moon spoon balloon soon noon'],['old','gold cold hold old bold fold'],['ear','near hear dear year clear']].map(f=>f[1].split(' '));
@@ -1200,11 +1200,938 @@ const TOPICS=[
   {id:'change',sub:'science',name:'Heating and cooling',glyph:'🧊',desc:'Melting, freezing and steam',tc:'#7FE3DA',gen:gChange},
   {id:'earth',sub:'science',name:'Earth and Sun',glyph:'🌍',desc:'Resources, shadows, days and seasons',tc:'#A9B8FF',gen:gEarth}
 ];
+/* =====================================================================
+   Big English question banks. Everything here is added to the original
+   pools, so there are now thousands of different questions.
+   ===================================================================== */
+`apple|a round red or green fruit
+banana|a long yellow fruit
+orange|a juicy citrus fruit and a colour
+pencil|you write with it
+paper|you draw or write on it
+table|you eat dinner at it
+chair|you sit on it
+bottle|you drink water from it
+basket|you carry things in it
+blanket|keeps you warm in bed
+button|it fastens a shirt
+candle|wax with a flame
+circle|a perfectly round shape
+cloud|a white shape in the sky
+clown|a funny person at the circus
+coffee|a hot drink that adults like
+cousin|the child of your aunt or uncle
+cupboard|you keep plates inside it
+dancing|moving to music
+dentist|looks after your teeth
+dinner|the evening meal
+doctor|helps you when you are sick
+dragon|a fire breathing monster in stories
+dream|what you see when you sleep
+eagle|a big bird of prey
+engine|makes a car go
+energy|the power to move and work
+enough|as much as you need
+every|each one
+exciting|full of fun and thrills
+fairy|a tiny magical person with wings
+farmer|grows crops and looks after animals
+feather|a bird has these
+finger|part of your hand
+flower|the colourful part of a plant
+forest|lots of trees growing together
+forget|not able to remember
+fountain|water that sprays up
+freeze|turn into ice
+frighten|to scare someone
+giant|a very big person in stories
+giraffe|a tall animal with a long neck
+golden|the colour of gold
+grandma|your parent's mother
+grass|green and grows on the lawn
+guitar|a musical instrument with strings
+hammer|a tool for hitting nails
+happy|feeling joy
+heavy|hard to lift
+helmet|you wear it to protect your head
+honey|sweet food made by bees
+hungry|you want food
+island|land with water all around
+jacket|you wear it when it is cold
+jelly|a wobbly sweet dessert
+journey|a long trip
+jumper|a warm top
+kangaroo|an Australian animal that hops
+kettle|you boil water in it
+kitten|a baby cat
+knight|a soldier in armour
+ladder|you climb it
+laugh|the sound you make when something is funny
+leopard|a big cat with spots
+lesson|a class where you learn
+letter|you write it and post it
+lizard|a small scaly reptile
+lunch|the midday meal
+machine|a thing with moving parts
+magnet|it pulls metal things
+market|where people buy and sell food
+mirror|you see your face in it
+monkey|an animal that swings in trees
+mountain|a very high hill
+muddy|covered in wet dirt
+napkin|you wipe your mouth with it
+needle|used for sewing
+neighbour|someone who lives next door
+number|used for counting
+ocean|a very big sea
+octopus|a sea animal with eight arms
+oven|you bake cakes in it
+painting|a picture made with paint
+parrot|a colourful bird that can talk
+pillow|you rest your head on it
+planet|Earth is one
+pocket|a small bag sewn into clothes
+polite|having good manners
+popcorn|a snack made from corn at the movies
+potato|a vegetable you can mash or chip
+present|a gift
+puppy|a baby dog
+puzzle|a game with pieces to fit together
+quarter|one of four equal parts
+question|you ask it
+quickly|very fast
+quiet|making no noise
+rainbow|colours in the sky after rain
+remember|to keep in your mind
+rhyme|words that sound the same at the end
+ribbon|a long strip of cloth for presents
+river|water that flows to the sea
+rocket|it flies into space
+saddle|you sit on it when riding a horse
+sailor|works on a ship
+sandwich|filling between two slices of bread
+scissors|you cut paper with them
+season|summer, autumn, winter or spring
+second|a very short time
+shadow|a dark shape made when light is blocked
+shampoo|you wash your hair with it
+shower|you stand under it to wash
+silver|a shiny grey colour
+sister|a girl who has the same parents as you
+sleepy|ready for bed
+slippery|hard to hold or walk on
+smile|a happy look on your face
+snake|a long reptile with no legs
+soldier|a person in the army
+spider|has eight legs and spins a web
+spoon|you eat soup with it
+squirrel|a small animal that loves nuts
+stairs|you walk up and down them
+station|where trains stop
+stomach|where your food goes
+storm|strong wind, rain and thunder
+story|you read it at bedtime
+stranger|a person you do not know
+strawberry|a small red fruit with seeds outside
+summer|the hottest season
+sunshine|light from the sun
+surprise|something you do not expect
+swimming|moving through water
+teacher|helps you learn at school
+teddy|a soft toy bear
+thirsty|you need a drink
+thunder|a loud noise in a storm
+ticket|you need it to get on a train
+tiger|a big striped cat
+tired|you need to sleep
+tomorrow|the day after today
+toothbrush|you clean your teeth with it
+towel|you dry yourself with it
+tractor|a farm vehicle
+travel|to go from place to place
+treasure|gold and jewels hidden by pirates
+trumpet|a brass instrument you blow
+turtle|a reptile with a hard shell
+umbrella|keeps you dry in the rain
+uniform|special clothes for school or work
+vegetable|carrots and peas are these
+village|a very small town
+visit|to go and see someone
+volcano|a mountain that erupts
+waiting|staying until something happens
+walking|moving on foot
+wallet|you keep money in it
+weather|rain, sun, wind and snow
+weekend|Saturday and Sunday
+whistle|you blow it to make a high sound
+wizard|a man with magic powers
+wonder|to think about something with curiosity
+woolly|made of or covered in wool
+yesterday|the day before today
+yogurt|a creamy food made from milk
+zebra|a striped animal like a horse
+zipper|it closes a jacket
+aeroplane|it flies in the sky
+afternoon|the part of the day after lunch
+airport|where planes take off and land
+animal|a living creature
+anything|any thing at all
+armchair|a comfy chair with arms
+backyard|the garden behind a house
+balloon|you blow it up at a party
+bathroom|where you have a bath
+beautiful|very pretty
+bedroom|where you sleep
+birthday|the day you were born, each year
+breakfast|the first meal of the day
+brother|a boy who has the same parents as you
+bushfire|a fire in the bush
+butterfly|an insect with colourful wings
+caravan|a house you can pull behind a car
+castle|where a king and queen live
+caterpillar|it turns into a butterfly
+chocolate|a sweet brown treat
+classroom|where you learn at school
+cooking|making food
+countryside|land outside towns and cities
+crocodile|a big reptile with sharp teeth
+dolphin|a clever sea animal that jumps
+dressing|putting your clothes on
+earthquake|the ground shakes
+elephant|a huge grey animal with a trunk
+everyone|all the people
+fireworks|bright lights and bangs at night
+football|a game with a ball and goals
+friendly|kind and nice to others
+gardener|looks after plants
+gingerbread|a spicy biscuit shaped like a man
+grandfather|your parent's father
+hamburger|a meat patty in a bun
+holiday|time off school or work
+hospital|where sick people get better
+insect|a small creature with six legs
+jellyfish|a see-through sea animal that stings
+lighthouse|a tower that warns ships
+newspaper|you read the news in it
+nobody|not one person
+outside|not inside
+penguin|a black and white bird that cannot fly
+pineapple|a spiky tropical fruit
+playground|where children play at school
+policeman|keeps people safe
+rainbow|colours in the sky after rain
+sunflower|a tall yellow flower
+telephone|you talk to people with it
+together|with each other
+vacuum|cleans the floor
+watermelon|a big green fruit with red inside
+wheelbarrow|you carry soil in it
+wombat|a furry Australian animal that digs
+yourself|you and nobody else`.split('\n').forEach(l=>{const [w,c]=l.split('|');if(w&&c&&!SPELL.some(x=>x[0]===w))SPELL.push([w,c])});
+`friend|freind|frend|freand
+believe|beleive|belive|beleave
+beautiful|beutiful|beautifull|butiful
+because|becase|becuz|becaus
+different|diferent|differant|diffrent
+favourite|favorite|favrite|faverit
+beginning|begining|beggining|beginnin
+surprise|suprise|surprize|supprise
+Wednesday|Wensday|Wednsday|Wendsday
+February|Febuary|Feburary|Febuery
+library|libary|librery|liberry
+necessary|neccessary|necesary|necessery
+tomorrow|tommorow|tomorow|tommorrow
+together|togther|togeather|toghether
+recipe|resipe|recipy|reciepe
+island|iland|islend|ireland
+knife|nife|knive|kniff
+knock|nock|knok|knoc
+write|rite|wright|wrigt
+wrong|rong|wrogn|wronge
+gentle|gentel|jentle|gentl
+giant|jiant|gient|giaent
+giraffe|jiraffe|girraf|girafe
+guess|gess|guees|guesss
+guard|gard|gaurd|guarde
+laughed|laffed|lauffed|laughd
+caught|cought|cawt|caugt
+thought|thot|thougt|thaught
+through|threw|thru|throgh
+enough|enuff|enogh|enuf
+busy|bizzy|busey|buzy
+whole|hole|whol|wholl
+climb|clime|climm|clymb
+sugar|shugar|sugur|suger
+mountain|mountian|mountin|mounten
+caterpillar|catterpillar|caterpiller|caterpilar
+dangerous|dangerus|danjerous|dangerrous
+exciting|exiting|excitting|exsiting
+excellent|excelent|exellent|excellant
+interesting|intresting|interesing|interestin
+adventure|adventur|advencher|adventer
+elephant|elefant|elephent|eliphant
+chocolate|choclate|chocolat|chocolite
+holiday|holliday|holadey|holidey
+orange|orenge|orang|oringe
+piece|peice|peece|pece
+yesterday|yesterdey|yestaday|yesturday
+brought|brot|broght|braught
+fought|fort|fougt|fawt
+daughter|dauter|darter|dorter
+neighbour|nabour|neighbor|neibour
+sausage|sossage|sausege|sosage
+squirrel|squirel|squirell|skwirrel
+height|hight|heigth|hiegt
+journey|jurney|journy|jerney
+vegetable|vegtable|vegetible|veggetable
+secret|secrit|seacret|sekret
+village|villige|vilage|villedge
+important|importent|imporant|inportant
+remember|rember|remeber|rememmber
+sandwich|sanwich|sandwhich|sandwitch
+treasure|treasur|tresure|trezure
+umbrella|umbrela|umbrelah|umbralla
+wonderful|wonderfull|wunderful|wonderfal
+weather|wether|wheather|wheter
+quickly|quikly|quickley|kwickly
+should|shud|shoud|shuld
+whistle|wistle|whissle|whistel
+wrapped|raped|wraped|rapped
+daughter|dortar|daugter|dawter`.split('\n').forEach(l=>{const a=l.split('|');if(a.length===4&&!MISS.some(x=>x[0]===a[0]))MISS.push(a)});
+[
+['ack','back pack black snack track crack'],['ash','cash crash flash splash trash'],['ay','day play say stay tray'],['est','best nest rest test west'],['ick','kick pick quick sick stick'],
+['ill','hill fill mill still will'],['ink','drink pink sink think wink'],['ip','chip ship skip trip zip'],['it','bit fit hit sit kit'],['ock','clock block rock sock lock'],
+['op','hop mop pop top stop'],['ow','cow now how wow brown'],['ot','dot hot pot spot not'],['ug','bug hug mug rug jug'],['ump','jump bump lump pump dump'],
+['ail','mail nail sail tail snail'],['ame','game name came same flame'],['ate','gate late plate skate state'],['eed','feed seed need weed speed'],['ice','mice nice rice twice slice'],
+['ide','hide ride side wide slide'],['ine','line mine nine pine shine'],['ive','five dive hive alive drive'],['oke','joke poke smoke woke spoke'],['one','bone cone phone stone alone'],
+['ool','cool pool school stool tool'],['ore','more store shore score floor'],['ose','nose rose close hose chose'],['ow2','snow grow slow low show'],['ube','cube tube cute mute flute'],
+['air','hair chair stair pair fair'],['are','care share stare scare bare'],['ark','bark dark park shark spark'],['ear2','bear pear wear tear swear'],['eat','heat meat seat beat wheat'],
+['ight2','fight might tight flight slight'],['ing2','bring spring swing sting cling'],['ail2','whale tale scale pale stale'],['ew','few new grew chew flew'],['ow3','bow row tow mow'],
+['ound2','mound pound hound wound bound'],['ent','bent dent tent went sent'],['and','band hand land sand stand'],['ang','bang hang sang rang fang'],['ong','long song strong along belong'],
+['unch','lunch bunch punch crunch munch'],['ump2','stump plump slump clump grump'],['ay2','hay clay pray gray spray'],['y','fly sky try cry dry'],['ee2','bee knee free three tree']
+].forEach(f=>FAMS.push(f[1].split(' ')));
+'pen-cil|ap-ple|wa-ter|ta-ble|mon-ster|rain-bow|sun-shine|but-ton|dra-gon|bis-cuit|pa-per|win-dow|moun-tain|dol-phin|tur-tle|pen-guin|pump-kin|pic-nic|bas-ket|can-dle|gar-den|jun-gle|li-on|ti-ger|ze-bra|gi-raffe|hip-po|mon-key|pup-py|kit-ten|mu-sic|gui-tar|pi-a-no|vi-o-lin|drum|trum-pet|choc-o-late|ba-by|bike|bal-loon|break-fast|lunch-box|birth-day|hol-i-day|ho-tel|air-plane|heli-cop-ter|tel-e-phone|ra-di-o|tel-e-vi-sion|vac-u-um|yo-gurt|cu-cum-ber|po-ta-to|spa-ghet-ti|ba-na-na|wa-ter-fall|dai-sy|sun-flow-er|but-ter-cup|rab-bit|ham-ster|gold-fish|koa-la|plat-y-pus|wom-bat|e-mu|din-o-saur|oc-to-pus|jel-ly-fish|o-cean|is-land|vol-ca-no|a-lien|ro-bot|ca-ble|com-put-er|ta-blet|key-board|mo-bile|pi-rate|trea-sure|cas-tle|king|prin-cess|wiz-ard|fair-y|mer-maid|u-ni-corn|su-per-hero|ad-ven-ture|ex-plo-rer|ex-plore|dis-cov-er|in-ven-tor|mu-se-um|li-brar-y|hos-pi-tal|am-bu-lance|fire-fight-er|po-lice|doc-tor|nurse|den-tist|tea-cher|stu-dent|class-room|play-ground|foot-ball|net-ball|crick-et|swim-ming|run-ning|jump-ing|danc-ing|sing-ing|paint-ing|read-ing|writ-ing|cook-ing'.split('|').forEach(s=>{if(!SYL.includes(s))SYL.push(s)});
+NOUNS.push('farmer','chef','pirate','knight','wizard','fairy','robot','astronaut','teddy','mermaid','penguin','koala','wombat','emu','possum','spider','octopus','whale','crocodile','dolphin','nurse','doctor','builder','painter','singer','dancer','explorer','diver','parrot','tiger','monkey','elephant','giraffe','turtle','owl','fox','duck','lamb','pony');
+ADJS.push('gentle','grumpy','curious','cheeky','giant','sparkly','scary','wobbly','bumpy','fuzzy','slimy','sticky','juicy','spiky','shy','proud','lazy','speedy','sneaky','muddy','dusty','golden','lonely','jolly','loud','quiet','wise','wild','tame','hungry','thirsty','cosy','messy','tidy','bright','dim','woolly','scaly','feathery','striped','spotty','rusty','smooth','rough','heavy','light');
+VERBS.push('skipped','swam','climbed','giggled','whispered','tiptoed','galloped','wandered','splashed','crawled','twirled','stomped','shouted','sneezed','yawned','nibbled','wiggled','dashed','floated','spun','leaped','rolled','marched','waddled','scampered');
+ENDS.push('across the bridge','through the tunnel','along the beach','behind the shed','inside the cave','at the market','up the mountain','down the slide','by the river','in the park','on the roof','under the bridge','next to the lake','past the farm','over the fence','around the pond','near the school','beside the campfire','in the classroom','at the zoo');
+[['bring','brought',['bringed','brang','brung']],['buy','bought',['buyed','boughten','buyd']],['catch','caught',['catched','caughten','cought']],['draw','drew',['drawed','drawn','drewed']],['fall','fell',['falled','fallen','felled']],['feel','felt',['feeled','feels','feld']],['find','found',['finded','finds','fund']],['fly','flew',['flied','flown','flyed']],['get','got',['getted','gots','gotten']],['grow','grew',['growed','grown','grewed']],['have','had',['haved','has','haven']],['hear','heard',['heared','hears','hurd']],['hide','hid',['hided','hidden','hidded']],['hit','hit',['hitted','hits','hat']],['keep','kept',['keeped','keeps','kep']],['know','knew',['knowed','known','knewed']],['leave','left',['leaved','leaves','lefted']],['let','let',['letted','lets','lat']],['lose','lost',['losed','loses','losted']],['meet','met',['meeted','meets','meat']],['put','put',['putted','puts','pat']],['read','read',['readed','reads','red']],['ride','rode',['rided','ridden','roded']],['ring','rang',['ringed','rung','ringd']],['say','said',['sayed','says','sayd']],['sell','sold',['selled','sells','soled']],['send','sent',['sended','sends','sint']],['sleep','slept',['sleeped','sleeps','slepted']],['speak','spoke',['speaked','spoken','speaks']],['stand','stood',['standed','stands','stooded']],['take','took',['taked','taken','takes']],['teach','taught',['teached','teaches','tought']],['tell','told',['telled','tells','tolded']],['think','thought',['thinked','thinks','thoughted']],['throw','threw',['throwed','thrown','throwd']],['wake','woke',['waked','wakes','woked']],['wear','wore',['weared','wears','worn']],['win','won',['winned','wins','wonned']],['dig','dug',['digged','digs','duged']],['build','built',['builded','builds','buildt']],['sweep','swept',['sweeped','sweeps','swepted']],['shake','shook',['shaked','shakes','shaken']],['blow','blew',['blowed','blown','blowd']],['bite','bit',['bited','bitten','bitted']],['begin','began',['beginned','begun','begins']],['break','broke',['breaked','broken','breaks']],['choose','chose',['choosed','chosen','chooses']],['do','did',['doed','does','done']],['drive','drove',['drived','driven','drives']],['forget','forgot',['forgeted','forgets','forgotten']]].forEach(x=>{if(!PAST.some(p=>p[0]===x[0]))PAST.push(x)});
+[['sheep','sheep',['sheeps','sheepes','sheepen']],['fish','fish',['fishes','fishs','fishen']],['goose','geese',['gooses','goosen','geeses']],['ox','oxen',['oxes','oxs','oxens']],['life','lives',['lifes','lifves','livs']],['knife','knives',['knifes','knifs','knifees']],['shelf','shelves',['shelfs','shelfes','shelvs']],['half','halves',['halfs','halfes','halvs']],['fly','flies',['flys','flyes','flees']],['cherry','cherries',['cherrys','cherryes','cherris']],['story','stories',['storys','storyes','storees']],['lady','ladies',['ladys','ladyes','ladees']],['kangaroo','kangaroos',['kangarooes','kangaroon','kangarooss']],['piano','pianos',['pianoes','pianon','pianoss']],['watch','watches',['watchs','watchies','watchez']],['church','churches',['churchs','churchies','churchez']],['glass','glasses',['glasss','glassies','glasez']],['brush','brushes',['brushs','brushies','brushez']],['class','classes',['classs','classies','classez']],['sandwich','sandwiches',['sandwichs','sandwichies','sandwichez']],['peach','peaches',['peachs','peachies','peachez']],['tomato','tomatoes',['tomatos','tomatoies','tomatoez']],['potato','potatoes',['potatos','potatoies','potatoez']],['donkey','donkeys',['donkies','donkeyes','donkeyz']],['monkey','monkeys',['monkies','monkeyes','monkeyz']],['day','days',['daies','dayes','dayz']],['toy','toys',['toies','toyes','toyz']],['tooth','teeth',['tooths','teethes','toothes']],['person','people',['persons','peoples','peopels']],['woman','women',['womans','womens','womanes']],['penny','pennies',['pennys','pennyes','pennees']],['berry','berries',['berrys','berryes','berrees']],['family','families',['familys','familyes','familees']],['party','parties',['partys','partyes','partees']]].forEach(x=>{if(!PLUR.some(p=>p[0]===x[0]))PLUR.push(x)});
+'big|little,hot|cool,loud|soft,high|low,rough|smooth,strong|weak,rich|poor,young|old,asleep|awake,above|below,inside|outside,begin|end,buy|sell,laugh|cry,love|hate,push|pull,start|finish,win|lose,right|wrong,true|false,top|bottom,front|back,come|go,sink|float,bright|dim,heavy|light,sharp|blunt,deep|shallow,tight|loose,smile|frown,give|take,arrive|leave,remember|forget,lift|drop,found|lost,always|never,first|last,more|less,most|least,same|different,easy|difficult,safe|dangerous,polite|rude,generous|selfish,lazy|busy,clever|silly,calm|angry,odd|even,bumpy|flat'.split(',').forEach(s=>{const p=s.split('|');if(!ANT.some(x=>x[0]===p[0]&&x[1]===p[1]))ANT.push(p)});
+'angry|cross,bad|poor,cold|chilly,cry|weep,dull|boring,end|finish,fix|mend,glad|pleased,huge|enormous,jump|hop,listen|hear,loud|noisy,mad|angry,old|ancient,quiet|silent,rich|wealthy,scared|frightened,sick|ill,smart|bright,sofa|couch,sleep|nap,throw|toss,under|beneath,wet|damp,woman|lady,yell|shout,hurry|rush,ill|unwell,little|small,mom|mum,pal|friend,present|gift,rubbish|trash,wander|roam,cheerful|jolly,gloomy|sad,silly|foolish,tidy|neat,tasty|delicious,trip|journey,toil|work,stroll|walk,gaze|stare,gift|present,shut|close,pretty|lovely,leap|jump,chat|talk,beginning|start,odd|strange,hard|difficult,easy|simple,rapid|fast,grin|smile'.split(',').forEach(s=>{const p=s.split('|');if(!SYN.some(x=>x[0]===p[0]&&x[1]===p[1]))SYN.push(p)});
+NEUT.push('cloud','stone','window','pillow','bucket','garden','cup','lamp','pizza','bell','ring','boot','flag','shell','leaf','rope','rain','kite','sand','door');
+ST_STAT.push('My sister plays netball on Saturdays','The kookaburra laughed in the gum tree','We ate fish and chips at the beach','Our dog loves to chase sticks','It rained all night long','Grandpa tells the best stories','The moon was big and bright','I rode my bike to the park','The baby bird sat in its nest','We planted tomatoes in the garden','Dad cooked sausages on the barbecue','The bus was late this morning','Her new shoes are green','The ice cream melted in the sun','A kangaroo hopped across the paddock','The teacher read us a book','Bees make honey in their hive','I can see a rainbow','We went swimming at the pool','The old clock ticked loudly','Mum is making a birthday cake','There are five ducks on the pond','Our class has a pet fish','The wind blew the leaves away','The kite flew high above the hill');
+ST_Q.push('What is your favourite colour','Where do kangaroos live','How many legs does a spider have','Can I have a drink of water','What time is it','Who made this lovely cake','Why is the grass wet','Are you coming to the party','Which one is yours','What is for dinner tonight','Did you see that bird','How was your day','May I please sit here','Do you want to play with me','Where is my school bag','What did you do on the weekend','Is it going to rain today','Have you finished your work','Can you help me find my shoe','When is your birthday');
+ST_EX.push('Look out','That is amazing','Be careful','Hurry up','What a huge dinosaur','Well done','Happy birthday','I won the race','Ouch, that hurt','Yum, this is delicious','Stop right there','Come quickly','I can not believe it','Fantastic news','Watch me jump','That was so funny','Oh no, I dropped it','We are going to the beach','Hip hip hooray','I love this song');
+BUILD.push('The little frog sat on a lily pad','My brother kicked the ball over the fence','We had a picnic by the river','The koala slept in the tall gum tree','Grandma knitted me a warm scarf','The children laughed and played in the park','A red balloon floated up to the sky','Our teacher gave us a big surprise','The bunny nibbled a juicy carrot','Dad washed the car on Sunday','The ducks swam across the pond','I helped Mum bake some cookies','The wind blew my hat away','Two birds sang in the garden','We looked at the stars last night','The puppy chased its own tail','She wore a yellow dress to the party','The train rolled into the station','He built a huge sandcastle at the beach','The moon shone over the quiet town','Our cat likes to sleep on the couch','A turtle crawled slowly across the sand','The baker sold fresh bread and buns','Everyone clapped at the end of the show','The farmer fed the hungry chickens','I found a shiny shell on the shore','The bus took us to the museum','My friend and I built a cubby house','The fire engine raced down the street','Wombats dig deep burrows in the ground','We sang songs around the campfire','The rain tapped on the window','She drew a picture of a dragon','The magician pulled a rabbit from his hat','An owl hooted in the dark forest','I put my shoes by the front door','The snail left a silver trail','They walked home along the quiet path','The big dog barked at the postman','Rain is good for the garden');
+ABC.push('ape','bat','crab','deer','eel','fox','gull','hippo','ibis','jaguar','lamb','mole','nest','otter','panda','quail','rat','swan','toad','urchin','vole','wasp','yak','badger','camel','dingo','finch','gecko','heron','iguana','lemur','magpie','numbat','ostrich','possum','rooster','sloth','turkey','walrus','bilby');
+PASS.push(
+ {t:'The lost puppy',x:'Tom found a small puppy near the park gate. It was wet and shivering. Tom wrapped it in his jumper and carried it home. His mum helped him find the puppy\'s owner by putting up posters.',qs:[['Where did Tom find the puppy?','Near the park gate',['At school','In a shop','On a bus']],['What did Tom wrap it in?','His jumper',['A towel','A blanket','A bag']],['How did the puppy feel?','Wet and shivering',['Hot and tired','Happy and warm','Hungry and sleepy']],['What did Mum help Tom do?','Put up posters',['Buy dog food','Go to the vet','Take a photo']]]},
+ {t:'Making pancakes',x:'On Sunday, Dad made pancakes. He mixed flour, eggs and milk in a big bowl. Then he poured the mixture into a hot pan. Lucy flipped the first pancake into the air and caught it. Everyone cheered!',qs:[['What did Dad make?','Pancakes',['Cakes','Soup','Pasta']],['What did Dad mix in the bowl?','Flour, eggs and milk',['Sugar and cream','Rice and water','Butter and honey']],['What did Lucy do?','Flipped a pancake',['Burnt the pan','Dropped the bowl','Ate everything']],['What did everyone do at the end?','Cheered',['Left','Cried','Slept']]]},
+ {t:'The class pet',x:'Room 3 has a class pet called Nibbles. Nibbles is a brown guinea pig with white spots. Each day a different student feeds Nibbles fresh lettuce and clean water. On Fridays, Nibbles goes home with a student for the weekend.',qs:[['What is the class pet called?','Nibbles',['Spotty','Lettuce','Brownie']],['What kind of animal is Nibbles?','A guinea pig',['A rabbit','A hamster','A mouse']],['What does Nibbles eat?','Fresh lettuce',['Chocolate','Pizza','Fish']],['When does Nibbles go home with a student?','On Fridays',['On Mondays','Every night','On Wednesdays']]]},
+ {t:'Dolphins',x:'Dolphins are clever sea animals. They live in groups called pods. Dolphins talk to each other with clicks and whistles. They are mammals, so they breathe air and have to swim up to the top of the water to take a breath.',qs:[['What is a group of dolphins called?','A pod',['A herd','A flock','A pack']],['How do dolphins talk?','With clicks and whistles',['With words','By barking','By roaring']],['Why do dolphins swim to the top?','To breathe air',['To eat','To sleep','To find friends']],['What kind of animal is a dolphin?','A mammal',['A fish','An insect','A bird']]]},
+ {t:'The windy day',x:'It was a very windy day. Ben\'s hat blew off his head and flew down the street. He chased it past the shop and the bus stop. At last it landed in a puddle. Ben picked it up and laughed. His hat was soggy, but he did not mind.',qs:[['What blew off Ben\'s head?','His hat',['His scarf','His kite','His glasses']],['Where did the hat land?','In a puddle',['In a tree','On a roof','In a bin']],['How did Ben feel at the end?','He laughed',['He cried','He shouted','He was cross']],['What was wrong with the hat?','It was soggy',['It was torn','It was lost','It was too big']]]},
+ {t:'A trip to the farm',x:'Our class went on a trip to a farm. We saw cows, sheep and chickens. A farmer showed us how to milk a cow. I collected three warm eggs from the henhouse. My favourite part was feeding the baby lambs with a bottle.',qs:[['Where did the class go?','To a farm',['To a zoo','To a beach','To a museum']],['How many eggs did the writer collect?','Three',['Two','Five','Ten']],['What was the favourite part?','Feeding the lambs',['Milking a cow','Seeing the hens','Riding a horse']],['Who showed them how to milk a cow?','A farmer',['A teacher','A vet','A baker']]]},
+ {t:'The sleepy bear',x:'In winter, some bears go into a deep sleep. They find a cosy den in a cave or under a log. The bear does not eat or drink for months. When spring comes, it wakes up very hungry and looks for food.',qs:[['When do some bears have a deep sleep?','In winter',['In summer','In spring','In autumn']],['Where might a bear sleep?','In a cave',['In a pond','In a nest','In a shop']],['How does the bear feel when it wakes?','Very hungry',['Very cold','Very noisy','Very sad']],['When does the bear wake up?','In spring',['In winter','At night','In summer']]]},
+ {t:'The bush walk',x:'Mia and her dad went for a walk in the bush. They heard a kookaburra laughing high up in a tree. Dad pointed to a goanna sunning itself on a log. Mia took a photo with her camera. The track led to a waterfall, where they ate their sandwiches.',qs:[['What did they hear?','A kookaburra laughing',['A dog barking','Thunder','A car']],['What was on the log?','A goanna',['A snake','A frog','A possum']],['What did Mia take?','A photo',['A drawing','A feather','A shell']],['Where did they eat their sandwiches?','At a waterfall',['At home','On the beach','At school']]]},
+ {t:'Bedtime',x:'Every night, Sam has the same bedtime plan. First he has a bath. Then he brushes his teeth. Next he puts on his pyjamas and chooses a book. Dad reads the story and turns off the light. Sam is asleep in minutes.',qs:[['What does Sam do first?','Has a bath',['Reads a book','Brushes his teeth','Puts on pyjamas']],['What does Sam do after brushing his teeth?','Puts on his pyjamas',['Has a bath','Goes to sleep','Eats dinner']],['Who reads the story?','Dad',['Mum','Sam','His sister']],['What happens last?','Sam falls asleep',['Sam has a bath','Sam eats','Sam plays']]]},
+ {t:'The rainbow',x:'After the rain stopped, the sun came out. A beautiful rainbow stretched across the sky. It had seven colours: red, orange, yellow, green, blue, indigo and violet. The children ran outside to look. "It looks like a giant bridge!" said Zoe.',qs:[['What stopped?','The rain',['The wind','The music','The bus']],['How many colours does a rainbow have?','Seven',['Five','Three','Ten']],['What did Zoe say it looked like?','A giant bridge',['A big hat','A slide','A road']],['What did the children do?','Ran outside to look',['Stayed inside','Went to sleep','Went shopping']]]},
+ {t:'Sharing',x:'Ella had a big bag of grapes at lunchtime. A new girl called Priya sat alone with no food. Ella asked, "Would you like some grapes?" Priya smiled and said thank you. They ate together and soon became friends.',qs:[['What did Ella have?','A bag of grapes',['A sandwich','An apple','A cake']],['What was Priya\'s problem?','She had no food',['She was lost','She was sick','She was late']],['What did Ella ask?','If Priya wanted some grapes',['If she was lost','If she liked school','For her name']],['What happened at the end?','They became friends',['They fought','They went home','Ella cried']]]},
+ {t:'Honey bees',x:'Honey bees live in a hive. A hive has one queen, many workers and some drones. The worker bees fly out to collect nectar from flowers. They carry it back to the hive and turn it into honey. A bee dances to tell the others where the best flowers are.',qs:[['Where do honey bees live?','In a hive',['In a nest','In a burrow','In a cave']],['What do workers collect?','Nectar',['Pollen only','Water','Leaves']],['What is nectar turned into?','Honey',['Milk','Juice','Wax']],['How does a bee tell the others where flowers are?','It dances',['It sings','It sends a letter','It draws a map']]]},
+ {t:'The new shoes',x:'Archie got new red sneakers for his birthday. He wore them to school the very next day. At recess, he ran so fast that he won the race. "These shoes must be magic!" he said. His friend Jai laughed and said, "Maybe you are just fast."',qs:[['What colour were the sneakers?','Red',['Blue','Green','Black']],['When did Archie wear them to school?','The next day',['That night','The next week','On Saturday']],['What happened at recess?','Archie won a race',['He lost a shoe','He fell over','He stayed inside']],['What did Jai say?','Maybe you are just fast',['The shoes are ugly','I want your shoes','Give them to me']]]},
+ {t:'Camping',x:'The Nguyen family went camping by a river. First, they put up the tent. Then Dad lit a campfire and they cooked sausages. At night, they looked up and saw thousands of stars. Lily heard an owl hooting in the trees. It was the best night ever.',qs:[['Where did the family go camping?','By a river',['At a beach','On a mountain','In a city']],['What did they cook?','Sausages',['Fish','Pancakes','Soup']],['What did they see at night?','Thousands of stars',['A rainbow','A storm','A kangaroo']],['What did Lily hear?','An owl hooting',['A dog barking','Rain','A car']]]},
+ {t:'The snow day',x:'Far away in the mountains, it snowed all night. In the morning, the whole town was white. Kids pulled on their boots and ran outside. They built a snowman with a carrot nose and two stones for eyes. Then they rolled down the hill on sleds.',qs:[['What fell all night?','Snow',['Rain','Leaves','Sand']],['What did the kids build?','A snowman',['A sandcastle','A fort','A boat']],['What was used for the nose?','A carrot',['A stick','A stone','A leaf']],['What did they ride down the hill?','Sleds',['Bikes','Skateboards','Scooters']]]},
+ {t:'The little seed',x:'A tiny seed sat in the dark soil. One day, rain fell and the seed drank the water. Slowly, a green shoot pushed up towards the light. Days passed. The shoot grew taller and taller. At last, a bright yellow sunflower opened its petals to the sun.',qs:[['Where was the seed?','In the soil',['In a pot of water','On a rock','In a bag']],['What did the seed drink?','Rain water',['Juice','Milk','Soup']],['What grew from the seed?','A sunflower',['A tree','A carrot','A rose']],['What colour was the flower?','Yellow',['Red','Blue','Pink']]]},
+ {t:'Fire safety',x:'Fire fighters visited our school. They showed us their big red truck and their hoses. A fire fighter taught us to stop, drop and roll if our clothes catch fire. She said we should have a safe meeting place outside our home. We all got a sticker.',qs:[['Who visited the school?','Fire fighters',['Police','Doctors','Bakers']],['What colour was the truck?','Red',['Blue','Yellow','White']],['What should you do if clothes catch fire?','Stop, drop and roll',['Run fast','Hide','Jump']],['What did everyone get?','A sticker',['A badge','A hat','A book']]]},
+ {t:'The talent show',x:'It was the night of the school talent show. Maya was very nervous. She walked on stage with her violin and took a deep breath. As soon as she began to play, her nerves disappeared. The audience clapped loudly when she finished. Maya bowed and smiled.',qs:[['What instrument did Maya play?','A violin',['A flute','A drum','A guitar']],['How did Maya feel at first?','Nervous',['Bored','Angry','Sleepy']],['What happened when she started to play?','Her nerves disappeared',['She dropped it','She forgot','She ran away']],['What did the audience do?','Clapped',['Left','Slept','Booed']]]},
+ {t:'Recycling',x:'At our school we have three bins. The yellow bin is for paper and cardboard. The green bin is for food scraps and garden waste. The red bin is for rubbish that cannot be recycled. Recycling helps keep our world clean.',qs:[['What goes in the yellow bin?','Paper and cardboard',['Food scraps','Plastic toys','Glass only']],['What goes in the green bin?','Food scraps',['Paper','Metal cans','Cardboard']],['How many bins does the school have?','Three',['Two','Four','One']],['What does recycling help to keep clean?','Our world',['Our hands','Our shoes','Our classroom desks only']]]},
+ {t:'The magic paintbrush',x:'Ling found an old paintbrush in the attic. When she painted a flower on the wall, it grew into a real flower! She painted a bird, and it flew away singing. Ling smiled. She decided to paint a big, juicy apple for her lunch.',qs:[['Where did Ling find the paintbrush?','In the attic',['In the kitchen','At school','In the garden']],['What happened to the painted flower?','It became a real flower',['It faded','It fell off','It was washed away']],['What did the painted bird do?','Flew away singing',['Hopped','Slept','Hid']],['What did Ling decide to paint?','An apple',['A cake','A cat','A tree']]]},
+ {t:'The kind postman',x:'Mr Brown is our postman. He rides a red bike and wears a bright orange vest. Every morning he brings letters and parcels to each house. When it rains, he wears a yellow raincoat. Mr Brown always waves to the children on the street.',qs:[['What does Mr Brown ride?','A red bike',['A scooter','A truck','A horse']],['What colour is his vest?','Orange',['Yellow','Red','Blue']],['What does he bring each morning?','Letters and parcels',['Milk','Bread','Flowers']],['What does he wear when it rains?','A yellow raincoat',['A hat','Boots only','A scarf']]]},
+ {t:'Turtle race',x:'The turtles in the pond decided to have a race. Slow Sam started at the log. Speedy Pip started beside him. Pip dashed ahead, but he stopped for a snack. Sam kept walking, step by step. Sam crossed the line first. Slow and steady won the race.',qs:[['Where did the turtles race?','At the pond',['At the beach','At the park','At school']],['Why did Pip stop?','For a snack',['To sleep','To talk','To swim']],['Who won the race?','Sam',['Pip','Nobody','A frog']],['What is the lesson of the story?','Slow and steady wins',['Always be fast','Never race','Snacks are bad']]]}
+);
+
+/* ---------- extra English question makers: each one has its own big bank ---------- */
+const EXTRA={};
+const CATS={
+  animals:['dog','cat','horse','cow','sheep','pig','rabbit','duck','lion','tiger','koala','emu','frog','snake','whale','owl'],
+  fruit:['apple','banana','grape','pear','mango','peach','plum','orange','kiwi','cherry','lemon','melon'],
+  colours:['red','blue','green','yellow','purple','pink','orange','brown','black','white'],
+  vehicles:['car','bus','train','truck','bike','boat','plane','tram','scooter','helicopter'],
+  clothes:['hat','shirt','socks','jumper','shorts','dress','shoes','scarf','jacket','gloves'],
+  body:['arm','leg','hand','foot','head','knee','elbow','finger','toe','nose'],
+  furniture:['chair','table','bed','couch','desk','shelf','stool','wardrobe'],
+  weather:['rain','wind','snow','sun','cloud','storm','fog','hail'],
+  instruments:['drum','guitar','piano','flute','violin','trumpet','harp','recorder'],
+  school:['pencil','ruler','book','eraser','bag','crayon','scissors','glue'],
+  months:['January','March','May','July','August','October','December'],
+  food:['bread','cheese','rice','pasta','pizza','soup','salad','cake','biscuit','egg'],
+  veg:['carrot','pea','potato','onion','corn','broccoli','pumpkin','lettuce'],
+  sports:['netball','cricket','swimming','football','tennis','soccer','rugby','golf'],
+  shapes:['circle','square','triangle','rectangle','oval','hexagon'],
+  birds:['eagle','parrot','kookaburra','magpie','owl','cockatoo','penguin','duck'],
+  sea:['shark','whale','octopus','crab','jellyfish','dolphin','seahorse','starfish'],
+  rooms:['kitchen','bedroom','bathroom','garage','laundry','hallway']
+};
+const CATNAME={animals:'animals',fruit:'fruit',colours:'colours',vehicles:'vehicles',clothes:'clothes',body:'body parts',furniture:'furniture',weather:'weather',instruments:'musical instruments',school:'things at school',months:'months',food:'foods',veg:'vegetables',sports:'sports',shapes:'shapes',birds:'birds',sea:'sea animals',rooms:'rooms in a house'};
+const HOMO=[
+ ['Can you ___ the birds singing?','hear',['here']],['Come ___ and sit by me.','here',['hear']],['I have ___ apples in my bag.','two',['to','too']],['We are going ___ the park.','to',['two','too']],['It is ___ hot today.','too',['to','two']],
+ ['The ___ is shining brightly.','sun',['son']],['The cat chased ___ tail.','its',['it\'s']],['I can ___ the boats in the sea.','see',['sea']],
+ ['We swam in the ___.','sea',['see']],['I ___ the answer to the question.','know',['no']],['There is ___ milk left.','no',['know']],['The wind ___ the leaves away.','blew',['blue']],['The sky is ___.','blue',['blew']],
+ ['I would like to ___ a letter.','write',['right']],['Turn ___ at the corner.','right',['write']],['The ___ ate the berries.','bear',['bare']],['Walk with ___ feet in the sand.','bare',['bear']],['A ___ of socks.','pair',['pear']],
+ ['I ate a juicy ___.','pear',['pair']],['The ___ grew in the garden.','flower',['flour']],['We need ___ to bake a cake.','flour',['flower']],['The dog wagged its ___.','tail',['tale']],['I read a fairy ___.','tale',['tail']],
+ ['We ate the ___ pizza.','whole',['hole']],['There is a ___ in my sock.','hole',['whole']],['She ___ the race.','won',['one']],['I have ___ brother.','one',['won']],['At ___ the owl hooted.','night',['knight']],
+ ['The ___ rode a white horse.','knight',['night']],['We ___ at the gate.','meet',['meat']],['I do not eat ___.','meat',['meet']],['A ___ has seven days.','week',['weak']],['The ___ kitten could barely stand.','weak',['week']],
+ ['The boat will ___ at noon.','sail',['sale']],['The shop has a big ___.','sale',['sail']],['We ___ our bikes to school.','rode',['road']],['The ___ was long and straight.','road',['rode']],['Please ___ for me.','wait',['weight']],
+ ['The ___ of the box was heavy.','weight',['wait']],['___ going to the park?','Are',['Our']],['This is ___ house.','our',['are']],['They left ___ shoes at the door.','their',['there']],['Put it over ___.','there',['their']],
+ ['The ___ roared loudly.','lion',['line']],['We stood in a ___.','line',['lion']],['The dog dug a ___ in the garden.','hole',['whole']]
+];
+const CLOZE=[
+ ['The kitten drank a bowl of ___.','milk',['stone','wind','shoe']],['We use an ___ when it rains.','umbrella',['spoon','pillow','candle']],['A ___ lives in a pond and croaks.','frog',['horse','camel','eagle']],['You wear ___ on your feet.','socks',['gloves','hats','scarves']],['The sun rises in the ___.','morning',['night','winter','kitchen']],
+ ['A baby sheep is called a ___.','lamb',['calf','cub','foal']],['We cut paper with ___.','scissors',['spoons','brushes','rulers']],['The ___ bakes bread and buns.','baker',['doctor','pilot','farmer']],['Ice is very ___.','cold',['hot','warm','loud']],['Fish live in the ___.','water',['sand','sky','tree']],
+ ['The ___ flew high in the sky.','eagle',['snail','crab','worm']],['I brush my ___ every morning.','teeth',['hair','knees','nose']],['A ___ has eight legs.','spider',['beetle','bird','cat']],['We read a ___ at bedtime.','story',['hammer','chair','glove']],['A police officer keeps us ___.','safe',['wet','hungry','sleepy']],
+ ['The ___ shone brightly at night.','moon',['sun','rain','fog']],['Please ___ the door when you leave.','close',['eat','sing','paint']],['The soup was too ___ to eat.','hot',['blue','short','heavy']],['She ___ a beautiful song.','sang',['drank','kicked','built']],['Dad ___ the car to the shops.','drove',['ate','slept','painted']],
+ ['I need a ___ to dig a hole.','spade',['feather','pillow','cup']],['A ___ is a young dog.','puppy',['kitten','calf','chick']],['We planted a ___ in the garden.','tree',['book','plate','phone']],['The baby was ___ in her cot.','sleeping',['running','flying','cooking']],['The tall giraffe ate leaves from the ___.','tree',['carpet','book','plate']],
+ ['The ___ is the hottest season.','summer',['winter','autumn','spring']],['An ___ has a trunk and big ears.','elephant',['kangaroo','penguin','dolphin']],['We heard ___ roll across the sky.','thunder',['music','honey','chalk']],['The boat ___ across the lake.','sailed',['baked','knitted','sneezed']],['A ___ keeps your hands warm.','glove',['sock','hat','scarf']],
+ ['He felt ___ when he won the prize.','proud',['tired','empty','broken']],['She was ___ because she lost her toy.','sad',['happy','excited','cheeky']],['The soft pillow was very ___.','comfortable',['sharp','noisy','heavy']],['The gentle breeze felt ___ on my face.','cool',['spiky','loud','square']],['The opposite of up is ___.','down',['over','high','under']],
+ ['A ___ is a place where you borrow books.','library',['bakery','garage','hospital']],['We ___ our hands before we eat.','wash',['kick','throw','paint']],['The ___ is the largest animal in the sea.','whale',['crab','fish','shrimp']],['Kookaburras ___ loudly in the morning.','laugh',['bark','roar','squeak']],['It is ___ to be kind to others.','important',['wet','tiny','round']],
+ ['A ___ sleeps in a nest.','bird',['fish','horse','cow']],['The farmer ___ the cows every morning.','milks',['paints','kicks','knits']],['I hung my wet clothes on the ___.','line',['bed','plate','mat']],['The ___ rang and school was over.','bell',['spoon','cloud','sock']],['Our teacher ___ the stories well.','reads',['eats','swims','climbs']]
+];
+function gPunct2(){
+  const t=R(0,4);
+  if(t===0){
+    const pool=[['apples','bananas','grapes','pears'],['red','blue','green','yellow'],['pens','books','rulers','erasers'],['dogs','cats','birds','fish'],['socks','shoes','hats','scarves'],['cakes','biscuits','pies','tarts'],['Mia','Tom','Ava','Jack'],['rice','peas','carrots','corn']];
+    const w=pick(pool),lead=pick(['I like','We packed','Mum bought','She saw','He collected','They need']);
+    const good=`${lead} ${w[0]}, ${w[1]}, ${w[2]} and ${w[3]}.`;
+    const bad=[`${lead} ${w[0]} ${w[1]} ${w[2]} and ${w[3]}.`,`${lead}, ${w[0]} ${w[1]}, ${w[2]} and ${w[3]}.`,`${lead} ${w[0]}, ${w[1]} ${w[2]}, and, ${w[3]}.`];
+    return choice('Which sentence uses commas correctly in the list?',sOpts(good,bad),good,'Put a comma between each thing in a list, but not before "and".',`A comma goes between the things in a list: "${good}"`);
+  }
+  if(t===1){
+    const C=[['do not',"don't"],['can not',"can't"],['is not',"isn't"],['I am',"I'm"],['they are',"they're"],['we will',"we'll"],['it is',"it's"],['she is',"she's"],['he will',"he'll"],['you are',"you're"],['did not',"didn't"],['was not',"wasn't"],['could not',"couldn't"],['would not',"wouldn't"],['I have',"I've"],['let us',"let's"],['that is',"that's"],['there is',"there's"],['have not',"haven't"],['will not',"won't"]];
+    const c=pick(C),wrong=shuffle(['dont','do\'nt','d\'ont','cant','ca\'nt','isnt','is\'nt','Im','I\'am','theyre','they\'r','well','we\'ll\'','its','it\'s\'','shes','she\'s\'','hell','youre','your\'e','didnt','did\'nt','wasnt','wasn\'t\'','couldnt','could\'nt','wouldnt','would\'nt','Ive','I\'ave','lets','let\'s\'','thats','that\'s\'','theres','there\'s\'','havent','have\'nt','wont','wo\'nt'].filter(x=>x.toLowerCase().replace(/'/g,'')[0]===c[1].toLowerCase()[0]&&x!==c[1])).slice(0,3);
+    while(wrong.length<3)wrong.push(c[1].replace("'",'')+'e');
+    return choice(`Which is the short way to write "${c[0]}"?`,sOpts(c[1],wrong),c[1],'Join the two words and use an apostrophe where letters are left out.',`"${c[0]}" becomes "${c[1]}". The apostrophe shows where letters are missing.`);
+  }
+  if(t===2){
+    const o=pick([['dog','bone'],['girl','hat'],['bunny','ears'],['teacher','desk'],['bird','nest'],['cat','bowl'],['boy','bike'],['baby','toy'],['farmer','tractor'],['king','crown']]);
+    const good=`the ${o[0]}'s ${o[1]}`;
+    return choice(`Which shows the ${o[1]} that belongs to one ${o[0]}?`,sOpts(good,[`the ${o[0]}s ${o[1]}`,`the ${o[0]}s' ${o[1]}`,`the ${o[0]}'s' ${o[1]}`]),good,'An apostrophe + s shows that something belongs to one person or animal.',`"${good}" means the ${o[1]} belongs to the ${o[0]}.`);
+  }
+  if(t===3){
+    const n=pick(W_NAMES),pl=pick(['Sydney','Perth','Brisbane','Melbourne','Darwin','Hobart','Adelaide','Canberra']),d=pick(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']);
+    const good=`On ${d}, ${n} went to ${pl}.`;
+    const bad=[`on ${d}, ${n} went to ${pl}.`,`On ${d.toLowerCase()}, ${n} went to ${pl}.`,`On ${d}, ${n.toLowerCase()} went to ${pl.toLowerCase()}.`];
+    return choice('Which sentence has capital letters in all the right places?',sOpts(good,bad),good,'Names, days, months and places start with capital letters.',`Days, names and places always start with a capital letter: "${good}"`);
+  }
+  const sp=pick([['Mum said','Dinner is ready'],['Dad called','Come and see this'],['The teacher said','Please line up'],['My friend asked','Can I play with you'],['Grandma said','Well done']]);
+  const good=`${sp[0]}, "${sp[1]}."`;
+  return choice('Which sentence shows speech correctly?',sOpts(good,[`${sp[0]}, ${sp[1]}.`,`${sp[0]} "${sp[1]}".`,`"${sp[0]}, ${sp[1]}."`]),good,'The words someone says go inside speech marks.',`The spoken words go inside speech marks: ${good}`);
+}
+function gVocab2(){
+  const t=R(0,3);
+  if(t===0){const h=pick(HOMO);return choice(`Which word fits? ${h[0].replace('___','_____')}`,sOpts(h[1],[...h[2],...shuffle(['when','near','up']).slice(0,3-h[2].length)]),h[1],'Read the sentence and think about what the word means.',`"${h[1]}" is the word that fits. Some words sound the same but have different spellings and meanings.`)}
+  if(t===1){const c=pick(CLOZE);return choice(c[0].replace('___','_____'),sOpts(c[1],c[2]),c[1],'Read the sentence to yourself and try each word.',`"${c[1]}" is the best word to finish this sentence.`)}
+  if(t===2){
+    const ks=shuffle(Object.keys(CATS)),a=ks[0],b=ks[1],three=shuffle(CATS[a]).slice(0,3),odd=pick(CATS[b].filter(x=>!CATS[a].includes(x)));
+    return choice('Which one does not belong in the group?',sOpts(odd,three),odd,`Three of these are ${CATNAME[a]}. Which one is different?`,`${three.join(', ')} are all ${CATNAME[a]}, but ${odd} is not.`);
+  }
+  const ks=shuffle(Object.keys(CATS)),a=ks[0],wrongCats=ks.slice(1,4),three=shuffle(CATS[a]).slice(0,3);
+  return choice(`${three.map(cap).join(', ')} are all kinds of what?`,sOpts(CATNAME[a],wrongCats.map(k=>CATNAME[k])),CATNAME[a],'Think of the group that all three belong to.',`${three.join(', ')} are all ${CATNAME[a]}.`);
+}
+const SENT_TYPES=[
+ ['The sun is shining','statement'],['I like green apples','statement'],['We have a new puppy','statement'],['My brother plays cricket','statement'],['The bus leaves at eight','statement'],['Birds can fly','statement'],['It is a sunny day','statement'],['She lost her hat','statement'],
+ ['What is your name','question'],['Where is the library','question'],['Do you like pizza','question'],['How old are you','question'],['Can I borrow a pencil','question'],['Who is at the door','question'],['Why is the sky blue','question'],['Is it time for lunch','question'],
+ ['Please sit down','command'],['Close the door','command'],['Wash your hands','command'],['Look at the board','command'],['Pass me the salt','command'],['Stop talking','command'],['Open your book','command'],['Be quiet','command'],
+ ['What a lovely day','exclamation'],['Watch out','exclamation'],['I won','exclamation'],['That is amazing','exclamation'],['Help me','exclamation'],['How wonderful','exclamation'],['Hooray','exclamation'],['Ouch','exclamation']
+];
+const SENT_EXPL={statement:'A statement tells us something and ends with a full stop.',question:'A question asks something and ends with a question mark.',command:'A command tells someone to do something.',exclamation:'An exclamation shows a strong feeling and ends with an exclamation mark.'};
+const A_AN=['apple','egg','umbrella','orange','elephant','ice cream','octopus','ant','owl','island','oven','igloo','acorn','airport','eagle','onion','ostrich','envelope','engine','astronaut','banana','dog','cat','house','bike','tree','book','pencil','fish','girl','boy','car','kite','moon','star','table','flower','sandwich','robot','pizza','hat','chair','rabbit','teacher','window','snake','zebra','lion','drum'];
+const GR_AGREE=[['The dogs ___ barking.','are',['is']],['The girl ___ happy.','is',['are']],['My friends ___ coming over.','are',['is']],['A bird ___ in the tree.','is',['are']],['The children ___ playing outside.','are',['is']],['The cat ___ asleep.','is',['are']],['We ___ going to the beach.','are',['is']],['He ___ my best friend.','is',['are']],['The flowers ___ pretty.','are',['is']],['She ___ a good singer.','is',['are']],['The boys ___ running fast.','are',['is']],['There ___ two ducks on the pond.','are',['is']],['There ___ a cow in the paddock.','is',['are']],['The books ___ on the shelf.','are',['is']],['The baby ___ crying.','is',['are']],['Yesterday I ___ at the park.','was',['were']],['Last night, we ___ at home.','were',['was']],['The kittens ___ very small.','were',['was']],['The sky ___ blue this morning.','was',['were']],['They ___ late for school.','were',['was']]];
+const PRON=[['Tom','He'],['Mia','She'],['The dog','It'],['Mum','She'],['Dad','He'],['My sister','She'],['The boys','They'],['The girls','They'],['The cat','It'],['Ben and I','We'],['Grandpa','He'],['The teacher','She'],['The kids','They'],['The bird','It'],['My brother','He'],['Ava and Zoe','They']];
+const POSWORD=[
+ ['The big dog ran fast.',[['big','adjective'],['dog','noun'],['ran','verb'],['fast','adverb']]],['A small bird sang sweetly.',[['small','adjective'],['bird','noun'],['sang','verb']]],['The happy girl jumped high.',[['happy','adjective'],['girl','noun'],['jumped','verb']]],['Our teacher reads funny stories.',[['teacher','noun'],['reads','verb'],['funny','adjective'],['stories','noun']]],['The old tree fell down.',[['old','adjective'],['tree','noun'],['fell','verb']]],
+ ['The little frog hopped away.',[['little','adjective'],['frog','noun'],['hopped','verb']]],['Cold rain tapped the window.',[['cold','adjective'],['rain','noun'],['tapped','verb'],['window','noun']]],['A hungry lion roared loudly.',[['hungry','adjective'],['lion','noun'],['roared','verb']]],['The baby giggled happily.',[['baby','noun'],['giggled','verb']]],['Bright stars twinkle at night.',[['bright','adjective'],['stars','noun'],['twinkle','verb'],['night','noun']]],
+ ['Kind farmers feed the animals.',[['kind','adjective'],['farmers','noun'],['feed','verb'],['animals','noun']]],['The clever fox escaped.',[['clever','adjective'],['fox','noun'],['escaped','verb']]],['Soft snow covered the hill.',[['soft','adjective'],['snow','noun'],['covered','verb'],['hill','noun']]],['My brother kicked the red ball.',[['brother','noun'],['kicked','verb'],['red','adjective'],['ball','noun']]],['The sleepy kitten yawned.',[['sleepy','adjective'],['kitten','noun'],['yawned','verb']]]
+];
+function gGrammar2(){
+  const t=R(0,6);
+  if(t===0){const g=pick(GR_AGREE);return choice(g[0].replace('___','_____'),sOpts(g[1],g[2].concat(['am']).slice(0,2)),g[1],'Is it about one thing, or more than one?',`"${g[1]}" is correct because of who or what the sentence is about.`)}
+  if(t===1){const w=pick(A_AN),an=/^[aeiou]/.test(w)||w==='ice cream',ans=an?'an':'a';return choice(`Which word goes before "${w}"?`,[{label:'a',value:'a'},{label:'an',value:'an'}],ans,'Use "an" before a word that starts with a vowel sound (a, e, i, o, u).',`We say "${ans} ${w}".`)}
+  if(t===2){const p=pick(PRON);const plr=p[1]==='They'||p[1]==='We';return choice(`${p[0]} ${plr?'are':'is'} very kind. _____ always ${plr?'share':'shares'}.`,sOpts(p[1],shuffle(['He','She','It','They','We']).filter(x=>x!==p[1]).slice(0,3)),p[1],'A pronoun takes the place of a name.',`"${p[1]}" takes the place of "${p[0]}".`)}
+  if(t===3){const s=pick(SENT_TYPES);return choice(`What kind of sentence is this? "${s[0]}${s[1]==='question'?'?':s[1]==='exclamation'?'!':'.'}"`,sOpts(s[1],['statement','question','command','exclamation'].filter(x=>x!==s[1])),s[1],'Look at the end mark and think about what the sentence does.',SENT_EXPL[s[1]])}
+  if(t===4){
+    const ps=pick(POSWORD),pair=pick(ps[1].filter(x=>x[1]!=='adverb')),lab={noun:'noun (naming word)',verb:'verb (doing word)',adjective:'adjective (describing word)'};
+    return choice(`In the sentence "${ps[0]}" what kind of word is "${pair[0]}"?`,sOpts(lab[pair[1]],Object.keys(lab).filter(k=>k!==pair[1]).map(k=>lab[k])),lab[pair[1]],'Is it a thing, an action or a describing word?',`"${pair[0]}" is a ${pair[1]}.`);
+  }
+  if(t===5){
+    const n=pick(W_NAMES),act=pick([['plays','played','will play'],['walks','walked','will walk'],['jumps','jumped','will jump'],['paints','painted','will paint'],['cooks','cooked','will cook'],['sings','sang','will sing']]),when=R(0,2),tm=['Today','Yesterday','Tomorrow'][when];
+    return choice(`${tm}, ${n} ___ .`.replace('___','_____'),sOpts(act[when===0?0:when===1?1:2],act.filter((_,i)=>i!==(when===0?0:when===1?1:2))),act[when===0?0:when===1?1:2],'Today is now. Yesterday is the past. Tomorrow is the future.',`${tm} needs "${act[when===0?0:when===1?1:2]}".`);
+  }
+  const g=pick(GR_AGREE.slice(15));return choice(g[0].replace('___','_____'),sOpts(g[1],g[2]),g[1],'Is it about one or many?',`"${g[1]}" is right.`);
+}
+const BLENDS={sh:['ship','shell','shop','sheep','shark','shoe','shirt','shed','shower','shine'],ch:['chip','chat','cheese','chair','chicken','church','cherry','chop','chin','chimp'],th:['thin','thumb','three','thick','think','thunder','thorn','thank','throw','thistle'],br:['brush','bridge','bread','brick','brown','branch','break','bring','broom','brave'],cr:['crab','cry','crown','crayon','cream','crack','crow','crumb','crisp','cross'],dr:['drum','dress','drip','drink','dragon','draw','dream','drop','drive','drain'],fl:['flag','flower','flat','flame','float','floor','fly','flute','flip','flock'],gr:['grass','green','grape','grow','grin','gram','grab','grey','grill','group'],pl:['plate','plane','plant','play','plum','plug','plus','plan','plow','please'],st:['star','stop','stick','stone','storm','stamp','stair','story','step','stove'],sw:['swim','swing','sweet','swan','sweep','sword','swap','sweater','switch','swell'],tr:['train','tree','truck','trip','trap','tray','trick','trunk','treat','trade'],sn:['snake','snow','snail','snap','sneeze','snack','sniff','snore','snip','snuggle'],sp:['spoon','spider','spin','spot','spell','speed','spill','spark','spray','spike'],bl:['blue','block','black','blow','blink','blanket','blast','bloom','blend','blush'],cl:['clap','clock','clown','cloud','clip','clean','climb','clay','clam','close'],wh:['whale','wheel','whisper','white','whistle','wheat','when','where','which','while']};
+const ENDINGS={ng:['ring','king','song','long','sing','wing','swing','spring','strong','bring'],ck:['duck','clock','sock','rock','back','pack','black','kick','stick','truck'],nd:['hand','sand','pond','band','wind','bend','end','stand','round','sound'],st:['fast','best','nest','rest','west','cost','last','past','just','dust'],mp:['jump','lamp','camp','stamp','bump','damp','pump','ramp','lump','stump'],sh:['fish','dish','wish','brush','splash','crash','cash','flash','trash','wash'],ch:['beach','peach','lunch','church','teach','bunch','watch','catch','match','ditch']};
+function gSounds2(){
+  const t=R(0,3);
+  if(t===0){
+    const ks=shuffle(Object.keys(BLENDS)),k=ks[0],w=shuffle(BLENDS[k]),target=w[0],ans=w[1],others=ks.slice(1,4).map(x=>pick(BLENDS[x]));
+    return choice(`Which word starts with the same sound as "${target}"?`,sOpts(ans,others),ans,`Say the word and listen to the start: "${k}".`,`"${target}" and "${ans}" both start with "${k}".`);
+  }
+  if(t===1){
+    const ks=shuffle(Object.keys(ENDINGS)),k=ks[0],w=shuffle(ENDINGS[k]),target=w[0],ans=w[1],others=ks.slice(1,4).map(x=>pick(ENDINGS[x]));
+    return choice(`Which word ends with the same sound as "${target}"?`,sOpts(ans,others),ans,`Say the word and listen to the end: "${k}".`,`"${target}" and "${ans}" both end with "${k}".`);
+  }
+  if(t===2){
+    const fams=shuffle(FAMS),f=fams[0],three=shuffle(f).slice(0,3),odd=pick(fams[1]);
+    return choice('Which word does NOT rhyme with the others?',sOpts(odd,three),odd,'Say all four words out loud. Three of them sound the same at the end.',`${three.join(', ')} all rhyme. "${odd}" does not.`);
+  }
+  const w=pick(SPELL)[0],n=w.length;
+  return choice(`How many letters are in the word "${w}"?`,nchoices(n,[n-1,n+1,n+2,n-2],String,[-2,-1,1,2]),n,'Touch each letter and count them one by one.',`${w.split('').join('-')} has ${n} letters.`);
+}
+function gSpell2(){
+  const t=R(0,2);
+  if(t===0){
+    const [w]=pick(SPELL.filter(x=>x[0].length>=4&&x[0].length<=9));
+    const i=R(1,w.length-2),miss=w[i],shown=w.slice(0,i)+'_'+w.slice(i+1);
+    const al='abcdefghijklmnoprstuwy'.split('').filter(c=>c!==miss);
+    return choice(`Which letter is missing? <b class="gap">${shown}</b>`,sOpts(miss,shuffle(al).slice(0,3)),miss,`Say the word slowly: "${w}". Which sound is missing?`,`The word is "${w}".`);
+  }
+  if(t===1){
+    const ws=shuffle(SPELL.map(x=>x[0])).filter((x,i,a)=>a.findIndex(y=>y[0]===x[0])===i).slice(0,4),first=ws.slice().sort()[0];
+    return choice('Which word comes FIRST in ABC order?',ws.map(x=>({label:x,value:x})),first,'Look at the first letter of each word. If two start the same, look at the next letter.',`In ABC order "${first}" comes first.`);
+  }
+  const [w,c]=pick(SPELL),n=w.length;
+  return choice(`Which word has ${n} letters and means "${c}"?`,sOpts(w,[...new Set(shuffle(SPELL.filter(x=>x[0].length===n&&x[0]!==w).map(x=>x[0])).slice(0,3).concat(shuffle(SPELL.map(x=>x[0])).filter(x=>x!==w)))].slice(0,3)),w,'Count the letters in each word and think about the meaning.',`"${w}" means "${c}".`);
+}
+const STORY_ACT=['built a sandcastle','played catch','looked for shells','flew a kite','had a picnic','drew with chalk','rode their bikes','fed the ducks','climbed a hill','ate ice cream','collected leaves','sang songs','kicked a ball','took photos','made a cubby'];
+const STORY_OBJ=['sandwiches','apples','balloons','books','toy cars','biscuits','pencils','blue kites','stickers','marbles','oranges','shells'];
+const STORY_WEATHER=['sunny','windy','rainy','cloudy','hot','cool','foggy'];
+const STORY_TIME=['morning','afternoon','evening','Saturday','Sunday','holiday'];
+function gRead2(){
+  const n=pick(W_NAMES),f=pick(W_NAMES.filter(x=>x!==n)),pl=pick(W_PLACES),ob=pick(STORY_OBJ),num=R(2,9),we=pick(STORY_WEATHER),tm=pick(STORY_TIME),act=pick(STORY_ACT),fe=pick(['happy','proud','excited','tired but happy','very pleased']);
+  const x=`${n} went to ${pl} on a ${we} ${tm}. ${n} took ${num} ${ob} in a bag. ${f} was already waiting there. Together they ${act}. At the end of the day, ${n} felt ${fe}.`;
+  const Q=[
+    [`Who was already waiting?`,f,shuffle(W_NAMES.filter(y=>y!==f&&y!==n)).slice(0,3)],
+    [`Where did ${n} go?`,pl,shuffle(W_PLACES.filter(y=>y!==pl)).slice(0,3)],
+    [`How many ${ob} did ${n} take?`,String(num),[String(num+1),String(num+2),String(Math.max(1,num-1))]],
+    [`What was the weather like?`,we,shuffle(STORY_WEATHER.filter(y=>y!==we)).slice(0,3)],
+    [`What did they do together?`,act,shuffle(STORY_ACT.filter(y=>y!==act)).slice(0,3)],
+    [`How did ${n} feel at the end?`,fe,shuffle(['sad','angry','scared','bored','sleepy']).slice(0,3)]
+  ];
+  const [q,c,w]=pick(Q);
+  return choice(q,sOpts(c,w),c,'Read the story again and look for the answer.',`The answer is "${c}". You can find it in the story.`,`<div class="passage"><h3>${n}'s day</h3>${x}</div>`);
+}
+function gBuild2(){
+  const t=R(0,2),n=pick(NOUNS),a=pick(ADJS),v=pick(VERBS),e=pick(ENDS),nm=pick(W_NAMES);
+  let sent;
+  if(t===0)sent=`The ${a} ${n} ${v} ${e}`;
+  else if(t===1)sent=`${nm} ${v} ${e} with a ${a} ${n}`;
+  else sent=`A ${a} ${n} and a ${pick(ADJS)} ${pick(NOUNS)} ${v} ${e}`;
+  const ws=sent.split(' ').map((w,i,arr)=>({id:String(i),label:i===arr.length-1?w+'.':w}));
+  let items=shuffle(ws);if(items.map(x=>x.id).join()===ws.map(x=>x.id).join())items.reverse();
+  return {kind:'order',wsq:'Put these words in the right order to make a sentence.',q:'Tap the words in the right order to make a sentence.',items,answer:ws.map(x=>x.id),hint:'Start with the word that has a capital letter.',why:`The sentence is: ${sent}.`,vis:'',show:sent+'.',pic:''};
+}
+EXTRA.punct=gPunct2;EXTRA.vocab=gVocab2;EXTRA.grammar=gGrammar2;EXTRA.sounds=gSounds2;EXTRA.spell=gSpell2;EXTRA.read=gRead2;EXTRA.build=gBuild2;
+
+/* =====================================================================
+   Big Science banks: lots more questions, sorting items, life cycles and
+   true-or-false facts for every science topic.
+   ===================================================================== */
+LIVING.push(['🐕','dog'],['🐈','cat'],['🌹','rose'],['🐦','bird'],['🦋','butterfly'],['🐢','turtle'],['🍄','mushroom'],['🌲','pine tree'],['🐜','ant'],['🦎','lizard'],['🐙','octopus'],['🐘','elephant'],['🌵','cactus'],['🐊','crocodile'],['🦉','owl'],['🐠','goldfish'],['🍎','apple tree'],['🌱','seedling'],['🐛','caterpillar'],['🦘','joey']);
+NONLIVING.push(['⏰','clock'],['🧱','brick'],['🧊','ice cube'],['🪑','stool'],['🔔','bell'],['🚲','bicycle'],['🎈','balloon'],['✏️','pencil'],['🥤','cup'],['🕯️','candle'],['🛏️','bed'],['🏠','house'],['📱','phone'],['🪟','window'],['🧦','sock'],['🔑','key'],['🥄','fork'],['🪣','bucket'],['☂️','umbrella'],['🧲','magnet']);
+CYCLES.push(
+ ['ladybird',[['🥚','egg'],['🐛','larva'],['💤','pupa'],['🐞','ladybird']]],
+ ['duck',[['🥚','egg'],['🐥','duckling'],['🦆','young duck'],['🦆','adult duck']]],
+ ['bean plant',[['🫘','bean seed'],['🌱','shoot'],['🌿','plant with leaves'],['🌸','flower'],['🫛','bean pod']]],
+ ['sea turtle',[['🥚','egg on the beach'],['🐢','hatchling'],['🌊','swims to sea'],['🐢','adult turtle']]],
+ ['bee',[['🥚','egg'],['🐛','larva'],['💤','pupa'],['🐝','adult bee']]],
+ ['human',[['👶','baby'],['🧒','child'],['🧑','teenager'],['🧓','adult']]],
+ ['tree',[['🌰','seed'],['🌱','seedling'],['🌳','young tree'],['🌲','tall tree']]],
+ ['mosquito',[['🥚','egg on water'],['🐛','wriggler'],['💤','pupa'],['🦟','adult']]]
+);
+LIVQ.push(
+ ['What do we call animals that eat only plants?','Herbivores',['Carnivores','Insects','Predators']],['What do we call animals that eat meat?','Carnivores',['Herbivores','Plants','Seeds']],['Where do fish take in oxygen?','Through their gills',['Through their ears','Through their tail','Through their fins']],['What do birds use to fly?','Wings',['Gills','Roots','Shells']],
+ ['Which part of a plant makes seeds?','The flower',['The root','The stem','The soil']],['What is a baby cat called?','A kitten',['A joey','A cub','A calf']],['What is a baby cow called?','A calf',['A foal','A lamb','A pup']],['What is a baby sheep called?','A lamb',['A kid','A calf','A piglet']],
+ ['Which animal has a pouch for its baby?','A kangaroo',['A dog','A rabbit','A horse']],['What do plants give out that we need to breathe?','Oxygen',['Smoke','Sand','Water']],['What does the stem of a plant do?','Holds it up and carries water',['Makes flowers','Eats insects','Makes honey']],['Which animal lives mostly in water?','A fish',['A cow','A mouse','A parrot']],
+ ['Which of these is a reptile?','A lizard',['A frog','A dog','A robin']],['Which of these is a mammal?','A dolphin',['A shark','A frog','A trout']],['What does a caterpillar turn into?','A butterfly',['A moth egg','A spider','A beetle larva only']],['What do roots do?','Take in water from the soil',['Make flowers','Catch insects','Make seeds fly']],
+ ['What do we call a place where an animal lives?','A habitat',['A garage','A kitchen','A highway']],['Which animal is nocturnal (awake at night)?','An owl',['A sparrow','A cow','A butterfly']],['What do animals need to stay healthy?','Food, water and shelter',['Toys','Money','Television']],['Which of these animals lays eggs?','A platypus',['A dog','A cow','A cat']],
+ ['What part of a plant makes food using sunlight?','The leaves',['The roots','The soil','The pot']],['Which animal changes from a tadpole?','A frog',['A fish','A lizard','A snake']],['Which animal has feathers?','A bird',['A cat','A fish','A snake']],['Which animal has fur?','A koala',['A frog','A snake','A fish']],
+ ['What do we call animals that hunt other animals?','Predators',['Plants','Pets','Seeds']],['What do bees collect from flowers?','Nectar',['Sand','Water only','Wood']],['What do living things do that non-living things do not?','Grow and have babies',['Fall down','Get dirty','Break']],['Which of these needs air to live?','A cat',['A rock','A spoon','A table']],
+ ['Where do worms live?','In the soil',['In the sky','In a tree','In a nest']],['What do you call the hard covering of a snail?','A shell',['A pouch','A fin','A wing']],['How do snakes move?','By slithering',['By hopping','By flying','By swimming only']],['Which animal builds a web?','A spider',['A bee','A worm','An ant']],
+ ['What do we call a young frog with a tail?','A tadpole',['A froglet adult','A chick','A pup']],['Which animal sleeps hanging upside down?','A bat',['A cat','A duck','A cow']],['Which plant part is a carrot?','The root',['The leaf','The flower','The seed']],['What do seeds need to start growing?','Water and warmth',['Salt','Ice','Electricity']],
+ ['Which season do many flowers bloom in?','Spring',['Winter only','Night','Never']],['What do penguins eat?','Fish',['Grass','Leaves','Berries only']],['Which of these animals can fly?','A cockatoo',['A wombat','A turtle','A lizard']],['Which animal is the tallest?','A giraffe',['An elephant','A horse','A camel']]
+);
+PUSHPULL.push(['🚪','open a door','pull'],['🪁','pull a kite string','pull'],['🧲','magnet pulling a pin','pull'],['🪣','pull up a bucket','pull'],['🎣','reel in a fish','pull'],['🚜','tractor pulling a trailer','pull'],['🛹','push off on a skateboard','push'],['🧱','push a wall','push'],['🚪','push a door','push'],['🪀','throw a ball','push'],['🏐','hit a volleyball','push'],['⛏️','dig with a spade','push'],['🧹','sweep with a broom','push'],['🪑','drag a chair','pull'],['🪢','pull a rope','pull']);
+FORCEQ.push(
+ ['What force slows things down when they rub together?','Friction',['Gravity','Magnetism','Light']],['What force pulls a ball back to the ground?','Gravity',['Friction','A push','Wind']],['Which surface has more friction?','A rough carpet',['Smooth ice','A wet slide','A polished floor']],['What happens when you drop a ball?','It falls to the ground',['It floats up','It stays in the air','It disappears']],
+ ['What makes a swing go higher?','A bigger push',['A smaller push','No push','A pull from the side']],['Which will go furthest if kicked?','A football',['A rock','A brick','A heavy book']],['What happens when you push a toy car harder?','It goes faster',['It goes slower','It stops','It turns into a truck']],['What does a magnet attract?','Iron and steel things',['Wood','Plastic','Glass']],
+ ['What do brakes on a bike do?','Slow it down',['Make it fly','Make it louder','Make it lighter']],['What do we call a force that changes how something moves?','A push or a pull',['A sound','A colour','A smell']],['Which is an example of a pull?','Opening a drawer',['Kicking a ball','Pushing a swing','Hammering a nail']],['Which is an example of a push?','Kicking a ball',['Opening a drawer','Pulling a wagon','Tug of war']],
+ ['What can make a still object start moving?','A push or a pull',['Waiting','Looking at it','Talking to it']],['What force makes a parachute fall slowly?','Air pushing up (air resistance)',['Magnets','Light','Sound']],['Why does a ball roll further on smooth floor?','There is less friction',['There is more friction','It is heavier','It is cold']],['Which will be easiest to push?','An empty box',['A box of books','A full fridge','A big rock']],
+ ['What happens when you stretch an elastic band?','It pulls back',['It floats','It melts','It grows']],['Which game uses pulling?','Tug of war',['Reading a book','Painting','Singing']],['What do we use to make a trolley go faster?','A bigger push',['A smaller push','A pull backwards','Nothing']],['What stops a ball rolling across grass?','Friction',['Magnets','Light','Colour']],
+ ['What force keeps us on the Earth?','Gravity',['Magnetism','Wind','Friction']],['Which would a magnet pick up?','A steel nail',['A plastic comb','A wooden pencil','A rubber ball']],['Which would a magnet NOT pick up?','A paper cup',['A paper clip','A steel spoon','An iron nail']],['What makes a boat move when you row?','A push against the water',['A pull from the moon','Light','Sound']],
+ ['Which is easier to pull?','A toy wagon',['A truck','A bus','A train']],['Which toy uses a push to work?','A pop-up toy button',['A pull-string toy only','A book','A pillow']],['What happens to a sled on snow?','It slides easily',['It sticks','It floats','It melts']],['What do wheels help do?','Make things move more easily',['Make things heavier','Make things quiet','Make things hot']],
+ ['What does a bigger push do to a swing?','Makes it swing higher',['Makes it stop','Makes it smaller','Makes it lighter']],['When you throw a ball up, what brings it down?','Gravity',['The wind only','Friction','Magnets']],['Which has the most friction?','Sandpaper',['Ice','Glass','A slippery slide']],['Why do we wear shoes with grips?','To stop us slipping',['To be heavier','To be warmer','To be louder']]
+);
+MATQ.push(
+ ['Which material is best for a tea towel?','Soft cotton',['Metal','Glass','Brick']],['Which material is waterproof?','Plastic',['Paper','Cotton','Tissue']],['Which material is see-through?','Glass',['Wood','Brick','Metal']],['Which material is best for a bike tyre?','Rubber',['Paper','Glass','Wood']],
+ ['Which material makes a good sponge?','Soft and absorbent foam',['Metal','Rock','Glass']],['Which material is best for a saucepan handle?','Wood or plastic',['Metal only','Wool','Glass']],['Which material is stretchy?','Elastic',['Brick','Glass','Wood']],['Which material would be bad for a boat?','Paper',['Plastic','Wood','Metal']],
+ ['Which material is shiny and hard?','Metal',['Cotton','Sponge','Wool']],['Which is a natural material?','Wool',['Plastic','Glass','Nylon']],['Which is a man-made material?','Plastic',['Wood','Cotton','Stone']],['Where does wood come from?','Trees',['Sheep','Sand','Oil']],
+ ['Where does wool come from?','Sheep',['Cows','Trees','Cotton plants']],['What is glass made from?','Sand',['Wood','Wool','Milk']],['What is paper made from?','Wood',['Sand','Wool','Rock']],['Which material would keep you warmest?','Wool',['Paper','Glass','Tin foil']],
+ ['Which material is best for a roof?','Tiles or metal',['Paper','Tissue','Cotton wool']],['Which material is best for a school bag?','Strong fabric',['Tissue','Cardboard','Glass']],['Which material is best for a window in a house?','Glass',['Wood','Wool','Metal']],['Which material can bounce?','Rubber',['Glass','Brick','Paper']],
+ ['Which material is best for a bath mat?','Soft cloth',['Glass','Metal','Rock']],['Which material is best for a toy boat?','Plastic',['Paper','Tissue','Sugar']],['Which material is rough?','Sandpaper',['Silk','Glass','Soap']],['Which material is smooth?','Glass',['Sandpaper','Bark','Brick']],
+ ['Which material would burn in a fire?','Wood',['Metal','Glass','Rock']],['Which material rusts?','Iron',['Plastic','Wood','Glass']],['Which material is best for an oven glove?','Thick cotton',['Paper','Plastic bag','Glass']],['Which material breaks easily?','Glass',['Rubber','Wood','Metal']],
+ ['Which material is hard and heavy?','Rock',['Feather','Sponge','Cotton wool']],['What can we make from clay?','A pot',['A jumper','A window','A paper plane']],['What do we use to make a raincoat?','Waterproof material',['Tissue','Cotton wool','Foam']],['What is a pillow filled with?','Soft stuffing',['Rocks','Sand','Wood']],
+ ['Which is a flexible material?','Rubber band',['Brick','Glass','Rock']],['Which is a rigid (stiff) material?','Wood',['Wool','Elastic','Cotton']],['Why are cups often made of plastic for children?','They do not break easily',['They are heavy','They melt','They are see-through only']],['Why do we use metal for a spoon?','It is strong and can be washed',['It is soft','It is sticky','It floats away']]
+);
+NATURAL.push(['🌸','flower'],['🪵','log'],['🌰','nut'],['🐚','seashell'],['🏖️','sand'],['🍂','dry leaf'],['🪨','pebble'],['🌿','grass'],['🌻','sunflower'],['🍁','maple leaf']);
+MADE.push(['📱','phone'],['🧸','plush toy'],['🥄','fork'],['🎒','school bag'],['⌚','watch'],['🪑','plastic chair'],['🧢','cap'],['📕','book'],['🛹','skateboard'],['💡','light bulb']);
+FLOATS.push(['🪵','wooden spoon'],['🍋','lemon'],['🧊','ice cube'],['🛶','canoe'],['🧴','empty plastic bottle'],['🧽','sponge'],['🛟','life ring']);
+SINKS.push(['🧱','brick'],['🔨','hammer'],['⚙️','metal gear'],['🔩','metal nut'],['🗝️','old key']);
+MELTS.push(['🧀','cheese'],['🍬','toffee'],['🍫','chocolate bar'],['🧈','margarine'],['❄️','snowball'],['🕯️','candle']);
+NOMELT.push(['🪑','chair'],['🧱','brick'],['📎','paper clip'],['🥄','spoon'],['🚗','toy car'],['🪟','window']);
+FROM.push(['🍅','tomato'],['🥔','potato'],['🍞','bread (from wheat)'],['🍚','rice'],['🍌','banana'],['🥒','cucumber'],['🍇','grapes']);
+ANIMAL.push(['🧈','butter'],['🍳','fried egg'],['🍖','sausage'],['🐟','fish fingers'],['🍦','yoghurt']);
+CHGQ.push(
+ ['What happens to water when it is very cold?','It freezes',['It boils','It disappears','It turns to wood']],['What happens to a puddle on a hot day?','It dries up (evaporates)',['It grows','It turns to ice','It turns pink']],['What is a gas that comes from boiling water?','Steam',['Ice','Snow','Sand']],['What happens to ice cream in the sun?','It melts',['It freezes harder','It grows','It turns to steam']],
+ ['What makes wet washing dry on the line?','The sun and wind',['The moon','Magnets','Shadows']],['Which change can be undone?','Melting ice',['Burning paper','Baking a cake','Cooking an egg']],['Which change can NOT be undone?','Toasting bread',['Melting chocolate','Freezing water','Melting butter']],['What happens to water in the fridge freezer?','It turns into ice',['It boils','It turns to steam','It turns into sand']],
+ ['What happens to candle wax near a flame?','It melts',['It freezes','It grows','It floats']],['What happens to a cold drink on a hot day?','It gets warmer',['It gets colder','It freezes','It turns to ice']],['What happens to steam when it touches a cold window?','It turns into water drops',['It turns to ice','It gets hotter','It disappears forever']],['What do we call water as a gas?','Steam or water vapour',['Ice','Snow','Frost']],
+ ['What happens to chocolate in the fridge?','It goes hard',['It melts','It boils','It turns to steam']],['What is the opposite of melting?','Freezing',['Boiling','Growing','Burning']],['How can you make a puddle disappear faster?','Put it in the sun',['Put it in the shade','Put it in the freezer','Add more water']],['Which will melt first in the sun?','An icy pole',['A rock','A spoon','A stick']],
+ ['What happens to butter when it is warm?','It goes soft and melts',['It freezes','It turns to stone','It disappears']],['When water boils, what do we see rising?','Steam',['Ice','Snow','Leaves']],['What happens to a balloon left in a hot car?','The air inside expands',['It shrinks','It freezes','It turns blue']],['Why do we put milk in the fridge?','To keep it cold and fresh',['To make it hot','To make it melt','To make it dry']],
+ ['What happens to soup when it is left out to cool?','It gets cooler',['It boils','It freezes at once','It turns to steam']],['What happens to a snowman when the sun comes out?','It melts',['It grows','It sings','It gets harder']],['What do we get when we cool melted wax?','Hard solid wax',['Steam','Water','Gas']],['What happens to an egg when it is cooked?','It goes hard and cannot change back',['It melts','It freezes','It turns to ice']],
+ ['What is the temperature at which water freezes?','0 degrees Celsius',['50 degrees','100 degrees','20 degrees']],['What is the temperature at which water boils?','100 degrees Celsius',['0 degrees','37 degrees','10 degrees']],['What do you use to measure temperature?','A thermometer',['A ruler','A clock','A scale']],['Which is the warmest?','Boiling water',['Ice','Cold milk','A frozen peas bag']],
+ ['What makes ice cubes?','Freezing water',['Boiling water','Burning water','Mixing sand']],['What makes a hot chocolate drink cool down?','Standing in cool air',['Boiling it','Heating it','Covering it up']],['Which of these is a solid?','An ice cube',['Steam','Milk','Juice']],['Which of these is a liquid?','Water',['A rock','A brick','Ice']]
+);
+EARTHQ.push(
+ ['Where does the Sun rise?','In the east',['In the west','In the north','In the south']],['Where does the Sun set?','In the west',['In the east','In the north','In the south']],['What is the Earth\'s closest star?','The Sun',['The Moon','Mars','The North Star']],['What lights up the night sky?','The Moon and stars',['The Sun','Clouds','Cars']],
+ ['Which season is the coldest in Australia?','Winter',['Summer','Spring','Autumn']],['Which season is the hottest in Australia?','Summer',['Winter','Spring','Autumn']],['What do we call water that falls from clouds?','Rain',['Sand','Smoke','Soil']],['What is the layer of air around Earth called?','The atmosphere',['The ocean','The desert','The lava']],
+ ['Which planet do we live on?','Earth',['Mars','Venus','Jupiter']],['What goes around the Earth?','The Moon',['The Sun','Mars','A cloud']],['What do we call frozen rain?','Hail',['Mist','Dew','Steam']],['What do we get when it is very windy?','Strong breezes',['Snow','Rainbows','Lava']],
+ ['Which of these is a renewable (never runs out) energy?','Sunlight',['Coal','Oil','Gas']],['What do we use solar panels to collect?','Energy from the Sun',['Rain','Wind noise','Soil']],['What makes shadows?','Blocking light',['Heating','Cooling','Sound']],['When are shadows the longest?','Early morning and late afternoon',['At midday','At midnight','On cloudy days only']],
+ ['What do we call the layer of rock we walk on?','The ground (Earth\'s crust)',['The air','The ocean','The clouds']],['Why do we have night and day?','The Earth spins',['The Sun goes out','Clouds move','The Moon blinks']],['What do we need to save to help the planet?','Water and energy',['Plastic','Litter','Smoke']],['What does recycling do?','Reuses materials',['Wastes things','Makes more rubbish','Burns things']],
+ ['What gives us leather?','Cows',['Trees','Sheep','Sand']],['What gives us milk?','Cows',['Chickens','Sheep only','Pigs']],['What gives us eggs?','Chickens',['Cows','Pigs','Sheep']],['What do bees make?','Honey',['Milk','Butter','Bread']],
+ ['What do we call a very big hole in the ground that gives us metal?','A mine',['A nest','A kitchen','A pond']],['Which resource do we get from the ground to make petrol?','Oil',['Sand','Wool','Wood']],['What do wind turbines make?','Electricity',['Water','Rain','Food']],['How can we save water?','Turn off the tap',['Leave the tap on','Fill the bath','Wash the car daily']],
+ ['What causes seasons to change?','Earth moves around the Sun',['The Moon changes','Clouds','Trees']],['How long does it take Earth to go around the Sun?','One year',['One day','One week','One hour']],['How long does it take Earth to spin once?','One day',['One year','One week','One month']],['What colour is the sky on a clear day?','Blue',['Green','Pink','Purple']],
+ ['What does a rainbow need?','Sun and rain',['Snow and wind','Night and day','Clouds only']],['What makes an echo?','Sound bouncing back',['Light','Wind','Heat']],['What is the biggest planet?','Jupiter',['Earth','Mars','Mercury']],['What do we use to look at the stars up close?','A telescope',['A microscope','A thermometer','A compass']]
+);
+const SCI_TF={
+ living:[['A rock is a living thing.',false],['All plants need water to grow.',true],['A dog is a living thing.',true],['Plants do not need sunlight.',false],['A baby kangaroo is called a joey.',true],['Fish breathe through their gills.',true],['Frogs begin life as tadpoles.',true],['All animals have feathers.',false],['A butterfly begins life as an egg.',true],['A cloud is a living thing.',false],['Roots take in water from the soil.',true],['Bats are birds.',false],['A seed can grow into a plant.',true],['Spiders have six legs.',false],['A chicken comes from an egg.',true],['Snakes have legs.',false],['Whales are fish.',false],['Bees make honey.',true],['Cacti live in the desert.',true],['Living things grow and change.',true],['Trees are not alive.',false],['A tadpole turns into a frog.',true],['Birds have wings.',true],['Insects have six legs.',true]],
+ forces:[['A push moves something away from you.',true],['Gravity pulls things up into the sky.',false],['A pull moves something towards you.',true],['Friction makes things slide faster.',false],['A magnet can pick up a wooden spoon.',false],['A bigger push makes a ball go further.',true],['Kicking a ball is a push.',true],['Opening a drawer is a pull.',true],['Gravity makes a dropped ball fall.',true],['A heavy box is easier to push than an empty box.',false],['Brakes slow a bike down.',true],['A magnet can pick up a steel nail.',true],['Rough surfaces have less friction than ice.',false],['A swing moves with a push.',true],['Magnets attract all metals.',false],['Wind can push a sailboat.',true],['Tug of war uses pulls.',true],['A force can make something stop.',true],['A force can change the shape of something.',true],['Pushing harder makes a toy car go faster.',true],['Gravity only works on Mondays.',false],['A magnet has two ends called poles.',true],['Friction happens when two things rub together.',true],['A ball stops by itself without any force.',false]],
+ materials:[['Glass is a see-through material.',true],['Wood is a good material for a raincoat.',false],['Rubber can bend and stretch.',true],['Paper is waterproof.',false],['Metal is hard and strong.',true],['Wool comes from sheep.',true],['Plastic is a natural material.',false],['A sponge is a good material for soaking up water.',true],['Bricks are used to build houses.',true],['Cotton wool is hard.',false],['Rocks are natural.',true],['Glass bounces when dropped.',false],['Pillows are filled with something soft.',true],['Gold is a shiny material.',true],['Leather can come from cows.',true],['Metal can rust in the rain.',true],['Wood can float on water.',true],['Tissue paper is strong.',false],['Rubber is a good material for boots.',true],['Sand is used to make glass.',true],['Cardboard is waterproof.',false],['Steel is stronger than paper.',true],['Silk is a rough material.',false],['Clay can be shaped when wet.',true]],
+ change:[['Ice melts when it gets warm.',true],['Water turns to steam when it boils.',true],['Chocolate melts in the fridge.',false],['Freezing means turning a liquid into a solid.',true],['Steam is very cold.',false],['Butter goes soft when it is warm.',true],['A puddle can dry up in the sun.',true],['Water freezes at 100 degrees.',false],['Ice is a solid.',true],['Melted wax can go hard again when it cools.',true],['Wet clothes dry faster in the sun.',true],['A cooked egg can turn back into a raw egg.',false],['Water boils at 100 degrees Celsius.',true],['A snowman melts in the sun.',true],['Steam is water as a gas.',true],['Ice cream stays frozen on a hot day.',false],['Ice cubes are made by freezing water.',true],['Hot soup cools down when left out.',true],['Heat makes things warmer.',true],['Cold makes ice.',true],['A rock melts in the sun.',false],['Wax is solid at room temperature.',true],['Water can be a solid, a liquid and a gas.',true],['A freezer is warmer than the kitchen.',false]],
+ earth:[['The Sun is a star.',true],['The Moon makes its own light.',false],['The Earth goes around the Sun.',true],['Night happens because the Earth spins.',true],['The Sun rises in the west.',false],['Summer is the hottest season.',true],['Shadows are long at midday.',false],['Trees give us paper.',true],['Sheep give us wool.',true],['Water is a precious resource.',true],['Sand can be used to make glass.',true],['The Earth is flat like a plate.',false],['Rain comes from clouds.',true],['Wind turbines make electricity.',true],['Cows give us milk.',true],['Plastic grows on trees.',false],['The Moon goes around the Earth.',true],['Solar panels use sunlight.',true],['Coal and oil can run out.',true],['Recycling helps the Earth.',true],['In Australia, Christmas is in winter.',false],['A year has four seasons.',true],['The Sun is cold.',false],['Honey is made by bees.',true]]
+};
+const SCI_ODD={
+ living:[['A rabbit','A fish','A tree','A rock'],['A cat','A dog','A flower','A chair'],['A frog','A butterfly','A bee','A spoon'],['A kangaroo','An emu','A koala','A cloud'],['A daisy','A rose','A tulip','A brick']],
+ forces:[['Push a swing','Kick a ball','Hammer a nail','Pull a wagon'],['Open a drawer','Pull a rope','Tug of war','Throw a ball'],['Gravity','Friction','Magnetism','Sunlight']],
+ materials:[['Glass','Plastic','Wood','Rain'],['Wool','Cotton','Silk','Metal'],['Brick','Stone','Concrete','Cotton wool'],['Rubber','Elastic','Stretchy fabric','Rock']],
+ change:[['Melting','Freezing','Boiling','Painting'],['Ice','Snow','Frost','Steam'],['Chocolate','Butter','Ice','Rock']],
+ earth:[['Sun','Moon','Stars','Table'],['Summer','Winter','Autumn','Monday'],['Wool','Milk','Honey','Plastic'],['Sand','Soil','Rock','Cloud']]
+};
+const SCI_ODD_EX={
+ living:[['A rock','a rock is not alive'],['A chair','a chair is not alive'],['A spoon','a spoon is not alive'],['A cloud','a cloud is not alive'],['A brick','a brick is not alive']],
+ forces:[['Pull a wagon','the others are pushes'],['Throw a ball','the others are pulls'],['Sunlight','the others are forces']],
+ materials:[['Rain','the others are materials we make things from'],['Metal','the others are soft or fabric'],['Cotton wool','the others are hard'],['Rock','the others can bend']],
+ change:[['Painting','the others are changes in heat'],['Steam','the others are solid'],['Rock','the others melt']],
+ earth:[['Table','the others are in the sky'],['Monday','the others are seasons'],['Plastic','the others come from animals'],['Cloud','the others are on the ground']]
+};
+function sciTF(topic){
+  const t=pick(SCI_TF[topic]);
+  return choice(`True or false? ${t[0]}`,[{label:'True',value:true},{label:'False',value:false}],t[1],'Think carefully. Is this fact true?',`${t[0]} This is ${t[1]?'true':'false'}.`);
+}
+function sciOdd(topic){
+  const i=R(0,SCI_ODD[topic].length-1),set=SCI_ODD[topic][i],ex=SCI_ODD_EX[topic][i];
+  return choice('Which one does not belong with the others?',sOpts(ex[0],set.filter(x=>x!==ex[0])),ex[0],'Three belong together. Which one is different?',`"${ex[0]}" is the odd one out, because ${ex[1]}.`);
+}
+['living','forces','materials','change','earth'].forEach(tp=>{
+  const f=()=>R(0,2)?sciTF(tp):sciOdd(tp);
+  EXTRA[tp]=f;
+});
+
+/* ---------- Science fact banks that make hundreds of extra questions ---------- */
+const ANIMAL_DB=`kangaroo|mammal|grass|the Australian bush|joey|fur|hops
+koala|mammal|gum leaves|gum trees|joey|fur|climbs
+wombat|mammal|grass and roots|burrows|joey|fur|digs
+platypus|mammal|worms and shrimp|rivers and creeks|puggle|fur|swims
+emu|bird|plants and insects|grasslands|chick|feathers|runs
+kookaburra|bird|lizards and insects|gum trees|chick|feathers|flies
+penguin|bird|fish|cold seas and ice|chick|feathers|swims
+owl|bird|mice and insects|trees|owlet|feathers|flies
+frog|amphibian|insects|ponds|tadpole|smooth skin|hops
+crocodile|reptile|fish and animals|rivers and swamps|hatchling|scales|swims
+snake|reptile|mice and eggs|grass and burrows|hatchling|scales|slithers
+lizard|reptile|insects|rocks and gardens|hatchling|scales|crawls
+turtle|reptile|plants and small animals|water and beaches|hatchling|a hard shell|swims
+shark|fish|other fish|the ocean|pup|rough skin|swims
+goldfish|fish|fish flakes|ponds and tanks|fry|scales|swims
+dolphin|mammal|fish and squid|the ocean|calf|smooth skin|swims
+whale|mammal|tiny sea animals (krill)|the ocean|calf|smooth skin|swims
+cow|mammal|grass|farms|calf|hair|walks
+sheep|mammal|grass|farms|lamb|wool|walks
+horse|mammal|grass and hay|paddocks|foal|hair|gallops
+pig|mammal|scraps and grain|farms|piglet|skin with bristles|walks
+chicken|bird|seeds and worms|farms|chick|feathers|walks
+duck|bird|plants and insects|ponds|duckling|feathers|swims
+dog|mammal|meat and dog food|homes|puppy|fur|runs
+cat|mammal|meat and cat food|homes|kitten|fur|pounces
+rabbit|mammal|grass and carrots|burrows|kitten|fur|hops
+bee|insect|nectar|hives|larva|a hard outer skin|flies
+butterfly|insect|nectar|gardens|caterpillar|wings with scales|flies
+ant|insect|seeds and scraps|nests in the ground|larva|a hard outer skin|crawls
+spider|arachnid|insects|webs and corners|spiderling|a hard outer skin|crawls
+elephant|mammal|leaves and grass|grasslands|calf|thick skin|walks
+lion|mammal|meat|grasslands|cub|fur|runs
+giraffe|mammal|leaves|grasslands|calf|skin with spots|walks
+monkey|mammal|fruit and leaves|forests|infant|fur|climbs
+bat|mammal|insects and fruit|caves and trees|pup|fur|flies
+eagle|bird|small animals|high mountains|eaglet|feathers|flies
+parrot|bird|seeds and fruit|trees|chick|feathers|flies
+echidna|mammal|ants and termites|bushland|puggle|spines|digs
+possum|mammal|leaves and fruit|trees|joey|fur|climbs
+octopus|mollusc|crabs|the ocean|hatchling|soft skin|swims
+snail|mollusc|leaves|gardens|baby snail|a shell|slides`.split('\n').map(l=>{const a=l.split('|');return {n:a[0],g:a[1],eat:a[2],home:a[3],baby:a[4],cover:a[5],move:a[6]}});
+function gAnimalFact(){
+  const a=pick(ANIMAL_DB),k=pick(['eat','home','baby','cover','move','g']);
+  const vals=[...new Set(ANIMAL_DB.map(x=>x[k]))].filter(v=>v!==a[k]);
+  const wrong=shuffle(vals).slice(0,3);
+  const Q={
+    eat:[`What does a ${a.n} eat?`,`A ${a.n} eats ${a.eat}.`],
+    home:[`Where does a ${a.n} live?`,`A ${a.n} lives in ${a.home}.`],
+    baby:[`What is a baby ${a.n} called?`,`A baby ${a.n} is called a ${a.baby}.`],
+    cover:[`What covers the body of a ${a.n}?`,`A ${a.n} has ${a.cover}.`],
+    move:[`How does a ${a.n} move?`,`A ${a.n} ${a.move}.`],
+    g:[`What kind of animal is a ${a.n}?`,`A ${a.n} is a ${a.g}.`]
+  }[k];
+  const cleaner=v=>k==='g'?v:v;
+  return choice(Q[0],sOpts(a[k],wrong.map(cleaner)),a[k],'Think about what you know about this animal.',Q[1]);
+}
+const OBJMAT=[['a window','glass'],['a saucepan','metal'],['a raincoat','plastic'],['a jumper','wool'],['a bike tyre','rubber'],['a book','paper'],['a table','wood'],['a house brick','clay'],['a teddy bear','fabric'],['a spoon','metal'],['a toy block','wood'],['a drink bottle','plastic'],['a jam jar','glass'],['a paper plane','paper'],['a T-shirt','cotton'],['a bucket','plastic'],['a garden path','stone'],['a cooking pot','metal'],['a pillow','fabric'],['gumboots','rubber'],['a cardboard box','cardboard'],['a balloon','rubber'],['a candle','wax'],['a pencil','wood'],['a mirror','glass'],['a gold ring','metal'],['a woollen hat','wool'],['a dinner plate','ceramic'],['a coin','metal'],['a chair leg','wood']];
+const MATSET=['glass','metal','plastic','wool','rubber','paper','wood','clay','fabric','cotton','stone','cardboard','wax','ceramic'];
+const PROPS=[
+ ['waterproof',['plastic','rubber','glass','metal'],['paper','tissue','cotton wool','sponge']],
+ ['bendy',['rubber','wool','an elastic band','a rubber glove'],['a rock','a brick','a glass jar','a metal bar']],
+ ['see-through',['glass','clear plastic','water','a clear window'],['wood','metal','brick','rock']],
+ ['hard',['rock','metal','a brick','glass'],['wool','a sponge','cotton wool','a pillow']],
+ ['soft',['wool','cotton wool','a pillow','fur'],['rock','a brick','metal','glass']],
+ ['attracted by a magnet',['an iron nail','a steel spoon','a paper clip','a steel can'],['a wooden spoon','a plastic cup','a rubber band','a glass jar']],
+ ['good at soaking up water',['a sponge','a paper towel','a cloth','cotton wool'],['plastic','glass','metal','rubber']],
+ ['good at keeping you warm',['wool','fur','a thick blanket','a puffer jacket'],['glass','metal','tissue paper','a plastic bag']]
+];
+function gMatFact(){
+  if(R(0,1)){const o=pick(OBJMAT);return choice(`What is ${o[0]} usually made from?`,sOpts(o[1],shuffle(MATSET.filter(m=>m!==o[1])).slice(0,3)),o[1],'Think about what the object feels like and what it has to do.',`${o[0][0].toUpperCase()+o[0].slice(1)} is usually made from ${o[1]}.`)}
+  const p=pick(PROPS),c=pick(p[1]);
+  return choice(`Which of these is ${p[0]}?`,sOpts(c,shuffle(p[2]).slice(0,3)),c,`Think about what ${p[0]} means.`,`${c[0].toUpperCase()+c.slice(1)} is ${p[0]}.`);
+}
+const MAGQ=[['a paper clip',true],['an iron nail',true],['a steel spoon',true],['a safety pin',true],['a steel can',true],['a metal bolt',true],['a steel key',true],['scissors',true],['a wooden block',false],['a plastic ruler',false],['a rubber ball',false],['a glass marble',false],['a sheet of paper',false],['a cotton ball',false],['a leaf',false],['a pencil',false],['aluminium foil',false],['a plastic cup',false],['a gold ring',false],['a rubber band',false]];
+const SURFACES=[['ice','carpet','sandpaper','a rough path'],['a wet slide','a doormat','grass','gravel'],['a polished floor','a woollen rug','a rough road','dry sand']];
+function gForceFact(){
+  const t=R(0,2);
+  if(t===0){const m=pick(PUSHPULL);return choice(`Is this a push or a pull? "${m[1]}"`,[{label:'Push',value:'push'},{label:'Pull',value:'pull'}],m[2],'A push moves something away. A pull moves it towards you.',`"${m[1]}" is a ${m[2]}.`)}
+  if(t===1){const m=pick(MAGQ);return choice(`Will a magnet stick to ${m[0]}?`,[{label:'Yes',value:true},{label:'No',value:false}],m[1],'Magnets pick up things made of iron or steel.',`${m[0][0].toUpperCase()+m[0].slice(1)} ${m[1]?'is made of iron or steel, so a magnet sticks to it':'is not made of iron or steel, so a magnet does not stick to it'}.`)}
+  const s=pick(SURFACES);return choice('Which surface has the LEAST friction (is the most slippery)?',sOpts(s[0],s.slice(1)),s[0],'Less friction means things slide more easily.',`${s[0][0].toUpperCase()+s[0].slice(1)} is the most slippery, so it has the least friction.`);
+}
+const HEATQ=[['a chocolate bar','left in the hot sun','It melts'],['an ice cream','left in the hot sun','It melts'],['an ice cube','left in the hot sun','It melts into water'],['butter','left in the hot sun','It goes soft and runny'],['a puddle','on a hot sunny day','It dries up'],['wet washing','on a sunny clothesline','It dries'],['a rock','left in the hot sun','It stays the same'],['a metal spoon','left in the sun','It stays solid (it just gets warm)'],['a crayon','left in a hot car','It goes soft'],['candle wax','near a flame','It melts'],['a wooden block','left in the sun','It stays the same'],['a snowball','on a warm day','It melts'],['frozen peas','left on the bench','They thaw (get soft)'],['water','put in the freezer','It freezes into ice'],['orange juice','put in the freezer','It freezes'],['milk','put in the freezer','It freezes'],['soup','put in the freezer','It freezes'],['an ice cube','put in the freezer','It stays frozen'],['a rock','put in the freezer','It stays the same'],['water','heated until it boils','It turns to steam'],['an egg','boiled in water','It goes hard'],['popcorn kernels','heated in a pan','They pop'],['chocolate','put in hot milk','It melts'],['butter','put in a hot pan','It melts']];
+const HEATRES=['It melts','It freezes','It stays the same','It dries up','It goes soft','It boils','It goes hard','It turns to steam','It melts into water'];
+function gHeatFact(){
+  const h=pick(HEATQ);
+  return choice(`What happens to ${h[0]} ${h[1]}?`,sOpts(h[2],shuffle(HEATRES.filter(x=>x!==h[2])).slice(0,3)),h[2],'Think about hot and cold. Does it get runny, hard or stay the same?',`${h[0][0].toUpperCase()+h[0].slice(1)} ${h[1]}: ${h[2].toLowerCase()}.`);
+}
+const SOURCE=[['wool','a sheep'],['milk','a cow'],['eggs','a chicken'],['honey','a bee'],['paper','a tree'],['glass','sand'],['cotton','a cotton plant'],['bread','wheat'],['silk','a silkworm'],['leather','a cow'],['rubber','a rubber tree'],['orange juice','oranges'],['chocolate','cocoa beans'],['cheese','milk'],['butter','milk'],['flour','wheat'],['sugar','sugar cane'],['maple syrup','maple trees'],['bacon','a pig'],['pearls','an oyster'],['wood','a tree'],['rice','a rice plant'],['popcorn','corn'],['potato chips','potatoes']];
+const SOURCESET=[...new Set(SOURCE.map(x=>x[1]))];
+const PLANETS=['Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune'];
+const SEASONORD=['Summer','Autumn','Winter','Spring'];
+const MONTHSEAS={January:'Summer',February:'Summer',March:'Autumn',April:'Autumn',May:'Autumn',June:'Winter',July:'Winter',August:'Winter',September:'Spring',October:'Spring',November:'Spring',December:'Summer'};
+function gEarthFact(){
+  const t=R(0,4);
+  if(t===0){const s=pick(SOURCE);return choice(`What does ${s[0]} come from?`,sOpts(s[1],shuffle(SOURCESET.filter(x=>x!==s[1])).slice(0,3)),s[1],'Think about where this comes from before it gets to the shop.',`${s[0][0].toUpperCase()+s[0].slice(1)} comes from ${s[1]}.`)}
+  if(t===1){const i=R(0,3),after=R(0,1),a=SEASONORD[(i+(after?1:3))%4];return choice(`Which season comes ${after?'after':'before'} ${SEASONORD[i].toLowerCase()}?`,tchoices(a,SEASONORD).map(o=>({label:o.value,value:o.value})),a,'Think of the four seasons going around in a circle.',`${a} comes ${after?'after':'before'} ${SEASONORD[i].toLowerCase()}.`)}
+  if(t===2){const m=pick(Object.keys(MONTHSEAS)),s=MONTHSEAS[m];return choice(`In Australia, which season is ${m} in?`,tchoices(s,SEASONORD).map(o=>({label:o.value,value:o.value})),s,'Seasons in Australia are opposite to the northern hemisphere. Christmas is in summer!',`${m} is in ${s.toLowerCase()} in Australia.`)}
+  if(t===3){const i=R(0,7);return choice(`Which planet is number ${i+1} from the Sun?`,tchoices(PLANETS[i],PLANETS).map(o=>({label:o.value,value:o.value})),PLANETS[i],'Say the planets in order: My Very Energetic Mother Just Served Us Nachos.',`${PLANETS[i]} is planet number ${i+1} from the Sun.`)}
+  const f=pick([['Which planet do we live on?','Earth'],['Which planet is called the Red Planet?','Mars'],['Which is the biggest planet?','Jupiter'],['Which planet has big rings?','Saturn'],['Which planet is closest to the Sun?','Mercury'],['What is the name of Earth\'s one natural moon?','The Moon'],['What do we call a big ball of burning gas in space?','A star'],['What does the Earth orbit (go around)?','The Sun']]);
+  const pool=['Earth','Mars','Jupiter','Saturn','Mercury','Venus','The Moon','A star','The Sun','Neptune'].filter(x=>x!==f[1]);
+  return choice(f[0],sOpts(f[1],shuffle(pool).slice(0,3)),f[1],'Think about what you know about space.',`The answer is ${f[1]}.`);
+}
+{
+  const old=EXTRA;
+  const mk=(tp,fn)=>{const base=EXTRA[tp];EXTRA[tp]=()=>R(0,99)<50?fn():base()};
+  mk('living',gAnimalFact);mk('forces',gForceFact);mk('materials',gMatFact);mk('change',gHeatFact);mk('earth',gEarthFact);
+}
+
+/* ---------- extra maths question makers: far more variety for the thinner topics ---------- */
+const seqVis=(cells,hide)=>'<div class="seq">'+cells.map((v,i)=>i===hide?'<span class="cell blank">?</span>':`<span class="cell">${v}</span>`).join('')+'</div>';
+function gSkip2(){
+  const t=R(0,5),step=pick([2,3,4,5,6,7,8,9,10,20,25,50,100]),back=R(0,2)===0;
+  const top=step>=20?step*R(6,14):step*R(8,16),base=back?top:step*R(0,12);
+  const seq=[...Array(5)].map((_,i)=>base+(back?-1:1)*step*i);
+  if(t===0){const shown=seq.slice(0,4);return num(`Count ${back?'back':'on'} by ${step}s. What number comes next?`,seq[4],'Find the jump between two numbers that sit next to each other.',`The numbers go ${back?'down':'up'} by ${step} each time, so the next number is ${seq[4]}.`,{vis:seqVis([...shown,'?'],4)})}
+  if(t===1){const h=R(1,3);return num(`Count ${back?'back':'on'} by ${step}s. What number is missing?`,seq[h],'Look at the jump between the numbers you can see.',`The jump is ${step}, so the missing number is ${seq[h]}.`,{vis:seqVis(seq,h)})}
+  if(t===2){const a=step*R(1,9),jumps=R(3,6);return num(`Start at ${a} and count on by ${step}s. What number do you land on after ${jumps} jumps?`,a+step*jumps,`Add ${step} each time. Keep a tally of the jumps on your fingers.`,`${a} + ${jumps} × ${step} = ${a+step*jumps}.`)}
+  if(t===3){
+    const m=step*R(2,12),c=m+pick([1,2,-1,-2,3].filter(x=>Math.abs(x)<step));
+    const ds=[c,m+1,m-1,m+2].filter((x,i,a)=>x!==m&&a.indexOf(x)===i&&x%step!==0).slice(0,3);
+    for(let k=1;ds.length<3;k++){const v=m+k;if(v%step!==0&&!ds.includes(v))ds.push(v)}
+    return choice(`Which number do you say when you count by ${step}s?`,sOpts(m,ds).map(o=>({label:o.label,value:o.value})),m,`Skip count by ${step}s from zero and listen for the number.`,`${m} is in the ${step}s pattern. ${m} ÷ ${step} = ${m/step}.`);
+  }
+  if(t===4){const a=step*R(0,6),j=R(3,8);return num(`How many jumps of ${step} does it take to get from ${a} to ${a+step*j}?`,j,`Subtract, then think: how many ${step}s are in the difference?`,`${a+step*j} − ${a} = ${step*j}, and ${step*j} ÷ ${step} = ${j}.`)}
+  const n=step*R(3,10);return num(`Count ${back?'back':'on'} by ${step}s from ${back?n+step*3:n}. What are you saying after 3 numbers?`,back?n:n+step*3,`Count ${back?'back':'on'} three times.`,`${back?n+step*3:n} ${back?'−':'+'} ${step} ${back?'−':'+'} ${step} ${back?'−':'+'} ${step} = ${back?n:n+step*3}.`);
+}
+function pieK(n,k){
+  let s='<svg class="pie" viewBox="0 0 120 120" role="img" aria-label="A shape cut into equal parts with some parts shaded">';
+  for(let i=0;i<n;i++){
+    const a0=(-90+360*i/n)*Math.PI/180,a1=(-90+360*(i+1)/n)*Math.PI/180,p=a=>`${(60+52*Math.cos(a)).toFixed(2)} ${(60+52*Math.sin(a)).toFixed(2)}`;
+    s+=`<path class="slice${i<k?' on':''}" d="M60 60 L${p(a0)} A52 52 0 0 1 ${p(a1)} Z"/>`;
+  }
+  return s+'</svg>';
+}
+const FWORD={2:['half','halves'],3:['third','thirds'],4:['quarter','quarters'],5:['fifth','fifths'],6:['sixth','sixths'],8:['eighth','eighths'],10:['tenth','tenths']};
+function gFrac2(){
+  const t=R(0,6);
+  if(t===0){
+    const n=pick([3,4,5,6,8]),k=R(1,n-1);
+    const right=`${k}/${n}`,ds=[`${n-k}/${n}`,`${k}/${n+1}`,`${k+1>=n?k-1||1:k+1}/${n}`,`1/${n}`].filter((x,i,a)=>x!==right&&a.indexOf(x)===i);
+    while(ds.length<3)ds.push(`${k}/${n+2+ds.length}`);
+    return choice('What fraction of the shape is shaded?',sOpts(right,ds.slice(0,3)),right,'Count all the equal parts. That is the bottom number. Then count the shaded parts for the top number.',`${k} of the ${n} equal parts are shaded, so ${right} is shaded.`,pieK(n,k));
+  }
+  if(t===1){
+    const d=pick([2,3,4,5,10]),n=d*R(2,10);
+    return num(`What is one ${FWORD[d][0]} of ${n}?`,n/d,`Share ${n} into ${d} equal groups.`,`${n} ÷ ${d} = ${n/d}.`,{vis:`<div class="pile">${dots(Math.min(n,40),'#FFC933')}</div>`});
+  }
+  if(t===2){
+    const d=pick([2,4]),a=d*R(3,12),nm=pick(ACTORS),th=pick(THINGS),w=d===2?'half':'a quarter';
+    return num(`${nm} has ${a} ${th} and gives ${d===2?'half':'a quarter'} of them away. How many ${th} are left?`,a-a/d,`First find ${w} of ${a}, then take that away from ${a}.`,`${w==='half'?'Half':'A quarter'} of ${a} is ${a/d}. ${a} − ${a/d} = ${a-a/d}.`);
+  }
+  if(t===3){
+    const ds=shuffle([2,3,4,5,6,8,10]).slice(0,2),a=ds[0],b=ds[1],big=R(0,1)===0,ans=big?(a<b?a:b):(a<b?b:a);
+    return choice(`Which fraction is ${big?'bigger':'smaller'}: 1/${a} or 1/${b}?`,[{label:`1/${a}`,value:a},{label:`1/${b}`,value:b}],ans,'The more equal parts there are in a whole, the smaller each part is.',`In 1/${ans} the whole is cut into ${ans} parts, so each part is ${big?'bigger':'smaller'}.`);
+  }
+  if(t===4){const d=pick([2,3,4,5,10]),w=R(2,5);return num(`How many ${FWORD[d][1]} make ${w} wholes?`,d*w,`Each whole has ${d} ${FWORD[d][1]}.`,`${w} × ${d} = ${d*w}.`)}
+  if(t===5){
+    const d=pick([4,5,10]),k=R(2,d-1),n=d*R(2,8),nm={4:'quarters',5:'fifths',10:'tenths'}[d];
+    return num(`What is ${k}/${d} of ${n}?`,k*n/d,`First find 1/${d} of ${n}. Then multiply by ${k}.`,`1/${d} of ${n} is ${n/d}. ${k} × ${n/d} = ${k*n/d}.`);
+  }
+  const d=pick([3,4,5,6,8]);
+  return choice(`Sam cuts a pizza into ${d} equal slices. Sam eats 1 slice. What fraction of the pizza is left?`,sOpts(`${d-1}/${d}`,[`1/${d}`,`${d}/${d}`,`1/${d+1}`]),`${d-1}/${d}`,`The pizza has ${d} equal slices. How many are left?`,`${d-1} slices are left out of ${d}, so ${d-1}/${d} is left.`);
+}
+const SHOP=[['pencil',80],['rubber',60],['ruler',120],['notebook',250],['apple',90],['banana',70],['ice cream',300],['sticker pack',150],['balloon',100],['toy car',450],['bunny hat',350],['carrot cake',500],['juice',220],['lolly',50],['book',650],['kite',800]];
+function gMoney2(){
+  const t=R(0,5);
+  if(t===0){
+    const a=pick(SHOP),b=pick(SHOP.filter(x=>x!==a)),tot=a[1]+b[1];
+    return choice(`A ${a[0]} costs ${fm(a[1])} and a ${b[0]} costs ${fm(b[1])}. How much for both?`,nchoices(tot,[tot+10,tot-10,tot+50,tot-50,tot+100],fm,[-100,-50,-10,10,50,100]),tot,'Add the two prices together.',`${fm(a[1])} + ${fm(b[1])} = ${fm(tot)}.`);
+  }
+  if(t===1){
+    const a=pick(SHOP.filter(x=>x[1]<=900)),pay=a[1]<=500?500:a[1]<=1000?1000:2000,ch=pay-a[1];
+    return choice(`A ${a[0]} costs ${fm(a[1])}. You pay with ${fm(pay)}. How much change do you get?`,nchoices(ch,[ch+10,ch-10,ch+50,ch-50,ch+100],fm,[-100,-50,-10,10,50,100]),ch,'Take the price away from the money you paid.',`${fm(pay)} − ${fm(a[1])} = ${fm(ch)}.`);
+  }
+  if(t===2){
+    const p=pick([[20,100],[10,100],[50,200],[5,50],[10,200],[50,500],[20,200],[100,500],[200,1000],[5,100],[10,50],[20,500]]);
+    return num(`How many ${fm(p[0])} coins (or notes) make ${fm(p[1])}?`,p[1]/p[0],`Skip count by ${fm(p[0])} until you reach ${fm(p[1])}.`,`${p[1]/p[0]} lots of ${fm(p[0])} make ${fm(p[1])}.`);
+  }
+  if(t===3){
+    const a=pick(SHOP),b=pick(SHOP.filter(x=>x[1]!==a[1])),hi=a[1]>b[1]?a:b;
+    return choice(`Which costs more: a ${a[0]} for ${fm(a[1])}, or a ${b[0]} for ${fm(b[1])}?`,[{label:a[0],value:a[0]},{label:b[0],value:b[0]}],hi[0],'Compare the dollars first, then the cents.',`${fm(hi[1])} is more than ${fm(a[1]>b[1]?b[1]:a[1])}, so the ${hi[0]} costs more.`);
+  }
+  if(t===4){
+    const items=shuffle(SHOP.filter(x=>x[1]<=300)).slice(0,3),tot=items.reduce((n,x)=>n+x[1],0);
+    return choice(`${items.map(x=>`a ${x[0]} (${fm(x[1])})`).join(', ')}. How much is that altogether?`,nchoices(tot,[tot+10,tot-10,tot+50,tot-50,tot+100],fm,[-100,-50,-10,10,50,100]),tot,'Add the three prices one at a time.',`${items.map(x=>fm(x[1])).join(' + ')} = ${fm(tot)}.`);
+  }
+  const n=R(2,5),v=pick([10,20,50]);
+  return choice(`How much money is ${n} lots of ${fm(v)}?`,nchoices(n*v,[n*v+v,n*v-v,n*v+10],fm,[-20,-10,10,20,50]),n*v,`Skip count by ${v}s, ${n} times.`,`${n} × ${fm(v)} = ${fm(n*v)}.`);
+}
+const TFACT=[['How many minutes are in one hour?',60,[30,100,24]],['How many minutes are in half an hour?',30,[15,60,20]],['How many minutes are in a quarter of an hour?',15,[10,30,25]],['How many hours are in one day?',24,[12,60,7]],['How many days are in a week?',7,[5,6,10]],['How many days are in two weeks?',14,[12,10,21]],['How many months are in a year?',12,[10,11,13]],['How many weeks are in a year?',52,[48,12,365]],['How many seconds are in one minute?',60,[30,100,12]],['How many days are in a year?',365,[300,360,12]],['How many hours are in half a day?',12,[6,24,10]],['How many months are in half a year?',6,[3,4,12]]];
+const DUR=[['a school lunch break','about 30 minutes'],['brushing your teeth','about 2 minutes'],['a movie','about 2 hours'],['a school day','about 6 hours'],['a night\'s sleep','about 10 hours'],['a school holiday','about 2 weeks'],['blinking your eyes','about 1 second'],['eating dinner','about 20 minutes'],['a summer holiday','about 6 weeks'],['a swimming lesson','about 30 minutes']];
+const DURALL=['about 1 second','about 2 minutes','about 20 minutes','about 30 minutes','about 2 hours','about 6 hours','about 10 hours','about 2 weeks','about 6 weeks'];
+function gTime2(){
+  const t=R(0,6);
+  if(t===0){
+    const h=R(1,12),half=R(0,1)===1,add=pick([30,60,120]),m0=half?30:0,tot=h*60+m0+add,hh=((Math.floor(tot/60)-1)%12)+1,mm=tot%60,lab=mm===0?`${hh} o'clock`:`half past ${hh}`;
+    const start=m0===0?`${h} o'clock`:`half past ${h}`,words=add===30?'30 minutes':add===60?'1 hour':'2 hours';
+    const cand=[`${hh} o'clock`,`half past ${hh}`,`${hh===12?1:hh+1} o'clock`,`half past ${hh===1?12:hh-1}`];
+    return choice(`It is ${start}. What time will it be in ${words}?`,sOpts(lab,[...new Set(cand.filter(x=>x!==lab))].slice(0,3)),lab,'Add the time on to the clock. 30 minutes is half an hour.',`${start} plus ${words} is ${lab}.`,clockSvg(h,m0));
+  }
+  if(t===1){const s=R(1,9),d=R(1,3),e=s+d;return num(`A movie starts at ${s} o'clock and finishes at ${e} o'clock. How many hours long is it?`,d,'Count on from the start time to the finish time.',`From ${s} to ${e} is ${d} hour${d>1?'s':''}.`,{unit:d>1?'hours':'hour'})}
+  if(t===2){const f=pick(TFACT);return choice(f[0],nchoices(f[1],f[2]),f[1],'Think about clocks and calendars.',`The answer is ${f[1]}.`)}
+  if(t===3){
+    const m=R(0,11),days=[31,28,31,30,31,30,31,31,30,31,30,31][m];
+    return choice(`How many days are in ${MONTHS[m]}? (A normal year.)`,tchoices(days,[31,30,28,29,32]).map(o=>({label:String(o.value),value:o.value})),days,'Remember the knuckle trick, or the rhyme: 30 days has September, April, June and November.',`${MONTHS[m]} has ${days} days.`);
+  }
+  if(t===4){
+    const i=R(0,6),k=pick([1,2,3,4]),d=R(0,1)===0,ans=DAYS[(i+(d?k:-k)+70)%7];
+    return choice(`What day is ${k} day${k>1?'s':''} ${d?'after':'before'} ${DAYS[i]}?`,tchoices(ans,DAYS),ans,'Say the days of the week in order.',`${k} day${k>1?'s':''} ${d?'after':'before'} ${DAYS[i]} is ${ans}.`);
+  }
+  if(t===5){const d=pick(DUR);return choice(`About how long does ${d[0]} take?`,sOpts(d[1],shuffle(DURALL.filter(x=>x!==d[1])).slice(0,3)),d[1],'Think about how long it feels.',`${d[0][0].toUpperCase()+d[0].slice(1)} takes ${d[1]}.`)}
+  const a=pick([['a minute','an hour'],['a day','a week'],['a week','a month'],['an hour','a day'],['a month','a year'],['a second','a minute']]),big=R(0,1);
+  return choice(`Which is ${big?'longer':'shorter'}: ${a[0]} or ${a[1]}?`,[{label:a[0],value:a[0]},{label:a[1],value:a[1]}],big?a[1]:a[0],'Think about how long each one takes.',`${big?a[1]:a[0]} is ${big?'longer':'shorter'}.`);
+}
+function gTime32(){
+  const t=R(0,3),h=R(1,12),m=pick([5,10,15,20,25,30,35,40,45,50,55]),pad=x=>String(x).padStart(2,'0');
+  const norm=(hh,mm)=>{let H=hh,M=mm;while(M>=60){M-=60;H++}while(M<0){M+=60;H--}H=((H-1+12*5)%12)+1;return `${H}:${pad(M)}`};
+  if(t===0)return num('How many minutes past the hour is it?',m,'Each number on the clock face is 5 more minutes.',`The long hand points to ${m/5}, so it is ${m} minutes past.`,{vis:clockSvg(h,m),unit:'minutes'});
+  if(t===1){
+    const add=pick([5,10,15,20,25,30]),ans=norm(h,m+add);
+    return choice(`The clock shows ${h}:${pad(m)}. What time will it be in ${add} minutes?`,tchoices(ans,[ans,norm(h,m+add+5),norm(h,m+add-5),norm(h,m-add),norm(h+1,m+add)]).map(o=>({label:o.value,value:o.value})),ans,`Count on ${add} minutes from the long hand.`,`${h}:${pad(m)} plus ${add} minutes is ${ans}.`,clockSvg(h,m));
+  }
+  if(t===2){
+    const sub=pick([5,10,15,20]),ans=norm(h,m-sub);
+    return choice(`It is ${h}:${pad(m)}. What time was it ${sub} minutes ago?`,tchoices(ans,[ans,norm(h,m-sub-5),norm(h,m-sub+5),norm(h,m+sub),norm(h-1,m-sub)]).map(o=>({label:o.value,value:o.value})),ans,`Count back ${sub} minutes.`,`${h}:${pad(m)} minus ${sub} minutes is ${ans}.`);
+  }
+  const mm=Math.min(m,45),d=pick([5,10,15,20,25,30,35]),m2=Math.min(55,mm+d),diff=m2-mm;
+  return num(`How many minutes are there from ${h}:${pad(mm)} to ${h}:${pad(m2)}?`,diff,'Count on in 5s from the first time to the second time.',`${m2} − ${m} = ${diff} minutes.`,{unit:'minutes'});
+}
+function ruler2(a,b){
+  let s='<svg class="ruler" viewBox="0 0 330 80" role="img" aria-label="A ruler with an object that does not start at zero"><rect class="objbar" x="'+(15+a*20)+'" y="6" width="'+((b-a)*20)+'" height="22" rx="3"/><rect class="rul" x="5" y="34" width="320" height="38" rx="3"/>';
+  for(let i=0;i<=15;i++){const x=15+i*20;s+=`<line class="tick" x1="${x}" y1="34" x2="${x}" y2="50"/><text class="rn" x="${x}" y="64">${i}</text>`;if(i<15)s+=`<line class="tick" x1="${x+10}" y1="34" x2="${x+10}" y2="42"/>`}
+  return s+'</svg>';
+}
+const UNIT_ITEMS=[['the length of an ant','millimetres',['centimetres','metres','kilometres']],['the height of a house','metres',['centimetres','millimetres','kilometres']],['the distance between two towns','kilometres',['centimetres','metres','millimetres']],['the width of a book','centimetres',['kilometres','metres','millimetres']],['the length of a swimming pool','metres',['centimetres','kilometres','millimetres']],['the height of a mountain','metres',['centimetres','millimetres','kilometres']],['the length of a car','metres',['centimetres','kilometres','millimetres']],['the thickness of a coin','millimetres',['metres','kilometres','centimetres']],['how far you walk to the shops','kilometres',['centimetres','metres','millimetres']],['the width of your hand','centimetres',['kilometres','metres','millimetres']]];
+function gLength2(){
+  const t=R(0,5);
+  if(t===0){const a=R(12,60),b=R(5,a-3);return num(`A ribbon is ${a} cm long. A string is ${b} cm long. How much longer is the ribbon?`,a-b,'Take the shorter length away from the longer length.',`${a} − ${b} = ${a-b} cm.`,{unit:'cm'})}
+  if(t===1){const a=R(1,6),L=R(3,8);return num('How long is the object? Read the ruler carefully. It does not start at zero!',L,'Subtract the number at the left end from the number at the right end.',`The object goes from ${a} to ${a+L}, so it is ${a+L} − ${a} = ${L} cm long.`,{vis:ruler2(a,a+L),unit:'cm'})}
+  if(t===2){
+    const q=pick([['How many centimetres are in 2 metres?',200,[20,2000,102]],['How many centimetres are in half a metre?',50,[5,500,25]],['How many centimetres are in 3 metres?',300,[30,103,3000]],['How many metres are in 400 centimetres?',4,[40,14,400]],['How many centimetres are in 1 metre?',100,[10,1000,50]],['How many metres are in 1 kilometre?',1000,[100,10,500]],['How many centimetres are in 5 metres?',500,[50,5000,105]]]);
+    return choice(q[0],nchoices(q[1],q[2]),q[1],'1 metre is 100 centimetres.',`The answer is ${q[1]}.`);
+  }
+  if(t===3){const u=pick(UNIT_ITEMS);return choice(`Which unit is best for measuring ${u[0]}?`,sOpts(u[1],u[2]),u[1],'Think about how big the thing is.',`${u[0][0].toUpperCase()+u[0].slice(1)} is best measured in ${u[1]}.`)}
+  if(t===4){
+    const opts=shuffle([['1 metre',100],['60 cm',60],['120 cm',120],['90 cm',90],['2 metres',200],['45 cm',45]]).slice(0,3),long=R(0,1),best=opts.slice().sort((x,y)=>long?y[1]-x[1]:x[1]-y[1])[0];
+    return choice(`Which is the ${long?'longest':'shortest'} length?`,opts.map(o=>({label:o[0],value:o[0]})),best[0],'Change them all to centimetres first.',`${best[0]} is the ${long?'longest':'shortest'}.`);
+  }
+  const a=R(2,12),b=R(2,12);
+  return num(`A rectangle is ${a} cm long and ${b} cm wide. What is the distance all the way around it (the perimeter)?`,2*(a+b),'Add all four sides: two lengths and two widths.',`${a} + ${b} + ${a} + ${b} = ${2*(a+b)} cm.`,{unit:'cm'});
+}
+const SOLID=[['cube',6,12,8],['rectangular prism',6,12,8],['triangular prism',5,9,6],['square pyramid',5,8,5],['triangular pyramid',4,6,4]];
+const PATSH=['🔺','🟦','🔵','⭐','🟢','🔶','❤️','🟡','🟣','🟥'];
+function gShapes2(){
+  const t=R(0,5);
+  if(t===0){const s=pick(SH2);return choice(`How many corners does a ${s.n} have?`,nchoices(s.s,[3,4,5,6,8]),s.s,'Corners are where two sides meet.',`A ${s.n} has ${s.s} corners and ${s.s} sides.`,shapeSvg(s.n))}
+  if(t===1){
+    const s=pick(SOLID),k=R(0,2),w=['faces','edges','corners (vertices)'][k];
+    return choice(`How many ${w} does a ${s[0]} have?`,nchoices(s[k+1],[3,4,5,6,8,9,12]),s[k+1],'Picture the object. Count them one by one.',`A ${s[0]} has ${s[1]} faces, ${s[2]} edges and ${s[3]} corners.`);
+  }
+  if(t===2){
+    const a=pick(PATSH),b=pick(PATSH.filter(x=>x!==a)),c=pick(PATSH.filter(x=>x!==a&&x!==b)),p=pick(['ab','aab','abb','abc']);
+    const unit=p.split('').map(x=>({a,b,c}[x])),seq=[];for(let i=0;i<7;i++)seq.push(unit[i%unit.length]);
+    const ans=seq[6],cells=seq.slice(0,6);
+    return choice('Which shape comes next in the pattern?',sOpts(ans,[a,b,c,pick(PATSH)].filter((x,i,arr)=>x!==ans&&arr.indexOf(x)===i).slice(0,3)).map(o=>({label:o.label,value:o.value})),ans,'Find the part of the pattern that repeats.',`The pattern repeats, so the next shape is ${ans}.`,`<div class="seq">${cells.map(x=>`<span class="cell">${x}</span>`).join('')}<span class="cell blank">?</span></div>`);
+  }
+  if(t===3){
+    const nc=['circle','oval','sphere','cylinder\'s curved side'],c=pick(['circle','oval']),others=['square','triangle','rectangle','hexagon','pentagon'],ws=shuffle(others).slice(0,3);
+    return choice('Which of these shapes has NO corners?',sOpts(c,ws).map(o=>({label:cap(o.label),value:o.value})),c,'A corner is where two straight sides meet.',`A ${c} is smooth all the way around with no corners.`);
+  }
+  if(t===4){
+    const sym=['A','H','I','M','O','T','U','V','W','X','Y'],non=['F','G','J','L','N','P','Q','R','S','Z'],l=pick(sym),ws=shuffle(non).slice(0,3);
+    return choice('Which letter has a line of symmetry (both halves match)?',sOpts(l,ws),l,'Imagine folding the letter in half. Do the two halves match?',`The letter ${l} is the same on both sides of a middle line.`);
+  }
+  const s=pick(SH2),n=R(2,5);
+  return num(`How many sides do ${n} ${s.n}s have altogether?`,n*s.s,`One ${s.n} has ${s.s} sides. Count that ${n} times.`,`${n} × ${s.s} = ${n*s.s} sides.`);
+}
+EXTRA.skip=gSkip2;EXTRA.frac=gFrac2;EXTRA.money=gMoney2;EXTRA.time=gTime2;EXTRA.time3=gTime32;EXTRA.length=gLength2;EXTRA.shapes=gShapes2;
+/* every topic with an extra maker now mixes it with the original questions */
+TOPICS.forEach(t=>{const e=EXTRA[t.id],g=t.gen;if(e)t.gen=()=>R(0,99)<60?e():g()});
+
 const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science mix':id==='daily'?"Cookie's Maths Daily Challenge":id==='daily:english'?"Cookie's English Daily Challenge":id==='daily:science'?"Cookie's Science Daily Challenge":id==='review'?"Cookie's Review":id==='fixit'?"Cookie's Fix-it Box":id==='mixed'?'Surprise Mix':id.startsWith('tt:')?(id==='tt:all'?'Times tables mix':`The ${id.slice(3)} times table`):TOPICS.find(t=>t.id===id).name;
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],writing:[],oops:[],mast:{},farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],writing:[],seen:[],oops:[],mast:{},farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
@@ -1883,6 +2810,17 @@ function oopsAdd(q){
   while(SAVE.oops.length>30)SAVE.oops.shift();
 }
 function oopsFixed(h){SAVE.oops=(SAVE.oops||[]).filter(o=>o.h!==h)}
+/* questions she has answered RIGHT are remembered, so the same one is not asked again for a long while.
+   Questions she got wrong are never added, so they are free to come back and be practised. */
+const SEEN_MAX=1200;
+const qKey=q=>hash32((q.tid||'')+'|'+(q.q||'')+'|'+(q.vis||'')+'|'+(q.word||'')+'|'+(q.show||''));
+function seenList(){return Array.isArray(SAVE.seen)?SAVE.seen:(SAVE.seen=[])}
+function markSeen(q){
+  if(!q||q.bonus||q.fixH||q.tid==='tt')return;
+  const k=qKey(q),a=seenList();
+  if(a.includes(k))return;
+  a.push(k);if(a.length>SEEN_MAX)a.splice(0,a.length-SEEN_MAX);
+}
 function fixPlan(){
   return shuffle(SAVE.oops||[]).slice(0,8).map(o=>({tid:o.tid,mk:()=>{
     const q=Object.assign({},o.q,{fixH:o.h});
@@ -1933,7 +2871,8 @@ function start(id){
   snd.tap();
   const build=()=>{
     const seen=new Set(),qs=[];
-    planFor(id).forEach(p=>{let q,g=0;do{q=p.mk();q.tid=p.tid;if(!q.mk)q.mk=p.mk}while(seen.has(q.q+q.vis)&&g++<12);seen.add(q.q+q.vis);qs.push(q)});
+    const known=(isDailyId(id)||id==='review'||id==='fixit'||id.startsWith('tt:'))?null:new Set(seenList());
+    planFor(id).forEach(p=>{let q,g=0;do{q=p.mk();q.tid=p.tid;if(!q.mk)q.mk=p.mk}while((seen.has(q.q+q.vis)||(known&&p.tid!=='tt'&&known.has(qKey(q))))&&g++<40);seen.add(q.q+q.vis);qs.push(q)});
     return qs;
   };
   const qs=isDailyId(id)?withSeed(id+dayStr(new Date()),build):build();
@@ -2177,7 +3116,7 @@ function settle(ok){
   if(q.fact)recordFact(q.fact,ok,S.hintUsed);
   persist();
   if(ok){
-    if(!q.bonus)S.score++;S.streak++;if(q.fixH)oopsFixed(q.fixH);
+    if(!q.bonus)S.score++;S.streak++;if(q.fixH)oopsFixed(q.fixH);markSeen(q);
     S.lastGain=1;
     if(S.streak>=3&&!S.hintUsed){S.lastGain=2;S.lastBonus=true}
     /* every right answer is worth 3 carrots, 5 in the times tables trainer (plus the windmill upgrade), doubled on Year 3 and 4 work */
