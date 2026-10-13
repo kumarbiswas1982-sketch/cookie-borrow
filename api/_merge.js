@@ -42,6 +42,9 @@ function mergeSaves(server, client, base) {
   }
   out.pb = pb;
   out.st = maxMap(server.st, client.st);
+  out.mast = maxMap(server.mast, client.mast);
+  // the Fix-it Box keeps a tricky question until it is fixed on the device that fixed it, newest 30 only
+  { const byH = new Map(); for (const o of [...(server.oops || []), ...(client.oops || [])]) byH.set(o.h, o); out.oops = [...byH.values()].slice(-30); }
   const qs = server.qd || { d: '', c: {}, k: {} }, qc = client.qd || { d: '', c: {}, k: {} };
   out.qd = qs.d === qc.d ? { d: qs.d, c: maxMap(qs.c, qc.c), k: { ...(qs.k || {}), ...(qc.k || {}) } } : ((qc.d || '') > (qs.d || '') ? qc : qs);
   const rs = server.rooms || { owned: ['main'], r: {} }, rc = client.rooms || { owned: ['main'], r: {} };

@@ -417,6 +417,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 #toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,40px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:14px;font-family:var(--display);font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 html.big .gtab.main{font-size:1.2rem}
+.medal{font-size:1.1rem}.mix.fixc{background:var(--coral-soft)}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -1179,11 +1180,11 @@ const TOPICS=[
   {id:'change',sub:'science',name:'Heating and cooling',glyph:'🧊',desc:'Melting, freezing and steam',tc:'#7FE3DA',gen:gChange},
   {id:'earth',sub:'science',name:'Earth and Sun',glyph:'🌍',desc:'Resources, shadows, days and seasons',tc:'#A9B8FF',gen:gEarth}
 ];
-const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science mix':id==='daily'?"Cookie's Maths Daily Challenge":id==='daily:english'?"Cookie's English Daily Challenge":id==='daily:science'?"Cookie's Science Daily Challenge":id==='review'?"Cookie's Review":id==='mixed'?'Surprise Mix':id.startsWith('tt:')?(id==='tt:all'?'Times tables mix':`The ${id.slice(3)} times table`):TOPICS.find(t=>t.id===id).name;
+const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science mix':id==='daily'?"Cookie's Maths Daily Challenge":id==='daily:english'?"Cookie's English Daily Challenge":id==='daily:science'?"Cookie's Science Daily Challenge":id==='review'?"Cookie's Review":id==='fixit'?"Cookie's Fix-it Box":id==='mixed'?'Surprise Mix':id.startsWith('tt:')?(id==='tt:all'?'Times tables mix':`The ${id.slice(3)} times table`):TOPICS.find(t=>t.id===id).name;
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],oops:[],mast:{},farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
@@ -1568,12 +1569,53 @@ function reviewPlan(){
 const isDailyId=id=>id==='daily'||String(id).startsWith('daily:');
 const dailySubOf=id=>id==='daily'?'maths':String(id).slice(6);
 const dailyIdOf=sub=>sub==='maths'?'daily':'daily:'+sub;
+/* ---------- Fix-it Box: tricky questions come back until they are fixed ---------- */
+const hash32=s=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+function oopsAdd(q){
+  if(!q||q.bonus||q.fixH||(q.kind!=='num'&&q.kind!=='choice'))return;
+  const vis=String(q.vis||''),pic=String(q.pic||'');
+  if(vis.length>1800||pic.length>1800)return;
+  const h=hash32(q.tid+'|'+q.q+'|'+vis);
+  SAVE.oops=SAVE.oops||[];
+  if(SAVE.oops.some(o=>o.h===h))return;
+  SAVE.oops.push({h,tid:q.tid,q:{kind:q.kind,q:q.q,answer:q.answer,hint:q.hint,why:q.why,vis,pic,show:q.show,unit:q.unit||'',options:q.options||null}});
+  while(SAVE.oops.length>30)SAVE.oops.shift();
+}
+function oopsFixed(h){SAVE.oops=(SAVE.oops||[]).filter(o=>o.h!==h)}
+function fixPlan(){
+  return shuffle(SAVE.oops||[]).slice(0,8).map(o=>({tid:o.tid,mk:()=>{
+    const q=Object.assign({},o.q,{fixH:o.h});
+    const g=TOPICS.find(t=>t.id===o.tid);
+    q.mk=g?g.gen:(o.tid==='tt'?()=>gTT(R(2,12)):null);
+    return q;
+  }}));
+}
+function fixCard(){
+  const n=(SAVE.oops||[]).length;if(!n)return '';
+  return `<div class="mix fixc"><div><h2>Cookie's Fix-it Box</h2><p>${n} tricky question${n===1?'':'s'} to fix. Get them right to throw them out of the box, for double carrots!</p></div><button class="btn sun" data-act="start" data-id="fixit">Fix them!</button></div>`;
+}
+/* ---------- topic medals: bronze, silver and gold for practising and getting things right ---------- */
+const MEDALS=[{id:'bronze',em:'🥉',n:20,acc:.7,gift:15},{id:'silver',em:'🥈',n:60,acc:.8,gift:40},{id:'gold',em:'🥇',n:150,acc:.88,gift:100}];
+function medalOf(tid){
+  const a=(SAVE.acc||{})[tid];if(!a||!a.t)return -1;
+  let m=-1;MEDALS.forEach((x,i)=>{if(a.r>=x.n&&a.r/a.t>=x.acc)m=i});return m;
+}
+function checkMastery(){
+  SAVE.mast=SAVE.mast||{};const out=[];
+  TOPICS.forEach(t=>{
+    const m=medalOf(t.id),have=SAVE.mast[t.id]==null?-1:SAVE.mast[t.id];
+    if(m>have){let g=0;for(let k=have+1;k<=m;k++)g+=MEDALS[k].gift;SAVE.mast[t.id]=m;SAVE.coins+=g;out.push({name:t.name,em:MEDALS[m].em,m:MEDALS[m].id,gain:g})}
+  });
+  return out;
+}
+
 function planFor(id,n=10){
   const T=x=>TOPICS.find(t=>t.id===x),mk=x=>({tid:x,mk:T(x).gen});
   if(id==='mixed'){const pool=TOPICS.filter(t=>!t.y&&!t.sub),out=[];while(out.length<n)out.push(...shuffle(pool).map(t=>mk(t.id)));return out.slice(0,n)}
   if(id.startsWith('mix:')){const pool=TOPICS.filter(t=>t.sub===id.slice(4));const out=[];while(out.length<n)out.push(...shuffle(pool).map(t=>mk(t.id)));return out.slice(0,n)}
   if(id.startsWith('tt:')){const tn=id.slice(3);return Array.from({length:n},()=>{const n=tn==='all'?(R(0,9)===0?1:R(2,12)):+tn;return {tid:'tt',mk:()=>gTT(n)}})}
   if(id==='review')return reviewPlan();
+  if(id==='fixit')return fixPlan();
   if(id==='daily:english'){
     /* five different parts of English, in a new order every day, always with a story question */
     const rest=shuffle(['spell','sounds','grammar','punct','vocab','build']).slice(0,4);
@@ -1594,7 +1636,7 @@ function start(id){
     return qs;
   };
   const qs=isDailyId(id)?withSeed(id+dayStr(new Date()),build):build();
-  Object.assign(S,{padOpen:false,strokes:[],view:'quiz',topic:id,topicName:topicName(id),mode:isDailyId(id)?'daily':id==='review'?'review':'topic',qs,mainN:qs.length,bonusN:0,i:0,score:0,streak:0,done:false,given:null,entry:'',res:[],hintOn:false,hintUsed:false,earn:0,carr:0,y3n:0,starsAtStart:SAVE.stars,sticker:null,rankUp:null,bonus5:false,gotPass:false,anim:'',dailyInfo:null,weekWin:false,autoSpeak:!!SAVE.autoread});
+  Object.assign(S,{padOpen:false,strokes:[],view:'quiz',topic:id,topicName:topicName(id),mode:isDailyId(id)?'daily':id==='review'?'review':id==='fixit'?'fix':'topic',qs,mainN:qs.length,bonusN:0,i:0,score:0,streak:0,done:false,given:null,entry:'',res:[],hintOn:false,hintUsed:false,earn:0,carr:0,y3n:0,starsAtStart:SAVE.stars,sticker:null,rankUp:null,bonus5:false,gotPass:false,anim:'',dailyInfo:null,weekWin:false,autoSpeak:!!SAVE.autoread});
   S.intro=`Question 1. ${pick(PEP)}`;
   render();window.scrollTo(0,0);
 }
@@ -1606,7 +1648,7 @@ function home(){
   <div class="qhead hero">${mascotBtn('happy','big '+anim,true)}${bubble(S.homeLine)}</div>
   <div class="rank"><h2>${curName()?esc(curName())+', you':'You'} are a ${rk.name}!</h2><div class="meter" role="img" aria-label="Progress to next rank"><i style="width:${pct}%"></i></div><p>${rk.next?`${rk.next-SAVE.stars} more star${rk.next-SAVE.stars===1?'':'s'} to become a ${rk.nextName}.`:'You are at the top of the mob. Legend!'}</p>
     <p class="daily">${icon('flame')}<span>${playedToday()?`Great! You played today. Day streak: ${SAVE.day.n}`:SAVE.day.n&&SAVE.day.last?`Play a round today to keep your day streak going! (${SAVE.day.n} so far)`:'Play one round every day to build a day streak!'}</span></p></div>
-  ${subTabs()}${dailyCard()}${reviewCard()}${playBanner()}
+  ${subTabs()}${dailyCard()}${reviewCard()}${fixCard()}${playBanner()}
   ${subBody()}
   ${weekCard()}${burrowCard()}
   <p class="foot">Questions are made fresh every round and follow the Australian Curriculum (Version 9) for Year 2 Maths, English and Science, with Year 3 and 4 times tables for stretch. Progress is saved to Srimaa\u2019s account, so it follows her to every device. <span class="syncst">${syncText()}</span> <button class="link" data-act="gate">Grown-ups corner</button></p>`;
@@ -1650,7 +1692,7 @@ function reviewCard(){
   const n=dueFacts().length;if(!n)return '';
   return `<div class="mix review"><div><h2>Cookie's Review</h2><p>${n} fact${n===1?' is':'s are'} ready to practise again. Quick reviews make memories stick!</p></div><button class="btn" data-act="start" data-id="review">Review now</button></div>`;
 }
-function tile(t){const b=SAVE.best[t.id];return `<button class="tile" style="--tc:${t.tc}" data-act="start" data-id="${t.id}"><span class="glyph" aria-hidden="true">${t.glyph}</span><span class="tt"><strong>${t.name}${t.y?' <em class="x2t in">×2 carrots</em>':''}</strong><span class="ds">${t.desc}</span><span class="tstars" aria-label="${b!=null?starsFor(b)+' out of 3 stars':'Not tried yet'}">${starRow(b!=null?starsFor(b):0)}</span></span></button>`}
+function tile(t){const b=SAVE.best[t.id],md=medalOf(t.id);return `<button class="tile" style="--tc:${t.tc}" data-act="start" data-id="${t.id}"><span class="glyph" aria-hidden="true">${t.glyph}</span><span class="tt"><strong>${t.name}${md>=0?` <span class="medal" title="${MEDALS[md].id} medal">${MEDALS[md].em}</span>`:''}${t.y?' <em class="x2t in">×2 carrots</em>':''}</strong><span class="ds">${t.desc}</span><span class="tstars" aria-label="${b!=null?starsFor(b)+' out of 3 stars':'Not tried yet'}">${starRow(b!=null?starsFor(b):0)}</span></span></button>`}
 
 /* ---------- players ---------- */
 const curName=()=>(PROF.list.find(p=>p.id===PROF.active)||{}).name||'';
@@ -1834,15 +1876,15 @@ function settle(ok){
   if(q.fact)recordFact(q.fact,ok,S.hintUsed);
   persist();
   if(ok){
-    if(!q.bonus)S.score++;S.streak++;
+    if(!q.bonus)S.score++;S.streak++;if(q.fixH)oopsFixed(q.fixH);
     S.lastGain=1;
     if(S.streak>=3&&!S.hintUsed){S.lastGain=2;S.lastBonus=true}
     /* every right answer is worth 3 carrots, 5 in the times tables trainer (plus the windmill upgrade), doubled on Year 3 and 4 work */
-    const m2=isY34(q)?2:1,cg=((q.tid==='tt'?5:3)+bbLv('mill'))*m2;gainStars(S.lastGain,0);SAVE.coins+=cg;S.lastCarr=cg;bump('ans');if(q.tid==='tt')bump('tt');S.earn+=S.lastGain;S.carr=(S.carr||0)+cg;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
+    const m2=isY34(q)?2:1,cg=((q.tid==='tt'?5:3)+bbLv('mill'))*m2*(q.fixH?2:1);gainStars(S.lastGain,0);SAVE.coins+=cg;S.lastCarr=cg;bump('ans');if(q.tid==='tt')bump('tt');S.earn+=S.lastGain;S.carr=(S.carr||0)+cg;S.lastX2=m2===2;if(m2===2)S.y3n=(S.y3n||0)+1;persist();
     S.line=S.streak===3?'Three in a row! You are on a roll, like a carrot cake roll!':S.streak===5?'FIVE in a row! Cookie is dizzy with joy!':S.streak>=7?'Unstoppable! Not even the foxes can catch you!':pick(YES);
     S.anim='bounce';
   }else{
-    S.streak=0;S.line=pick(NO);S.anim='shake';
+    S.streak=0;S.line=pick(NO);S.anim='shake';oopsAdd(q);
   }
   render();
   if(ok){snd.yes();confettiAt($v.querySelector('.ansbox')||$v.querySelector('.opt.right')||$v.querySelector('.fb'),S.lastBonus?44:26)}
@@ -1886,6 +1928,7 @@ function finish(){
     }else S.dailyInfo={first:false,n:rec.n,sub};
   }
   bump('rounds');if(S.mode==='daily')bump('dc');
+  S.medals=checkMastery();
   touchDay();if(SAVE.passes<3){SAVE.passes++;S.gotPass=true}else S.gotPass='max';persist();
   const after=rankOf(SAVE.stars);
   S.rankUp=after.name!==before.name?after.name:null;
@@ -1906,6 +1949,7 @@ function results(){
     <div class="earn">${icon('star')}<span>+${S.earn+(S.bonus5?5:0)} stars this round${S.bonus5?' (sticker book full bonus!)':''}</span></div>
     <div class="earn">${icon('carrot')}<span>+${S.carr||0} carrots${S.y3n?` (${S.y3n} question${S.y3n===1?'':'s'} earned double!)`:''}${S.ghGain?` (Greenhouse bonus: +${S.ghGain})`:''}</span></div>${nudgeHtml()}
     <div class="reward pass"><div><h3>${S.gotPass==='max'?'Your playtime bank is full!':'Playtime unlocked!'}</h3><p>${S.gotPass==='max'?'Use a pass to play for 5 minutes.':'You earned 5 minutes in the Bunny Playground.'}</p><button class="btn small sun" data-act="play">Play now</button></div></div>
+    ${(S.medals||[]).map(m=>`<div class="rankup daily">${m.em} ${m.m[0].toUpperCase()+m.m.slice(1)} medal in ${m.name}! +${m.gain} carrots!</div>`).join('')}
     ${S.dailyInfo?`<div class="rankup daily">${S.dailyInfo.first?`${SUBS[S.dailyInfo.sub]||'Maths'} Daily Challenge done! +3 stars and +5 carrots. Streak: ${S.dailyInfo.n} day${S.dailyInfo.n===1?'':'s'}!`:`${SUBS[S.dailyInfo.sub]||'Maths'} Daily Challenge practice. Your reward is already collected today!`}</div>`:''}
     ${S.weekWin?`<div class="rankup weekwin">Weekly goal reached! You earned a Maths Star certificate and 10 carrots!<br><button class="btn small" data-act="cert" data-i="${SAVE.certs.length-1}">See my certificate</button></div>`:''}
     ${S.rankUp?`<div class="rankup">New rank! You are now a ${S.rankUp}!</div>`:''}
@@ -2361,6 +2405,7 @@ const ACH=[];
   [[3,15],[10,50]].forEach(([n,r])=>A('box'+n,'🎁','Lucky bunny',`Open ${n} mystery boxes`,S_('box'),n,r));
   [[100,20],[250,60],[500,150]].forEach(([n,r])=>A('stars'+n,'🌟','Star collector',`Earn ${n} stars`,()=>SAVE.stars||0,n,r));
   [[7,30],[30,120]].forEach(([n,r])=>A('streak'+n,'🔥','Every day hero',`Play ${n} days in a row`,()=>(SAVE.day||{}).n||0,n,r));
+  [[3,20],[8,60],[15,150]].forEach(([n,r])=>A('medal'+n,'🏅','Medal hunter',`Win medals in ${n} topics`,()=>TOPICS.filter(t=>medalOf(t.id)>=0).length,n,r));
   [[3,20],[6,80]].forEach(([n,r])=>A('bond'+n,'💖','Best friends',`Get ${n} pets to Best friend`,()=>PETS.filter(p=>bondLv(p.id)>=3).length,n,r));
 })();
 const achClaimed=id=>(SAVE.ach||[]).includes(id);
