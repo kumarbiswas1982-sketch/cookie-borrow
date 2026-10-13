@@ -43,6 +43,7 @@ function mergeSaves(server, client, base) {
   out.pb = pb;
   out.st = maxMap(server.st, client.st);
   out.mast = maxMap(server.mast, client.mast);
+  { const byId = new Map(); for (const w of [...(server.writing || []), ...(client.writing || [])]) byId.set(w.id, w); out.writing = [...byId.values()].sort((a, b) => String(a.id).localeCompare(String(b.id))).slice(-40); }
   // the Fix-it Box keeps a tricky question until it is fixed on the device that fixed it, newest 30 only
   { const byH = new Map(); for (const o of [...(server.oops || []), ...(client.oops || [])]) byH.set(o.h, o); out.oops = [...byH.values()].slice(-30); }
   const qs = server.qd || { d: '', c: {}, k: {} }, qc = client.qd || { d: '', c: {}, k: {} };

@@ -418,6 +418,26 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 #toast.on{opacity:1;transform:translate(-50%,0)}
 html.big .gtab.main{font-size:1.2rem}
 .medal{font-size:1.1rem}.mix.fixc{background:var(--coral-soft)}
+.wtypes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:10px 0 16px}
+.wtype{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;background:var(--paper);border:3px solid var(--ink);border-radius:20px;padding:12px 14px;box-shadow:0 5px 0 var(--ink);font-family:var(--body)}
+.wtype .wem{font-size:2rem;line-height:1}.wtype b{font-family:var(--display);font-size:1.15rem}.wtype small{opacity:.8;font-size:.85rem;line-height:1.25}
+.wtype:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.wprompt{background:var(--sun-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;font-weight:700;margin:6px 0 10px}.wprompt.big{font-size:1.2rem}
+.wbank{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.wchip{background:#CFE9FF;border:2.5px solid var(--ink);border-radius:99px;padding:4px 12px;font-family:var(--body);font-size:.95rem}.wchip.adj{background:#FFD6E8}
+.wtextarea{width:100%;box-sizing:border-box;min-height:200px;padding:14px;border:3px solid var(--ink);border-radius:18px;font-family:var(--body);font-size:1.15rem;line-height:1.5;background:#fff;color:var(--ink);resize:vertical}
+.wcheck{list-style:none;margin:10px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 14px;font-size:.95rem}
+.wcheck li.ok{color:#1E8A55;font-weight:700}
+.wtext{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 14px;line-height:1.55;margin:6px 0}
+.wlist{display:flex;flex-direction:column;gap:10px;margin:8px 0 14px}
+.wentry{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-family:var(--body);width:100%;box-shadow:0 4px 0 var(--ink)}
+.wentry.open{box-shadow:none;cursor:default}.wmeta{font-size:.82rem;opacity:.75;margin:0}
+.mix.writec{background:#E3D6FF}
+.wtype.star{background:var(--sun-soft)}
+.wpart{display:flex;flex-direction:column;gap:6px;margin:12px 0}.wpart label{display:flex;flex-direction:column;gap:2px}.wpart label span{font-size:.9rem;opacity:.8}
+.winput{width:100%;box-sizing:border-box;padding:12px 14px;border:3px solid var(--ink);border-radius:16px;font-family:var(--body);font-size:1.1rem;background:#fff;color:var(--ink)}
+.wmtn{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wmtn span{text-align:center;font-family:var(--display);font-weight:800;font-size:.85rem;background:var(--sun);border:2.5px solid var(--ink);border-radius:10px;padding:2px 4px}
+.wplan{background:#E9F5FF;border:3px dashed var(--line);border-radius:14px;padding:8px 12px;font-size:.92rem;margin-bottom:10px}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -1184,7 +1204,7 @@ const topicName=id=>id==='mix:english'?'English mix':id==='mix:science'?'Science
 
 /* ---------- save data (one save per player) ---------- */
 const PKEY='y2m-profiles-v1',LEGACY='y2m-save-v2';
-const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],oops:[],mast:{},farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
+const DEFAULTS=()=>({v:3,sub:'maths',stars:0,coins:null,stickers:[],best:{},mute:false,calm:false,big:false,autoread:false,facts:{},acc:{},day:{last:'',n:0},passes:0,hi:{},wear:'none',hats:['none'],items:[],use:{},daily:{last:'',n:0,best:0},week:{id:'',stars:0,goal:30,done:false},certs:[],speed:{},pets:[],petOut:[],petDay:{d:'',ids:[]},labs:{},labDay:{},lastBackup:0,outfit:'none',outfits:['none'],paints:[],lessons:[],writing:[],oops:[],mast:{},farm:{p:{}},pb:{},qd:{d:'',c:{},k:{}},st:{},ach:[],rooms:{owned:['main'],r:{}},vis:'',lvClaimed:0,wallp:'dirt',floorp:'wood',bb:{lv:{},got:{}},gifts:[]});
 function readJ(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 let AUTH=readJ('y2m-auth');let SYNC=readJ('y2m-sync')||{ver:0,dirty:false};
 const keyFor=id=>id==='p1'?LEGACY:LEGACY+'-'+id;
@@ -1551,7 +1571,7 @@ const mascotBtn=(mood,cls,tappable)=>tappable?`<button class="mascot ${cls}" dat
 const starRow=n=>[0,1,2].map(i=>`<svg class="ic${i<n?' on':''}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>`).join('');
 const starsFor=(s,n=10)=>{const r=s/n;return r>=.9?3:r>=.7?2:r>=.4?1:0};
 
-function render(){applyTheme();renderTop();if(S.view!=='play')stopGame();if(S.view!=='speed'){clearInterval(SPT);SPT=0}S.view==='lab'?labView():S.view==='gate'?gate():S.view==='login'?login():S.view==='loading'?loading():S.view==='who'?who():S.view==='ws'?worksheet():S.view==='burrow'?burrow():S.view==='lesson'?lessonView():S.view==='cert'?cert():S.view==='speed'?speed():S.view==='home'?home():S.view==='quiz'?quiz():S.view==='book'?book():S.view==='learn'?learn():S.view==='report'?report():S.view==='play'?play():S.view==='playend'?playend():results()}
+function render(){applyTheme();renderTop();if(S.view!=='play')stopGame();if(S.view!=='speed'){clearInterval(SPT);SPT=0}S.view==='lab'?labView():S.view==='gate'?gate():S.view==='login'?login():S.view==='loading'?loading():S.view==='who'?who():S.view==='ws'?worksheet():S.view==='burrow'?burrow():S.view==='write'?writeView():S.view==='lesson'?lessonView():S.view==='cert'?cert():S.view==='speed'?speed():S.view==='home'?home():S.view==='quiz'?quiz():S.view==='book'?book():S.view==='learn'?learn():S.view==='report'?report():S.view==='play'?play():S.view==='playend'?playend():results()}
 
 function withSeed(str,fn){
   let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
@@ -1569,6 +1589,287 @@ function reviewPlan(){
 const isDailyId=id=>id==='daily'||String(id).startsWith('daily:');
 const dailySubOf=id=>id==='daily'?'maths':String(id).slice(6);
 const dailyIdOf=sub=>sub==='maths'?'daily':'daily:'+sub;
+/* =====================================================================
+   Writing Studio: school-style writing. Narrative first (plan, beginning,
+   problem, solution, ending), then recounts, information reports,
+   procedures, persuasive writing, descriptions, letters and poems.
+   Every type has guided parts, a word bank, a live checklist, Cookie's
+   feedback, and a writing book that remembers everything.
+   ===================================================================== */
+const W_NAMES=['Poppy','Max','Mia','Ollie','Zara','Leo','Ruby','Jack','Ava','Finn','Lily','Sam','Ella','Noah','Isla','Tom','Nina','Kai','Pippa','Ben','Maya','Archie','Evie','Harry','Grace','Theo','Chloe','Jai','Amelia','Hugo'];
+const W_ANIMALS=['kangaroo','koala','wombat','platypus','emu','kookaburra','echidna','crocodile','dolphin','penguin','turtle','parrot','frog','hedgehog','fox','owl','bunny','puppy','kitten','elephant','giraffe','lion','monkey','panda','tiger','whale','octopus','seahorse','butterfly','ladybird','dragon','unicorn','dinosaur','robot','mouse','possum','bilby','quokka','cockatoo','lizard'];
+const W_PLACES=['the beach','a dark cave','the park','a magic forest','the school playground','a spooky castle','the farm','a busy city','the bush','a tall mountain','a secret garden','a space station','the library','a rainy street','the zoo','a tiny island','a big supermarket','a quiet lake','the circus','an old lighthouse','a treehouse','the desert','a deep jungle','the swimming pool','a train station','grandma\'s kitchen','a snowy hill','under the sea','the moon','a toy shop'];
+const W_OBJECTS=['a glowing key','a talking map','a tiny door','a golden egg','a mysterious box','a shiny stone','a magic wand','a singing shell','a lost kite','a silver feather','an old suitcase','a sparkling crown','a purple umbrella','a mysterious letter','a giant footprint','a little robot','a sleepy dragon egg','a rainbow ladder','a clock with no hands','a bottle with a note inside'];
+const W_PROBLEMS=['gets lost and cannot find the way home','loses something very special','hears a strange sound in the night','meets a very grumpy giant','gets stuck in the mud','wakes up very, very small','finds a door that was not there yesterday','has to keep a big secret','needs to help a new friend','sees something shiny floating in the sky','is chased by a cheeky crow','finds a baby animal that is all alone','cannot get a kite out of a tall tree','is afraid of the dark','breaks a favourite toy'];
+const W_SOLUTIONS=['asks a friend for help and they solve it together','is brave and tries something new','uses a clever idea','says sorry and makes things right','follows the clues and finds the answer','shares what they have','stays calm and thinks it through','gets help from a kind stranger'];
+const W_FEELINGS='happy sad proud excited relieved glad scared nervous brave lonely worried joyful cheerful delighted thankful safe surprised grateful pleased cross upset embarrassed amazed'.split(' ');
+const W_TOPICS=['my best friend','my favourite food','a rainy day','the funniest thing that ever happened to me','my pet (or the pet I wish I had)','my family','my favourite game','a day at the beach','what I want to be when I grow up','my school','the best birthday ever','a trip somewhere new','a very windy day','my bedroom','the night sky','my favourite season','a tasty snack','a big storm','a day with no rules','my hero'];
+const W_LETTER_TO=['your teacher','a friend who lives far away','your grandma or grandpa','the Prime Minister','Cookie the bunny','a zookeeper','your future self','a new student at school','Santa Claus','an astronaut'];
+const W_PERSUADE=['Should every school have a class pet?','Should children get longer lunch breaks?','Should kids be allowed to have a pet bunny?','Is it better to have summer holidays at the beach or in the mountains?','Should we have a school garden?','Should everyone read for 20 minutes every day?','Should there be a puppy day at school?','Should we plant more trees in our town?','Is it better to walk or ride to school?','Should every child learn to swim?','Should we use less plastic?','Should we have more playgrounds?','Should school start later in the morning?','Should kids help cook dinner?'];
+const W_HOWTO=['make a jam sandwich','build a sandcastle','plant a seed','make a paper plane','wash a dog','brush your teeth','make a birthday card','bake a cake','make a cup of hot chocolate','make a bed','get ready for school','fly a kite','draw a cartoon bunny','make a fruit salad','look after a pet fish','make slime safely','pack a school bag','blow a bubble','make a paper boat','tie your shoelaces'];
+const W_REPORTS=['kangaroos','koalas','the moon','the ocean','dinosaurs','bees','rainforests','the Sun','penguins','volcanoes','sharks','rainbows','Australia','frogs','trees','owls','the desert','butterflies','whales','crocodiles','wombats','space','the rainforest'];
+const W_SCENES=['🐸','🐢','🦘','🐨','🌧️','☀️','🌈','🏠','⛺','🚀','🌙','⭐','🏖️','🌳','🚲','🎂','🎈','🐠','🦋','🍎','🧸','🎨','🚂','⛵','🏰','🐉','🦄','🍕','🌻','🍂'];
+const W_ADJ='happy sad big small tiny huge giant little fluffy soft hard shiny sparkly bright dark colourful loud quiet noisy silent fast slow quick brave scared shy kind gentle friendly grumpy silly funny clever smart lazy sleepy tired excited nervous proud lonely cheeky wild tall short long thin thick round smooth rough bumpy sticky slimy wet dry hot cold warm cool icy sunny rainy windy stormy cloudy misty beautiful pretty ugly lovely wonderful amazing terrible scary spooky creepy magical mysterious secret old new ancient young fresh juicy sweet sour salty yummy delicious smelly stinky dusty muddy sandy golden silver purple orange pink green blue red yellow white black brown spotty stripy fuzzy furry feathery scaly prickly sharp spiky heavy light empty full messy tidy clean dirty busy calm peaceful cosy snug lucky special strange odd rare precious favourite'.split(' ');
+const W_JOIN=['and','but','because','so','then','when','while','after','before','if','until','or'];
+const W_TIME=['first','next','then','after','finally','suddenly','later','soon','meanwhile','once','one','morning','afternoon','night','yesterday','today','before','while','just','at'];
+/* each writing type is made of parts, so a child writes a beginning, a middle and an end rather than one big blob */
+const W_TYPES=[
+  {id:'narrative',name:'Narrative: tell a story',em:'📖',star:1,min:40,sent:6,
+   tip:'A narrative has a beginning, a problem, a solution and an ending. Plan it first!',
+   parts:[
+    {id:'a',label:'Beginning',tip:'Who is in your story? Where and when does it happen? Set the scene.',min:10,ph:'One sunny morning, ...'},
+    {id:'b',label:'The problem',tip:'Something goes wrong! What happens? Use "Suddenly".',min:10,ph:'Suddenly, ...'},
+    {id:'c',label:'Solving the problem',tip:'How do the characters fix it? What do they try?',min:10,ph:'First, ... Then, ...'},
+    {id:'d',label:'The ending',tip:'How does it end? How do the characters feel now?',min:8,ph:'In the end, ...'}]},
+  {id:'recount',name:'Recount: what happened',em:'⏰',min:30,sent:5,tip:'Tell what happened in order: first, next, then, finally.',
+   parts:[{id:'a',label:'Who, what, when, where',tip:'Tell us who was there, what you did, when and where.',min:8,ph:'Last Saturday, I went to ...'},{id:'b',label:'What happened',tip:'Tell the events in order. Use first, next, then, after that.',min:15,ph:'First, ... Next, ...'},{id:'c',label:'How you felt',tip:'End with how you felt or what you thought.',min:6,ph:'I felt ...'}]},
+  {id:'report',name:'Information report',em:'🦘',min:35,sent:5,tip:'Write facts that are true. One fact in each sentence.',
+   parts:[{id:'a',label:'What is it?',tip:'Say what it is and what group it belongs to.',min:6,ph:'A kangaroo is a ...'},{id:'b',label:'Facts about it',tip:'Where does it live? What does it eat? What does it look like?',min:18,ph:'Kangaroos live in ...'},{id:'c',label:'An amazing fact',tip:'Finish with the most amazing thing you know.',min:6,ph:'Did you know ...'}]},
+  {id:'procedure',name:'Procedure: how to...',em:'🧾',min:30,sent:5,tip:'Write what you need and then the steps in order. Use bossy (command) verbs.',
+   parts:[{id:'a',label:'Goal and things you need',tip:'What are you making or doing? List what you need.',min:6,ph:'How to make a ...  You will need: ...'},{id:'b',label:'Steps',tip:'Number your steps: 1. 2. 3. Start each with a doing word.',min:18,ph:'1. First, ...\n2. Next, ...'}]},
+  {id:'persuasive',name:'Persuasive writing',em:'📣',min:30,sent:5,tip:'Say what you think, give reasons with "because", then say it again strongly.',
+   parts:[{id:'a',label:'What I think',tip:'Say your opinion clearly.',min:6,ph:'I think that ...'},{id:'b',label:'My reasons',tip:'Give at least two reasons. Use because, also, and another reason.',min:16,ph:'One reason is ... because ...'},{id:'c',label:'My strong ending',tip:'Say it again and try to persuade the reader.',min:6,ph:'That is why we should ...'}]},
+  {id:'describe',name:'Describe it',em:'🔍',min:25,sent:4,tip:'Use your five senses: see, hear, smell, taste, touch.',
+   parts:[{id:'a',label:'What is it?',tip:'Say what you are describing.',min:6,ph:'The ... is ...'},{id:'b',label:'Describe it',tip:'Add lots of describing words. What does it look, sound and feel like?',min:18,ph:'It is ... It looks ...'}]},
+  {id:'letter',name:'Write a letter',em:'✉️',min:25,sent:4,tip:'Start with Dear, tell your news, and finish with your name.',
+   parts:[{id:'a',label:'Greeting',tip:'Start with Dear and the name.',min:2,ph:'Dear ...,'},{id:'b',label:'Your news',tip:'Tell your news. Ask a question too.',min:18,ph:'I am writing to tell you ...'},{id:'c',label:'Sign off',tip:'Finish with Love, From or Yours, and your name.',min:2,ph:'From,'}]},
+  {id:'poem',name:'Poem time',em:'🎵',min:12,sent:2,tip:'Try to make two lines rhyme. Short lines are great!',
+   parts:[{id:'a',label:'My poem',tip:'Write your poem. Use lots of describing words and try rhyming.',min:10,ph:'Roses are red ...'}]}
+];
+const wType=id=>W_TYPES.find(t=>t.id===id)||W_TYPES[0];
+function wPrompt(type,r){
+  const P=a=>a[Math.floor(r()*a.length)];
+  if(type==='narrative'){
+    const k=Math.floor(r()*5),n=P(W_NAMES);
+    if(k===0)return `One sunny morning, ${n} found ${P(W_OBJECTS)} in ${P(W_PLACES)}. What happened next? Write a narrative.`;
+    if(k===1)return `Write a narrative about ${n} the ${P(W_ANIMALS)} who ${P(W_PROBLEMS)}.`;
+    if(k===2)return `Write a narrative that begins: "It was the strangest day ever, because ${n} saw a ${P(W_ANIMALS)} in ${P(W_PLACES)}."`;
+    if(k===3)return `Imagine ${n} and a ${P(W_ANIMALS)} go to ${P(W_PLACES)} and discover ${P(W_OBJECTS)}. Write a narrative about their adventure.`;
+    return `Write an adventure story set in ${P(W_PLACES)}. Your main character must ${P(['learn something new','be brave','help a friend','find something that was lost','make a big decision'])}.`;
+  }
+  if(type==='recount')return `Write a recount about ${P(W_TOPICS)}. Tell what happened first, next, then and finally.`;
+  if(type==='report')return `Write an information report about ${P(W_REPORTS)}. Tell us what it is, some facts about it, and one amazing fact.`;
+  if(type==='procedure')return `Write a procedure telling someone how to ${P(W_HOWTO)}. List what you need and number the steps.`;
+  if(type==='persuasive')return `${P(W_PERSUADE)} Write to persuade the reader. Give your opinion and at least two reasons.`;
+  if(type==='describe'){
+    const k=Math.floor(r()*3);
+    if(k===0)return `Describe ${P(W_PLACES)} so well that I can picture it. Tell me what you see, hear and smell.`;
+    if(k===1)return `Describe a ${P(W_ANIMALS)}. What does it look like, sound like and feel like?`;
+    const a=P(W_SCENES);let b=P(W_SCENES),g=0;while(b===a&&g++<10)b=P(W_SCENES);
+    return `Look at this picture: ${a} ${b}. Describe everything you can see, hear and feel in this scene.`;
+  }
+  if(type==='letter')return `Write a letter to ${P(W_LETTER_TO)} about ${P(W_TOPICS)}.`;
+  return `Write a short poem about ${P(['a '+P(W_ANIMALS),P(W_PLACES),P(W_TOPICS),'a rainy day','the moon','my favourite colour'])}. Try to make two lines rhyme.`;
+}
+function newWritePrompt(type){
+  let seen=[];try{seen=JSON.parse(localStorage.getItem('y2m-wseen')||'[]')}catch(e){}
+  let best='',tries=0;
+  while(tries++<30){const p=wPrompt(type,Math.random);best=p;if(!seen.includes(hash32(p)))break}
+  seen.push(hash32(best));
+  try{localStorage.setItem('y2m-wseen',JSON.stringify(seen.slice(-250)))}catch(e){}
+  return best;
+}
+const wJoin=W=>wType(W.type).parts.map(p=>String((W.parts||{})[p.id]||'').trim()).filter(Boolean).join('\n\n');
+function wChecks(W){
+  const ty=wType(W.type),parts=W.parts||{},t=wJoin(W);
+  const sents=t.replace(/([.!?]+["')]*)\s+/g,'$1\u0001').split('\u0001').map(s=>s.trim()).filter(Boolean);
+  const words=t.split(/\s+/).filter(Boolean),lw=words.map(w=>w.toLowerCase().replace(/[^a-z']/g,''));
+  const wc=id=>String(parts[id]||'').trim().split(/\s+/).filter(Boolean).length;
+  const has=a=>lw.some(w=>a.includes(w)),any=re=>re.test(t);
+  const startsU=new Set(sents.map(s=>(s.split(/\s+/)[0]||'').toLowerCase())).size;
+  const L=[];const add=(ok,txt,tip)=>L.push({ok:!!ok,txt,tip:tip||txt});
+  add(/^["'(]*[A-Z]/.test(t),'Starts with a capital letter','Begin with a capital letter.');
+  add(sents.length>0&&sents.every((s,i)=>/^["'(\d]*[A-Z\d]/.test(s)||(i>0&&/[!?,]["”']$/.test(sents[i-1]))),'Every sentence starts with a capital','Check that each sentence starts with a capital letter.');
+  add(/[.!?]["')]*$/.test(t),'Ends with . ? or !','Finish your last sentence with a full stop.');
+  add(sents.length>=ty.sent,`At least ${ty.sent} sentences`,`Try to write ${ty.sent} sentences or more.`);
+  add(words.length>=ty.min,`At least ${ty.min} words`,`Keep going. Aim for ${ty.min} words.`);
+  add(has(W_ADJ),'Uses a describing word','Add a describing word, like fluffy, tiny or sparkly.');
+  add(has(W_JOIN),'Uses a joining word (and, but, because)','Join two ideas with and, but or because.');
+  add(sents.length<3||startsU>=Math.min(3,sents.length-1),'Sentences start in different ways','Try not to start every sentence with the same word.');
+  add(!/(^|\s)i(\s|$|[,.!?'])/.test(t),'The word "I" is a capital letter','The word I is always a capital letter.');
+  const partsOk=ty.parts.every(p=>wc(p.id)>=Math.min(p.min,8));
+  if(ty.parts.length>1)add(partsOk,'Every part is written ('+ty.parts.map(p=>p.label).join(', ')+')','Write something in every box: '+ty.parts.filter(p=>wc(p.id)<Math.min(p.min,8)).map(p=>p.label).join(', ')+'.');
+  if(ty.id==='narrative'){
+    const nm=String((W.plan||{}).char||'').trim().split(/\s+/)[0].toLowerCase().replace(/[^a-z]/g,'');
+    add(!nm||String(parts.a||'').toLowerCase().includes(nm),'The beginning names your main character','Name your main character in the beginning.');
+    add(has(['suddenly','but','oh','however','oops','unfortunately'])||/\b(lost|stuck|scared|trouble|problem|strange|noise)\b/i.test(String(parts.b||'')),'There is a problem to solve','Show the problem clearly. Try starting with "Suddenly,".');
+    add(has(['finally','eventually','so','then','solved','fixed','found','helped','together']),'The problem gets solved','Show how the problem is solved.');
+    add(has(W_FEELINGS),'Says how someone felt','Say how your character felt at the end: happy, proud, relieved ...');
+    add(any(/["“”]/),'Has speech in quotation marks (bonus)','Try adding what a character says in speech marks: "Help!" cried Poppy.');
+    add(has(W_TIME),'Uses time words (suddenly, then, finally)','Use time words like suddenly, then, next, finally.');
+  }else if(ty.id==='recount'){
+    add(has(['first','next','then','after','finally','later']),'Events are in order (first, next, then)','Put your events in order with first, next, then, finally.');
+    add(has(W_FEELINGS)||any(/\bI (felt|thought|loved|liked|enjoyed)\b/),'Says how you felt','Tell how you felt at the end.');
+    add(any(/\b(yesterday|today|last|on monday|on tuesday|on wednesday|on thursday|on friday|on saturday|on sunday|this morning|one day)\b/i),'Says when it happened','Say when it happened: last Saturday, yesterday ...');
+  }else if(ty.id==='report'){
+    add(any(/\b(is|are) (a|an|the)?\b/i),'Starts by saying what it is','Begin by saying what it is: "A koala is a ..."');
+    add(any(/\b(live|lives|eat|eats|found|called|can|have|has)\b/i),'Includes real facts (lives, eats, has)','Add facts: where it lives, what it eats, what it has.');
+  }else if(ty.id==='procedure'){
+    add(any(/(^|\n)\s*(1|one)[.):]/i)||has(['first','next','then','finally']),'Steps are numbered or in order','Number your steps: 1. 2. 3.');
+    add(any(/you (will )?need|materials|ingredients|equipment|things you need/i),'Lists what you need','Say what you need: "You will need ..."');
+  }else if(ty.id==='persuasive'){
+    add(any(/\bI (think|believe|feel)\b|\bshould\b|\bmust\b/i),'States an opinion (I think, should)','Say what you think: "I think we should ..."');
+    add(has(['because','also','another','reason']),'Gives reasons (because, another reason)','Give reasons with because and another reason.');
+    add(any(/\b(that is why|so we|therefore|in conclusion|finally|that is the reason)\b/i),'Ends strongly (that is why, so we should)','Finish strongly: "That is why we should ..."');
+  }else if(ty.id==='letter'){
+    add(any(/^dear\b/i),'Starts with Dear','Begin with "Dear ..."');
+    add(any(/\b(from|love|yours|regards)\b/i),'Has a sign-off (From, Love)','Finish with From, Love or Yours and your name.');
+  }
+  return {words:words.length,sents:sents.length,list:L};
+}
+const wStarsFor=c=>{const n=c.list.filter(x=>x.ok).length,r=n/c.list.length;return r>=.85?3:r>=.65?2:1};
+
+/* ----- draft, views and actions ----- */
+function wDraftSave(){try{const W=S.w;localStorage.setItem('y2m-wdraft',JSON.stringify({type:W.type,prompt:W.prompt,plan:W.plan,parts:W.parts}))}catch(e){}}
+function writeCard(){
+  const n=(SAVE.writing||[]).length;
+  return `<div class="mix writec"><div><h2>Cookie's Writing Studio</h2><p>${n?`You have written ${n} piece${n===1?'':'s'}. Plan a narrative, write a recount, a report and more!`:'Narratives, recounts, reports, procedures and persuasive writing. Plan it, write it, and Cookie checks it!'}</p></div><button class="btn sun" data-act="wr" data-op="open">Start writing</button></div>`;
+}
+function wPartsHtml(W){
+  const ty=wType(W.type);
+  return ty.parts.map((p,i)=>`<div class="wpart"><label for="wp_${p.id}"><b>${i+1}. ${p.label}</b><span>${p.tip}</span></label><textarea id="wp_${p.id}" class="wtextarea" data-part="${p.id}" rows="${p.min>=15?7:4}" spellcheck="true" autocapitalize="sentences" placeholder="${esc(p.ph||'')}">${esc((W.parts||{})[p.id]||'')}</textarea></div>`).join('');
+}
+function writeView(){
+  const W=S.w||(S.w={step:'pick',type:'',prompt:'',text:''});
+  if(W.step==='pick'){
+    const n=(SAVE.writing||[]).length;
+    $v.innerHTML=`
+    <div class="qhead">${mascotBtn('happy','big',false)}${bubble('Welcome to the Writing Studio! What kind of writing would you like to do today?')}</div>
+    <section class="card"><h2>Choose what to write</h2>
+      <div class="wtypes">${W_TYPES.map(t=>`<button class="wtype${t.star?' star':''}" data-act="wr" data-op="type" data-id="${t.id}"><span class="wem" aria-hidden="true">${t.em}</span><b>${t.name}</b><small>${t.tip}</small></button>`).join('')}</div>
+      <div class="actions"><button class="btn alt" data-act="wr" data-op="journal">My writing book${n?` (${n})`:''}</button><button class="btn alt" data-act="home">Home</button></div>
+    </section>`;
+    return;
+  }
+  if(W.step==='journal'){
+    const list=(SAVE.writing||[]).slice().reverse(),open=list.find(e=>e.id===W.openId);
+    $v.innerHTML=`
+    <div class="qhead">${mascotBtn('cheer','big',false)}${bubble(list.length?'Here is everything you have written. Wow, you are an author!':'Your writing book is empty. Write something and it will appear here!')}</div>
+    <section class="card"><h2>My writing book</h2>
+      ${open?`<div class="wentry open"><p class="wmeta">${wType(open.t).em} ${wType(open.t).name} · ${fmtDate(open.d)} · ${open.n} words ${'⭐'.repeat(open.s||1)}</p><p class="wprompt">${esc(open.p)}</p><div class="wtext">${esc(open.x).replace(/\n/g,'<br>')}</div><div class="actions"><button class="btn small" data-act="wr" data-op="readentry" data-id="${open.id}">Read it to me</button><button class="btn small alt" data-act="wr" data-op="copy" data-id="${open.id}">Copy</button><button class="btn small alt" data-act="wr" data-op="remove" data-id="${open.id}">${W.rmAsk===open.id?'Tap again to remove':'Remove'}</button><button class="btn small alt" data-act="wr" data-op="journal">Back</button></div></div>`
+      :`<div class="wlist">${list.map(e=>`<button class="wentry" data-act="wr" data-op="entry" data-id="${e.id}"><span class="wmeta">${wType(e.t).em} ${wType(e.t).name} · ${fmtDate(e.d)} · ${e.n} words ${'⭐'.repeat(e.s||1)}</span><b>${esc(e.x.slice(0,90))}${e.x.length>90?'…':''}</b></button>`).join('')}</div>`}
+      <div class="actions"><button class="btn" data-act="wr" data-op="open">Write something new</button><button class="btn alt" data-act="home">Home</button></div>
+    </section>`;
+    return;
+  }
+  const ty=wType(W.type);
+  if(W.step==='plan'){
+    const pl=W.plan||(W.plan={char:'',setting:'',problem:'',solution:''});
+    const F=(id,label,tip,ph)=>`<div class="wpart"><label for="wpl_${id}"><b>${label}</b><span>${tip}</span></label><input id="wpl_${id}" class="winput" data-plan="${id}" value="${esc(pl[id]||'')}" placeholder="${esc(ph)}" autocapitalize="sentences"></div>`;
+    $v.innerHTML=`
+    <div class="qhead">${mascotBtn('think','big',false)}${bubble('Good writers plan first! Fill in your story plan. Stuck? Tap "Surprise me" for ideas!')}</div>
+    <section class="card"><p class="meta"><span>${ty.em} ${ty.name}</span><span>Step 1: Plan</span></p>
+      <div class="wprompt big">${esc(W.prompt)}</div>
+      <div class="wmtn" aria-hidden="true"><span>Beginning</span><span>Problem</span><span>Solution</span><span>Ending</span></div>
+      ${F('char','Who is the main character?','Give them a name. Are they a person or an animal?','Poppy the kangaroo')}
+      ${F('setting','Where and when does it happen?','Think of the place and the time.','a dark cave at midnight')}
+      ${F('problem','What is the problem?','Something goes wrong. What is it?','she gets lost and cannot find her way home')}
+      ${F('solution','How is the problem solved?','How do they fix it? Who helps?','she follows the glowing fireflies')}
+      <div class="actions"><button class="btn" data-act="wr" data-op="startwrite">Start writing my story</button><button class="btn alt small" data-act="wr" data-op="surprise">Surprise me</button><button class="btn alt small" data-act="wr" data-op="another">Another prompt</button><button class="btn alt small" data-act="wr" data-op="open">Back</button></div>
+    </section>`;
+    return;
+  }
+  if(W.step==='done'){
+    const r=W.result;
+    $v.innerHTML=`
+    <div class="qhead">${mascotBtn(r.stars>=3?'cheer':'happy','big bounce',false)}${bubble(r.stars>=3?'WOW! What a brilliant piece of writing! I am so proud of you!':r.stars===2?'Lovely writing! You used so many good ideas!':'Well done for writing! Try the tips below to make it even better next time.')}</div>
+    <section class="card"><h2>Cookie's feedback</h2>
+      <div class="wtext">${esc(W.text).replace(/\n/g,'<br>')}</div>
+      <p class="meta"><span>${r.words} words, ${r.sents} sentences</span><span>${'⭐'.repeat(r.stars)}</span></p>
+      <ul class="wcheck">${r.list.map(x=>`<li class="${x.ok?'ok':'no'}">${x.ok?'✅':'💡'} ${x.ok?x.txt:x.tip}</li>`).join('')}</ul>
+      ${r.reward?`<div class="earn">${icon('star')}<span>+${r.reward.stars} stars and +${r.reward.carrots} carrots for writing!</span></div>`:'<p class="sub">You have already earned writing rewards three times today. Your writing is saved in your book!</p>'}
+      <div class="actions"><button class="btn" data-act="wr" data-op="improve">Make it even better</button><button class="btn alt" data-act="wr" data-op="open">Write another</button><button class="btn alt" data-act="wr" data-op="journal">My writing book</button><button class="btn alt" data-act="home">Home</button></div>
+    </section>`;
+    return;
+  }
+  const chk=wChecks(W);
+  if(!W.bank)W.bank=shuffle(W_ADJ).slice(0,8);
+  const starters=W.type==='narrative'?['One day,','Suddenly,','Next,','Then,','After that,','Finally,','In the end,']:W.type==='procedure'?['First,','Next,','Then,','After that,','Finally,','You will need']:W.type==='persuasive'?['I think','Because','Another reason is','That is why','In conclusion,']:W.type==='letter'?['Dear','I am writing to','Thank you for','From,','Love,']:['One day,','First,','Next,','Then,','Finally,','I felt','It was'];
+  const plan=W.type==='narrative'&&W.plan?`<div class="wplan"><b>My plan:</b> ${esc(W.plan.char||'?')} · ${esc(W.plan.setting||'?')} · problem: ${esc(W.plan.problem||'?')} · solution: ${esc(W.plan.solution||'?')}</div>`:'';
+  $v.innerHTML=`
+  <div class="qhead">${mascotBtn('think','big',false)}${bubble(ty.tip)}</div>
+  <section class="card"><p class="meta"><span>${ty.em} ${ty.name}</span><span id="wcount">${chk.words} words</span></p>
+    <div class="wprompt big">${esc(W.prompt)}</div>${plan}
+    <div class="wbank" aria-label="Word bank">${starters.map(s=>`<button class="wchip" data-act="wr" data-op="ins" data-t="${esc(s)} ">${esc(s)}</button>`).join('')}${W.bank.map(s=>`<button class="wchip adj" data-act="wr" data-op="ins" data-t="${esc(s)} ">${esc(s)}</button>`).join('')}</div>
+    ${wPartsHtml(W)}
+    <ul class="wcheck live" id="wlive">${chk.list.map(x=>`<li class="${x.ok?'ok':'no'}">${x.ok?'✅':'⬜'} ${x.txt}</li>`).join('')}</ul>
+    <div class="actions"><button class="btn" data-act="wr" data-op="finish">I am finished!</button><button class="btn alt small" data-act="wr" data-op="read">Read it to me</button><button class="btn alt small" data-act="wr" data-op="another">Another prompt</button><button class="btn alt small" data-act="wr" data-op="open">Back</button></div>
+  </section>`;
+}
+function wLive(){
+  const W=S.w;if(!W)return;
+  W.parts=W.parts||{};
+  document.querySelectorAll('textarea[data-part]').forEach(t=>{W.parts[t.dataset.part]=t.value});
+  W.text=wJoin(W);wDraftSave();
+  const c=wChecks(W),cnt=document.getElementById('wcount'),l=document.getElementById('wlive');
+  if(cnt)cnt.textContent=c.words+' words';
+  if(l)l.innerHTML=c.list.map(x=>`<li class="${x.ok?'ok':'no'}">${x.ok?'✅':'⬜'} ${x.txt}</li>`).join('');
+}
+document.addEventListener('input',e=>{
+  const t=e.target;if(!t||!S.w)return;
+  if(t.dataset&&t.dataset.part!=null)wLive();
+  else if(t.dataset&&t.dataset.plan!=null){S.w.plan=S.w.plan||{};S.w.plan[t.dataset.plan]=t.value;wDraftSave()}
+});
+document.addEventListener('focusin',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.part!=null&&S.w)S.w.focus=t.id});
+function writeAct(b){
+  const op=b.dataset.op,id=b.dataset.id;
+  const W=S.w||(S.w={step:'pick',type:'',prompt:'',text:''});
+  const go=()=>{render();window.scrollTo(0,0)};
+  if(op==='open'){snd.tap();S.view='write';S.w={step:'pick',type:'',prompt:'',text:''};go();return}
+  if(op==='type'){
+    snd.tap();S.view='write';
+    let d=null;try{d=JSON.parse(localStorage.getItem('y2m-wdraft')||'null')}catch(e){}
+    const hasDraft=d&&d.type===id&&d.parts&&Object.values(d.parts).some(v=>String(v).trim());
+    S.w={step:id==='narrative'&&!hasDraft?'plan':'write',type:id,prompt:hasDraft?d.prompt:newWritePrompt(id),plan:(hasDraft&&d.plan)||{char:'',setting:'',problem:'',solution:''},parts:hasDraft?d.parts:{},text:''};
+    go();return;
+  }
+  if(op==='another'){snd.tap();W.prompt=newWritePrompt(W.type);W.bank=null;go();return}
+  if(op==='surprise'){
+    const r=Math.random,P=a=>a[Math.floor(r()*a.length)];
+    const nm=P(W_NAMES);W.plan={char:`${nm} the ${P(W_ANIMALS)}`,setting:`${P(W_PLACES)} ${P(['at midnight','on a rainy morning','one sunny afternoon','just before sunrise'])}`,problem:`${nm} ${P(W_PROBLEMS)}`,solution:`${nm} ${P(W_SOLUTIONS)}`};
+    snd.tap();go();return;
+  }
+  if(op==='startwrite'){
+    document.querySelectorAll('input[data-plan]').forEach(t=>{W.plan=W.plan||{};W.plan[t.dataset.plan]=t.value});
+    snd.tap();W.step='write';go();return;
+  }
+  if(op==='ins'){
+    const ta=document.getElementById(W.focus)||document.querySelector('textarea[data-part]');if(!ta)return;
+    const t=b.dataset.t,s=ta.selectionStart==null?ta.value.length:ta.selectionStart,e=ta.selectionEnd==null?s:ta.selectionEnd;
+    ta.value=ta.value.slice(0,s)+t+ta.value.slice(e);const p=s+t.length;ta.focus();try{ta.setSelectionRange(p,p)}catch(_){}
+    wLive();snd.tap();return;
+  }
+  if(op==='read'){wLive();speakText(wJoin(W)||W.prompt);return}
+  if(op==='improve'){snd.tap();W.step='write';go();return}
+  if(op==='finish'){
+    wLive();
+    const c=wChecks(W);
+    if(c.words<10){toast('Write a little more first. Try for at least 10 words!');snd.no();return}
+    const stars=wStarsFor(c),q=qToday(),first=(q.c.write||0)<3;
+    let reward=null;
+    if(first){const car=6+stars*4;gainStars(stars,0);SAVE.coins+=car;reward={stars,carrots:car}}
+    const text=wJoin(W);
+    SAVE.writing=SAVE.writing||[];
+    SAVE.writing.push({id:'w'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36),d:todayTag(),t:W.type,p:W.prompt,x:text.slice(0,1800),n:c.words,s:stars});
+    while(SAVE.writing.length>40)SAVE.writing.shift();
+    bump('write');touchDay();persist();
+    try{localStorage.removeItem('y2m-wdraft')}catch(e){}
+    W.text=text;W.step='done';W.result=Object.assign({},c,{stars,reward});
+    snd.fan();go();if(stars>=2)rain();return;
+  }
+  if(op==='journal'){snd.tap();W.step='journal';W.openId='';W.rmAsk='';S.view='write';go();return}
+  if(op==='entry'){snd.tap();W.openId=id;W.step='journal';W.rmAsk='';go();return}
+  if(op==='readentry'){const e=(SAVE.writing||[]).find(x=>x.id===id);if(e)speakText(e.x);return}
+  if(op==='copy'){
+    const e=(SAVE.writing||[]).find(x=>x.id===id);if(!e)return;
+    try{navigator.clipboard.writeText(e.x).then(()=>toast('Copied!'),()=>toast('Could not copy'))}catch(_){toast('Could not copy')}return;
+  }
+  if(op==='remove'){
+    if(W.rmAsk!==id){W.rmAsk=id;go();return}
+    SAVE.writing=(SAVE.writing||[]).filter(x=>x.id!==id);W.openId='';W.rmAsk='';persist();go();return;
+  }
+}
+
 /* ---------- Fix-it Box: tricky questions come back until they are fixed ---------- */
 const hash32=s=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
 function oopsAdd(q){
@@ -1648,7 +1949,7 @@ function home(){
   <div class="qhead hero">${mascotBtn('happy','big '+anim,true)}${bubble(S.homeLine)}</div>
   <div class="rank"><h2>${curName()?esc(curName())+', you':'You'} are a ${rk.name}!</h2><div class="meter" role="img" aria-label="Progress to next rank"><i style="width:${pct}%"></i></div><p>${rk.next?`${rk.next-SAVE.stars} more star${rk.next-SAVE.stars===1?'':'s'} to become a ${rk.nextName}.`:'You are at the top of the mob. Legend!'}</p>
     <p class="daily">${icon('flame')}<span>${playedToday()?`Great! You played today. Day streak: ${SAVE.day.n}`:SAVE.day.n&&SAVE.day.last?`Play a round today to keep your day streak going! (${SAVE.day.n} so far)`:'Play one round every day to build a day streak!'}</span></p></div>
-  ${subTabs()}${dailyCard()}${reviewCard()}${fixCard()}${playBanner()}
+  ${subTabs()}${dailyCard()}${writeCard()}${reviewCard()}${fixCard()}${playBanner()}
   ${subBody()}
   ${weekCard()}${burrowCard()}
   <p class="foot">Questions are made fresh every round and follow the Australian Curriculum (Version 9) for Year 2 Maths, English and Science, with Year 3 and 4 times tables for stretch. Progress is saved to Srimaa\u2019s account, so it follows her to every device. <span class="syncst">${syncText()}</span> <button class="link" data-act="gate">Grown-ups corner</button></p>`;
@@ -2378,7 +2679,8 @@ const QPOOL=[
   {id:'feed',key:'feed',opts:[1,2,3],txt:n=>`Feed ${n} pet${n>1?'s':''}`,r:n=>n*6+4},
   {id:'play',key:'play',opts:[1],txt:()=>'Play with a pet',r:()=>8},
   {id:'tt',key:'tt',opts:[5,8,12],txt:n=>`Get ${n} times tables right`,r:n=>n*2+6},
-  {id:'dc',key:'dc',opts:[1],txt:()=>'Finish a Daily Challenge',r:()=>25}
+  {id:'dc',key:'dc',opts:[1],txt:()=>'Finish a Daily Challenge',r:()=>25},
+  {id:'write',key:'write',opts:[1],txt:()=>'Write something in the Writing Studio',r:()=>20}
 ];
 function todaysQuests(){
   const r=srand('quests'+todayTag()),pool=QPOOL.slice(),out=[];
@@ -2402,6 +2704,7 @@ const ACH=[];
   [[6,15],[14,50],[23,100]].forEach(([n,r])=>A('hats'+n,'🎩','Hat collector',`Own ${n} hats`,()=>(SAVE.hats||[]).length-1,n,r));
   [[5,20],[10,60],[15,120],[20,250]].forEach(([n,r])=>A('lvl'+n,'⭐','Burrow builder',`Reach burrow level ${n}`,burrowLevel,n,r));
   [[3,30],[6,120]].forEach(([n,r])=>A('rooms'+n,'🚪','Room maker',`Own ${n} rooms`,()=>roomsOwned().length,n,r));
+  [[1,10],[5,40],[15,100],[30,200]].forEach(([n,r])=>A('write'+n,'✍️','Author',`Write ${n} piece${n>1?'s':''} in the Writing Studio`,S_('write'),n,r));
   [[3,15],[10,50]].forEach(([n,r])=>A('box'+n,'🎁','Lucky bunny',`Open ${n} mystery boxes`,S_('box'),n,r));
   [[100,20],[250,60],[500,150]].forEach(([n,r])=>A('stars'+n,'🌟','Star collector',`Earn ${n} stars`,()=>SAVE.stars||0,n,r));
   [[7,30],[30,120]].forEach(([n,r])=>A('streak'+n,'🔥','Every day hero',`Play ${n} days in a row`,()=>(SAVE.day||{}).n||0,n,r));
@@ -3061,6 +3364,7 @@ document.body.addEventListener('click',e=>{
   if(a==='petbuy'||a==='petout'||a==='petpat'){petAct(a,b);return}
   if(a==='bbbuy'||a==='bbget'){bbAct(a,b);return}
   if(a==='v2'){v2Act(b);return}
+  if(a==='wr'){writeAct(b);return}
   if(a==='lesson'){snd.tap();lessonStart();return}
   if(a==='lnext'||a==='lback'||a==='lpick'||a==='lend'){lessonAct(a,b);return}
   if(a==='gate'){snd.tap();if(S.gateOk){S.view='report';render();window.scrollTo(0,0)}else{S.gateQ=null;S.gateMsg='';S.view='gate';render();window.scrollTo(0,0)}return}
