@@ -438,6 +438,9 @@ html.big .gtab.main{font-size:1.2rem}
 .winput{width:100%;box-sizing:border-box;padding:12px 14px;border:3px solid var(--ink);border-radius:16px;font-family:var(--body);font-size:1.1rem;background:#fff;color:var(--ink)}
 .wmtn{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wmtn span{text-align:center;font-family:var(--display);font-weight:800;font-size:.85rem;background:var(--sun);border:2.5px solid var(--ink);border-radius:10px;padding:2px 4px}
 .wplan{background:#E9F5FF;border:3px dashed var(--line);border-radius:14px;padding:8px 12px;font-size:.92rem;margin-bottom:10px}
+.tenbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;width:min(100%,420px)}.tenbar i{height:34px;border:3px solid var(--ink);border-radius:8px;background:#fff;display:block}.tenbar i.on{background:var(--sun)}
+.nline{width:min(100%,420px);height:auto}
+.key.dot{grid-column:1/-1;min-height:56px;font-size:2.6rem;line-height:1}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -612,7 +615,7 @@ const THIEVES=['a cheeky fox','a sneaky crow','a hungry magpie','a naughty possu
 /* ---------- question builders ---------- */
 let NEXTPIC='';
 const takePic=()=>{const p=NEXTPIC;NEXTPIC='';return p};
-const num=(q,a,hint,why,o={})=>({kind:'num',q,answer:a,hint,why,vis:o.vis||'',unit:o.unit||'',show:a+(o.unit?' '+o.unit:''),pic:takePic()});
+const num=(q,a,hint,why,o={})=>({kind:'num',q,answer:a,hint,why,dec:!!o.dec,vis:o.vis||'',unit:o.unit||'',show:a+(o.unit?' '+o.unit:''),pic:takePic()});
 const choice=(q,options,answer,hint,why,vis='')=>({kind:'choice',q,options,answer,hint,why,vis,show:options.find(o=>o.value===answer).label,pic:takePic()});
 function nchoices(correct,ds,fmt=String,deltas=[-10,-2,-1,1,2,10]){
   const set=[];const add=v=>{if(v>=0&&v!==correct&&!set.includes(v))set.push(v)};
@@ -1172,6 +1175,77 @@ function gEarth(){
 }
 
 /* ---------- topics ---------- */
+/* ---------- decimals (Year 2/3 stretch): tenths, money, number lines and measuring ---------- */
+const dt=t=>(t/10).toFixed(1);                 // tenths as a decimal string: 7 -> "0.7"
+const dd=c=>'$'+(c/100).toFixed(2);            // cents as dollars: 275 -> "$2.75"
+const tenBar=k=>`<div class="tenbar" role="img" aria-label="${k} of 10 equal parts shaded">${Array.from({length:10},(_,i)=>`<i class="${i<k?'on':''}"></i>`).join('')}</div>`;
+function nlSvg(base,k){
+  let s='<svg class="nline" viewBox="0 0 340 90" role="img" aria-label="A number line with ticks for tenths and an arrow"><path d="M20 55H320" stroke="#22304A" stroke-width="4" stroke-linecap="round"/>';
+  for(let i=0;i<=10;i++){
+    const x=20+i*30,big=i===0||i===10;
+    s+=`<path d="M${x} ${big?42:47}V63" stroke="#22304A" stroke-width="${big?4:3}" stroke-linecap="round"/>`;
+    if(big)s+=`<text x="${x}" y="82" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="18" fill="#22304A">${i===0?base:base+1}</text>`;
+  }
+  const x=20+k*30;
+  return s+`<path d="M${x} 40 L${x-9} 20 H${x+9}Z" fill="#FF6B5E" stroke="#22304A" stroke-width="3" stroke-linejoin="round"/></svg>`;
+}
+const DEC_ACT=['runs','walks','cycles','swims','hops'];
+function gDec(){
+  const t=R(0,19);
+  if(t===0){
+    const k=R(1,9),right=dt(k);
+    return choice('What decimal shows the shaded part of the whole?',sOpts(right,[dt(k===9?1:k+1),`${k}.0`,`0.0${k}`]),right,'The whole is cut into 10 equal parts. Each part is one tenth, or 0.1.',`${k} of the 10 parts are shaded: ${k} tenths = ${right}.`,tenBar(k));
+  }
+  if(t===1){
+    const k=R(1,9),right=dt(k);
+    return choice(`Which decimal is the same as ${k} tenths?`,sOpts(right,[`${k}.0`,`0.0${k}`,dt(10-k===k?k+1:10-k)]),right,'One tenth is 0.1. Count in tenths.',`${k} tenths is ${right}.`);
+  }
+  if(t===2){const k=R(1,9);return num(`Write ${k}/10 as a decimal.`,k/10,'The number on the bottom is 10, so this is tenths. Write 0 point, then the number of tenths.',`${k}/10 = ${dt(k)}.`,{dec:true})}
+  if(t===3){const k=R(1,9);return choice(`Which fraction is the same as ${dt(k)}?`,sOpts(`${k}/10`,[`1/${k+1}`,`${k}/100`,`10/${k}`]),`${k}/10`,'0.1 is one tenth. The decimal digit tells you how many tenths.',`${dt(k)} is ${k} tenths = ${k}/10.`)}
+  if(t===4){
+    const a=R(1,9),b=R(1,9),w=pick(['7 tenths','tenths']),which=R(0,1);
+    const n=`${a}.${b}`;
+    return which===0
+      ?choice(`In the number ${n}, what does the ${b} stand for?`,sOpts(`${b} tenths`,[`${b} ones`,`${b} tens`,`${b} hundredths`]),`${b} tenths`,'The digit after the decimal point is the tenths place.',`In ${n}, the ${a} is ${a} ones and the ${b} is ${b} tenths.`)
+      :choice(`In the number ${n}, which digit is in the ones place?`,sOpts(String(a),[String(b),'0',String(a===9?1:a+1)]),String(a),'The digit before the decimal point is the ones place.',`In ${n}, the ${a} is in the ones place.`);
+  }
+  if(t===5){const base=R(0,5),k=R(1,9),ans=`${base}.${k}`;return choice('What decimal is the arrow pointing to?',sOpts(ans,[`${base}.${k===9?8:k+1}`,`${base}.${k===1?2:k-1}`,`${base+1}.${k}`]),ans,'Count the tick marks from the left. Each one is one tenth, 0.1.',`The arrow is ${k} tenths past ${base}, so it points to ${ans}.`,nlSvg(base,k))}
+  if(t===6){
+    const a=R(1,50),b=R(1,50),w=a===b?b+1:b,big=R(0,1),ans=big?(a>w?a:w):(a<w?a:w);
+    return choice(`Which decimal is ${big?'bigger':'smaller'}: ${dt(a)} or ${dt(w)}?`,[{label:dt(a),value:dt(a)},{label:dt(w),value:dt(w)}],dt(ans),'Compare the ones first. If they match, compare the tenths.',`${dt(ans)} is ${big?'bigger':'smaller'} than ${dt(a===ans?w:a)}.`);
+  }
+  if(t===7){
+    const v=shuffle([...new Set([R(1,9),R(10,19),R(20,29),R(30,39)])]).slice(0,3),sorted=v.slice().sort((x,y)=>x-y);
+    const good=sorted.map(dt).join(', '),bad=[sorted.slice().reverse().map(dt).join(', '),[sorted[1],sorted[0],sorted[2]].map(dt).join(', '),[sorted[0],sorted[2],sorted[1]].map(dt).join(', ')];
+    return choice('Which list is in order from smallest to largest?',sOpts(good,bad),good,'Find the smallest first. Compare the ones, then the tenths.',`In order from smallest to largest: ${good}.`);
+  }
+  if(t===8){const a=R(1,35),b=R(1,25);return num(`${dt(a)} + ${dt(b)} = ?`,(a+b)/10,'Add the tenths. If you get 10 tenths, that makes 1 whole.',`${a} tenths + ${b} tenths = ${a+b} tenths = ${dt(a+b)}.`,{dec:true})}
+  if(t===9){const a=R(12,50),b=R(1,a-1);return num(`${dt(a)} − ${dt(b)} = ?`,(a-b)/10,'Take away the tenths. Think about whole numbers first.',`${a} tenths − ${b} tenths = ${a-b} tenths = ${dt(a-b)}.`,{dec:true})}
+  if(t===10){const k=R(1,9);return num(`${dt(k)} + ? = 1`,(10-k)/10,'One whole is 10 tenths. How many more tenths do you need?',`1 whole is 10 tenths. 10 − ${k} = ${10-k}, so ${dt(k)} + ${dt(10-k)} = 1.`,{dec:true})}
+  if(t===11){const c=R(1,9)*50+R(0,3)*100;return num(`${dd(c)} is how many cents?`,c,'$1 is 100 cents. The numbers after the decimal point are the cents.',`${dd(c)} = ${Math.floor(c/100)} dollar${Math.floor(c/100)===1?'':'s'} and ${c%100} cents = ${c} cents.`,{unit:'cents'})}
+  if(t===12){const c=R(105,895),c5=Math.round(c/5)*5;return choice(`How do you write ${c5} cents in dollars?`,sOpts(dd(c5),[dd(c5/10),'$'+(c5/10).toFixed(2).replace('.',''),'$'+(c5*10/100).toFixed(2)]),dd(c5),'100 cents make one dollar. The cents go after the decimal point.',`${c5} cents = ${Math.floor(c5/100)} dollar${Math.floor(c5/100)===1?'':'s'} and ${c5%100} cents = ${dd(c5)}.`)}
+  if(t===13){
+    const a=R(1,4)*50+R(0,3)*100,b=R(1,4)*50+R(0,3)*50,tot=a+b;
+    return num(`${dd(a)} + ${dd(b)} = ? (Type the answer in dollars, like 3.50)`,tot/100,'Add the dollars, then add the cents. 100 cents make a dollar.',`${dd(a)} + ${dd(b)} = ${dd(tot)}.`,{dec:true,unit:'dollars'});
+  }
+  if(t===14){const f=pick([['1/2',0.5,[0.2,0.12,1.2]],['1/4',0.25,[0.4,0.14,2.5]],['3/4',0.75,[0.34,0.7,3.4]],['1/10',0.1,[0.01,1.0,10]],['2/10',0.2,[0.02,2.0,0.12]],['1/5',0.2,[0.5,0.15,1.5]]]);return choice(`Which decimal is the same as ${f[0]}?`,sOpts(String(f[1]),f[2].map(String)),String(f[1]),'Half is 0.5. A quarter is 0.25. Think of money: 50c is half a dollar.',`${f[0]} = ${f[1]}.`)}
+  if(t===15){const x=R(1,9)*10+R(1,9),r=Math.round(x/10);return num(`Round ${dt(x)} to the nearest whole number.`,r,'Look at the tenths digit. 5 or more? Round up. Less than 5? Stay the same.',`${dt(x)} is ${x%10>=5?'closer to '+r+' (the tenths digit is 5 or more, so round up)':'closer to '+r+' (the tenths digit is less than 5, so stay the same)'}.`)}
+  if(t===16){
+    const q=pick([['1.5 metres is how many centimetres?',150,'cm'],['2.5 metres is how many centimetres?',250,'cm'],['0.5 metres is how many centimetres?',50,'cm'],['3.5 metres is how many centimetres?',350,'cm'],['1.5 kilograms is how many grams?',1500,'g'],['2.5 kilograms is how many grams?',2500,'g'],['0.5 kilograms is how many grams?',500,'g'],['1.5 litres is how many millilitres?',1500,'mL'],['0.5 litres is how many millilitres?',500,'mL'],['2.5 litres is how many millilitres?',2500,'mL'],['0.2 metres is how many centimetres?',20,'cm'],['1.2 metres is how many centimetres?',120,'cm']]);
+    return num(q[0],q[1],'Half of the unit is 0.5. 1 metre = 100 cm, 1 kilogram = 1000 g, 1 litre = 1000 mL.',`${q[0].replace(' is how many',' = ').replace('?','')}${q[1]} ${q[2]}.`,{unit:q[2]});
+  }
+  if(t===17){
+    const step=pick([1,2,5,25]),isH=step===25,mult=isH?25:step,seq=[...Array(5)].map((_,i)=>mult*(i+1)),h=R(1,3);
+    const f=v=>isH?(v/100).toFixed(2):dt(v);
+    const cells=seq.map((v,i)=>i===h?'<span class="cell blank">?</span>':`<span class="cell">${f(v)}</span>`).join('');
+    return num(`Count by ${f(mult)}s. What number is missing?`,seq[h]/(isH?100:10),`Find the jump between two numbers: it is ${f(mult)}.`,`Each number is ${f(mult)} more than the one before, so the missing number is ${f(seq[h])}.`,{dec:true,vis:`<div class="seq">${cells}</div>`});
+  }
+  if(t===18){const a=R(1,9),b=R(1,9);return choice(`Which decimal is ${a} ones and ${b} tenths?`,sOpts(`${a}.${b}`,[`${b}.${a}`,`${a}${b}`,`0.${a}${b}`]),`${a}.${b}`,'Ones go before the decimal point. Tenths go after it.',`${a} ones and ${b} tenths is ${a}.${b}.`)}
+  const nm=pick(ACTORS),vb=pick(DEC_ACT),a=R(11,40),b=R(5,30),add=R(0,1);
+  return add
+    ?num(`${nm} ${vb} ${dt(a)} km on Monday and ${dt(b)} km on Tuesday. How far is that altogether?`,(a+b)/10,'Add the two distances. Add the tenths first.',`${dt(a)} + ${dt(b)} = ${dt(a+b)} km.`,{dec:true,unit:'km'})
+    :num(`A ribbon is ${dt(a+b)} m long. ${nm} cuts off ${dt(b)} m. How much ribbon is left?`,a/10,'Take the piece that was cut off away from the whole ribbon.',`${dt(a+b)} − ${dt(b)} = ${dt(a)} m.`,{dec:true,unit:'m'});
+}
 const TOPICS=[
   {id:'place',name:'Place value',glyph:'123',desc:'Hundreds, tens and ones',tc:'#FFB08A',gen:gPlace},
   {id:'skip',name:'Skip counting',glyph:'2·4·6',desc:'Count by 2s, 3s, 5s and 10s',tc:'#8FCBFF',gen:gSkip},
@@ -1187,6 +1261,7 @@ const TOPICS=[
   {id:'pull',y:3,name:'Pull apart',glyph:'− −',desc:'Take away by splitting tens and ones',tc:'#FFB8D0',gen:gPull},
   {id:'big',y:3,name:'Bigger numbers',glyph:'1000',desc:'Thousands, rounding, 3-digit sums',tc:'#9FD8FF',gen:gBig},
   {id:'time3',y:3,name:'Time to 5 minutes',glyph:'4:20',desc:'Reading the clock minute by minute',tc:'#B6EBA6',gen:gTime3},
+  {id:'dec',y:3,name:'Decimals',glyph:'0.5',desc:'Tenths, money, number lines and measuring',tc:'#FFD0A8',gen:gDec},
   {id:'spell',sub:'english',name:'Spelling',glyph:'Ab',desc:'Build words and spot the right spelling',tc:'#FFB08A',gen:gSpell},
   {id:'sounds',sub:'english',name:'Rhymes and syllables',glyph:'♪',desc:'Rhyming words and word beats',tc:'#C9AEFF',gen:gSounds},
   {id:'grammar',sub:'english',name:'Grammar',glyph:'Aa',desc:'Nouns, verbs, plurals and past tense',tc:'#7FE0B2',gen:gGrammar},
@@ -2806,7 +2881,7 @@ function oopsAdd(q){
   const h=hash32(q.tid+'|'+q.q+'|'+vis);
   SAVE.oops=SAVE.oops||[];
   if(SAVE.oops.some(o=>o.h===h))return;
-  SAVE.oops.push({h,tid:q.tid,q:{kind:q.kind,q:q.q,answer:q.answer,hint:q.hint,why:q.why,vis,pic,show:q.show,unit:q.unit||'',options:q.options||null}});
+  SAVE.oops.push({h,tid:q.tid,q:{kind:q.kind,q:q.q,answer:q.answer,hint:q.hint,why:q.why,dec:!!q.dec,vis,pic,show:q.show,unit:q.unit||'',options:q.options||null}});
   while(SAVE.oops.length>30)SAVE.oops.shift();
 }
 function oopsFixed(h){SAVE.oops=(SAVE.oops||[]).filter(o=>o.h!==h)}
@@ -2864,7 +2939,7 @@ function planFor(id,n=10){
     /* one question from each of the five science topics, in a new order every day */
     return shuffle(['living','forces','materials','change','earth']).map(mk);
   }
-  if(id==='daily'){const n=pick([2,3,4,5,6,7,8,9,10,11,12]);return [{tid:'tt',mk:()=>gTT(n)},mk('addsub'),mk(pick(['place','skip'])),mk(pick(['multi','frac','money','time','length','shapes','data'])),mk(pick(['div','big','time3']))]}
+  if(id==='daily'){const n=pick([2,3,4,5,6,7,8,9,10,11,12]);return [{tid:'tt',mk:()=>gTT(n)},mk('addsub'),mk(pick(['place','skip'])),mk(pick(['multi','frac','money','time','length','shapes','data'])),mk(pick(['div','big','time3','pull','dec']))]}
   return Array.from({length:n},()=>mk(id));
 }
 function start(id){
@@ -3061,7 +3136,7 @@ function answerHtml(q){
     }).join('')+'</div>';
   }
   const pad=['1','2','3','4','5','6','7','8','9'].map(k=>`<button class="key" data-act="key" data-k="${k}">${k}</button>`).join('')
-    +`<button class="key back" data-act="back" aria-label="Delete">${icon('del')}</button><button class="key" data-act="key" data-k="0">0</button><button class="key go" data-act="go" id="gobtn" aria-label="Check answer"${S.entry?'':' disabled'}>${icon('check')}</button>`;
+    +`<button class="key back" data-act="back" aria-label="Delete">${icon('del')}</button><button class="key" data-act="key" data-k="0">0</button><button class="key go" data-act="go" id="gobtn" aria-label="Check answer"${S.entry?'':' disabled'}>${icon('check')}</button>`+(q.dec?`<button class="key dot" data-act="key" data-k="." aria-label="Decimal point">.</button>`:'');
   if(S.done){
     return `<div class="ansrow"><div class="ansbox ${S.res[S.i].ok?'right':'wrong'}">${esc(S.given)}</div>${q.unit?`<span class="unit">${q.unit}</span>`:''}</div>`;
   }
@@ -3103,8 +3178,10 @@ function updateEntry(){
 }
 function press(k){
   if(S.done)return;
+  const dq=(S.qs[S.i]||{}).dec;
   if(k==='back')S.entry=S.entry.slice(0,-1);
-  else if(S.entry.length<4)S.entry=(S.entry==='0'?'':S.entry)+k;
+  else if(k==='.'){if(dq&&!S.entry.includes('.')&&S.entry.length<5)S.entry=(S.entry||'0')+'.'}
+  else if(S.entry.length<(dq?5:4))S.entry=(S.entry==='0'?'':S.entry)+k;
   snd.tap();updateEntry();
 }
 
@@ -3133,7 +3210,7 @@ function settle(ok){
 function answerChoice(k){const q=S.qs[S.i];if(S.done)return;S.given=k;settle(q.options[k].value===q.answer)}
 function answerNum(){
   const q=S.qs[S.i];if(S.done||!S.entry)return;
-  S.given=S.entry;settle(+S.entry===q.answer);
+  S.given=S.entry;settle(Math.abs(+S.entry-q.answer)<1e-9);
 }
 function next(){
   snd.tap();
@@ -4417,7 +4494,7 @@ document.addEventListener('keydown',e=>{
 
 /* ======================= v9 additions ======================= */
 /* ---------- double carrots for Year 3 and 4 work ---------- */
-const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3','pull'];
+const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3','pull','dec'];
 const isY34=q=>!!q&&(Y3IDS.includes(q.tid)||(q.tid==='tt'&&Y34.includes(q.tt)));
 function nudgeHtml(){
   if(S.y3n||S.mode!=='topic'||S.mainN<1)return '';
