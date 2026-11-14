@@ -441,6 +441,10 @@ html.big .gtab.main{font-size:1.2rem}
 .tenbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;width:min(100%,420px)}.tenbar i{height:34px;border:3px solid var(--ink);border-radius:8px;background:#fff;display:block}.tenbar i.on{background:var(--sun)}
 .nline{width:min(100%,420px);height:auto}
 .key.dot{grid-column:1/-1;min-height:56px;font-size:2.6rem;line-height:1}
+.tal{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}.tg{width:34px;height:30px}
+.sy{font-size:1.6rem;line-height:1.3;display:inline-flex;flex-wrap:wrap;gap:2px;align-items:center}.halfsym{display:inline-block;width:.62em;overflow:hidden;font-style:normal;vertical-align:bottom;white-space:nowrap}
+.dtab{border-collapse:collapse;font-family:var(--body);margin:4px 0;min-width:260px}.dtab th,.dtab td{border:3px solid var(--ink);padding:6px 14px;text-align:center}.dtab th{background:var(--sun-soft);font-family:var(--display)}
+.bargraph{width:min(100%,440px);min-width:min(100%,320px);height:auto;display:block}
 .sprev{width:90px}.sprev svg{width:100%;height:auto;display:block;overflow:visible}.sprev.wide{width:100%;max-width:140px;height:84px;display:grid;place-items:center}.sprev.wide svg{height:84px}
 .state{font-family:var(--display);font-weight:800;color:var(--gum);background:var(--gum-soft);border:3px solid var(--ink);border-radius:14px;padding:4px 14px}
 .cert{background:#FFFBEF}
@@ -1246,6 +1250,83 @@ function gDec(){
     ?num(`${nm} ${vb} ${dt(a)} km on Monday and ${dt(b)} km on Tuesday. How far is that altogether?`,(a+b)/10,'Add the two distances. Add the tenths first.',`${dt(a)} + ${dt(b)} = ${dt(a+b)} km.`,{dec:true,unit:'km'})
     :num(`A ribbon is ${dt(a+b)} m long. ${nm} cuts off ${dt(b)} m. How much ribbon is left?`,a/10,'Take the piece that was cut off away from the whole ribbon.',`${dt(a+b)} − ${dt(b)} = ${dt(a)} m.`,{dec:true,unit:'m'});
 }
+/* ---------- Data (Year 2/3 stretch): tally charts, tables, picture graphs and bar graphs ---------- */
+const GSETS=[
+  ['Favourite fruit',['Mango','Banana','Apple','Grapes','Orange','Pear']],
+  ['Pets at home',['Dog','Cat','Fish','Bird','Rabbit','Lizard']],
+  ['Favourite sport',['Netball','Cricket','Swimming','Footy','Tennis','Soccer']],
+  ['How we get to school',['Walk','Bike','Bus','Car','Scooter','Train']],
+  ['Favourite colour',['Red','Blue','Green','Yellow','Purple','Pink']],
+  ['Favourite lunch',['Sandwich','Pasta','Rice','Wrap','Soup','Pizza']],
+  ['Favourite animal',['Koala','Lion','Panda','Dolphin','Giraffe','Penguin']],
+  ['Favourite season',['Summer','Autumn','Winter','Spring']],
+  ['Favourite playground game',['Tag','Cubby','Hopscotch','Handball','Skipping','Soccer']],
+  ['Favourite ice cream',['Vanilla','Chocolate','Strawberry','Mango','Mint','Caramel']],
+  ['Birthday months',['January','April','June','August','October','December']],
+  ['Favourite book type',['Funny','Animals','Space','Fairy tales','Mystery','Adventure']],
+  ['Weather this week',['Sunny','Cloudy','Rainy','Windy','Stormy']],
+  ['Favourite subject',['Maths','Art','Music','Sport','Science','Reading']],
+  ['Favourite carrot snack',['Raw','Cake','Juice','Soup','Chips']],
+  ['Bunny food eaten today',['Carrots','Lettuce','Clover','Apples','Hay']]
+];
+const GSYM=['⭐','🍎','🐾','🌸','🍪','🎈','🐟','🚗','🥕'];
+function tallyG(k){
+  let s='<svg class="tg" viewBox="0 0 40 36" aria-hidden="true">';
+  for(let i=0;i<Math.min(k,4);i++)s+=`<path d="M${7+i*9} 4V32" stroke="#22304A" stroke-width="3.4" stroke-linecap="round"/>`;
+  if(k>=5)s+='<path d="M2 28L38 8" stroke="#22304A" stroke-width="3.4" stroke-linecap="round"/>';
+  return s+'</svg>';
+}
+const tallyHtml=n=>{let h='';for(let g=0;g<Math.floor(n/5);g++)h+=tallyG(5);if(n%5)h+=tallyG(n%5);return `<span class="tal" role="img" aria-label="${n} tally marks">${h||'0'}</span>`};
+function barSvg(labels,vals,scale){
+  const mx=Math.max(...vals),top=Math.max(scale,Math.ceil(mx/scale)*scale),W=360,H=216,L=34,B=40,T=14,pw=W-L-8,ph=H-B-T,n=vals.length,bw=Math.min(44,pw/n*.62);
+  let s=`<svg class="bargraph" viewBox="0 0 ${W} ${H}" role="img" aria-label="A bar graph">`;
+  for(let v=0;v<=top;v+=scale){
+    const y=T+ph-ph*v/top;
+    s+=`<path d="M${L} ${y.toFixed(1)}H${W-8}" stroke="${v===0?'#22304A':'#C9D3E3'}" stroke-width="${v===0?3:1.5}"/><text x="${L-6}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Baloo 2,sans-serif" font-weight="700" font-size="11" fill="#22304A">${v}</text>`;
+  }
+  s+=`<path d="M${L} ${T}V${T+ph}" stroke="#22304A" stroke-width="3"/>`;
+  vals.forEach((v,i)=>{
+    const cx=L+pw/n*(i+.5),h=ph*v/top,c=['#7FC4FF','#FFA3C7','#7FE0B2','#FFD36B','#C9AEFF','#FFB08A'][i%6];
+    s+=`<rect x="${(cx-bw/2).toFixed(1)}" y="${(T+ph-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="${c}" stroke="#22304A" stroke-width="2.5"/>`;
+    s+=`<text x="${cx.toFixed(1)}" y="${H-B+16}" text-anchor="middle" font-family="Atkinson Hyperlegible,sans-serif" font-weight="700" font-size="${n>5?9.5:11}" fill="#22304A">${labels[i].slice(0,9)}</text>`;
+  });
+  return s+'</svg>';
+}
+function picGraphHtml(labels,vals,per,sym){
+  const half=per/2;
+  return `<div class="pg"><p class="pgt">Each ${sym} stands for ${per} children${per%2===0?`, and half a ${sym} stands for ${half}`:''}.</p>`
+    +labels.map((l,i)=>{const full=Math.floor(vals[i]/per),hf=per%2===0&&vals[i]%per===half;return `<div class="prow"><span class="pl">${l}</span><span class="sy">${sym.repeat(full)}${hf?`<i class="halfsym">${sym}</i>`:''}</span></div>`}).join('')+'</div>';
+}
+const tableHtml=(labels,vals,head)=>`<table class="dtab"><tr><th>${head}</th><th>Number of children</th></tr>${labels.map((l,i)=>`<tr><td>${l}</td><td>${vals[i]}</td></tr>`).join('')}</table>`;
+function gGraph(){
+  const [title,cats]=pick(GSETS),n=R(4,Math.min(6,cats.length)),labs=shuffle(cats).slice(0,n);
+  const rep=pick(['tally','tally','bar','bar','bar','pic','pic','table']);
+  const scale=rep==='bar'?pick([1,2,5,10]):rep==='pic'?pick([2,5,10]):1;
+  const gen=()=>{
+    if(rep==='tally')return R(1,18);
+    if(rep==='table')return R(2,30);
+    if(rep==='bar')return scale===1?R(1,9):scale===2?R(1,8)*(R(0,2)?2:1)+(R(0,3)===0?1:0):scale===5?R(1,6)*5:R(1,6)*10+(R(0,2)===0?5:0);
+    return scale===2?R(1,8)*2+(R(0,3)===0?1:0):scale===5?R(1,6)*5:R(1,6)*10+(R(0,2)===0?5:0);
+  };
+  let vals,g=0;
+  do{vals=labs.map(gen);g++}while(g<60&&(vals.filter(v=>v===Math.max(...vals)).length>1||vals.filter(v=>v===Math.min(...vals)).length>1));
+  const sym=pick(GSYM);
+  const vis=rep==='tally'?`<div class="pg"><p class="pgt">${title}. Each tally mark is 1 child. A line across four makes 5.</p>`+labs.map((l,i)=>`<div class="prow"><span class="pl">${l}</span>${tallyHtml(vals[i])}</div>`).join('')+'</div>'
+    :rep==='bar'?`<div class="pg"><p class="pgt">${title}</p>${barSvg(labs,vals,scale)}</div>`
+    :rep==='pic'?`<div class="pg"><p class="pgt">${title}</p>${picGraphHtml(labs,vals,scale,sym)}</div>`
+    :`<div class="pg"><p class="pgt">${title}</p>${tableHtml(labs,vals,'Choice')}</div>`;
+  const mxI=vals.indexOf(Math.max(...vals)),mnI=vals.indexOf(Math.min(...vals)),tot=vals.reduce((a,b)=>a+b,0);
+  const q=pick([0,0,1,2,3,3,4,5,6,rep==='bar'||rep==='pic'?7:0]);
+  if(q===0){const i=R(0,n-1);return num(`How many children chose ${labs[i]}?`,vals[i],rep==='bar'?'Find the top of the bar and read across to the numbers on the side.':rep==='pic'?'Count the symbols. Remember how many each symbol stands for.':rep==='tally'?'Count the groups of 5, then add the extra marks.':'Look along the row for this choice.',`${labs[i]} has ${vals[i]} children.`,{vis})}
+  if(q===1)return choice('Which choice got the MOST children?',sOpts(labs[mxI],shuffle(labs.filter((_,i)=>i!==mxI)).slice(0,3)),labs[mxI],'Find the longest bar, row or biggest number.',`${labs[mxI]} has the most (${vals[mxI]}).`,vis);
+  if(q===2)return choice('Which choice got the FEWEST children?',sOpts(labs[mnI],shuffle(labs.filter((_,i)=>i!==mnI)).slice(0,3)),labs[mnI],'Find the shortest bar, row or smallest number.',`${labs[mnI]} has the fewest (${vals[mnI]}).`,vis);
+  if(q===3){let i=R(0,n-1),j=R(0,n-1),g2=0;while((i===j||vals[i]===vals[j])&&g2++<80){i=R(0,n-1);j=R(0,n-1)}if(vals[i]<vals[j])[i,j]=[j,i];return num(`How many more children chose ${labs[i]} than ${labs[j]}?`,vals[i]-vals[j],'Find both numbers, then take the smaller away from the bigger.',`${vals[i]} − ${vals[j]} = ${vals[i]-vals[j]}.`,{vis})}
+  if(q===4)return num('How many children were asked altogether?',tot,'Add up all the numbers.',`${vals.join(' + ')} = ${tot}.`,{vis});
+  if(q===5){let i=R(0,n-1),j=R(0,n-1);while(i===j)j=R(0,n-1);return num(`How many children chose ${labs[i]} and ${labs[j]} together?`,vals[i]+vals[j],'Find both numbers and add them.',`${vals[i]} + ${vals[j]} = ${vals[i]+vals[j]}.`,{vis})}
+  if(q===6){const i=R(0,n-1),m=R(2,8);return num(`If ${m} more children chose ${labs[i]}, how many would that be?`,vals[i]+m,'Start with the number now, then add the new children.',`${vals[i]} + ${m} = ${vals[i]+m}.`,{vis})}
+  const k=rep==='bar'?'Each gridline on the side goes up by how many?':'Each symbol stands for how many children?';
+  return choice(k,nchoices(scale,[1,2,5,10]),scale,rep==='bar'?'Look at the numbers on the side of the graph. What is the jump between lines?':'Read the key at the top of the graph.',`The scale is ${scale}.`,vis);
+}
 const TOPICS=[
   {id:'place',name:'Place value',glyph:'123',desc:'Hundreds, tens and ones',tc:'#FFB08A',gen:gPlace},
   {id:'skip',name:'Skip counting',glyph:'2·4·6',desc:'Count by 2s, 3s, 5s and 10s',tc:'#8FCBFF',gen:gSkip},
@@ -1262,6 +1343,7 @@ const TOPICS=[
   {id:'big',y:3,name:'Bigger numbers',glyph:'1000',desc:'Thousands, rounding, 3-digit sums',tc:'#9FD8FF',gen:gBig},
   {id:'time3',y:3,name:'Time to 5 minutes',glyph:'4:20',desc:'Reading the clock minute by minute',tc:'#B6EBA6',gen:gTime3},
   {id:'dec',y:3,name:'Decimals',glyph:'0.5',desc:'Tenths, money, number lines and measuring',tc:'#FFD0A8',gen:gDec},
+  {id:'graphs',y:3,name:'Data and graphs',glyph:'▮▮▯',desc:'Tally marks, tables, picture and bar graphs',tc:'#B8D8FF',gen:gGraph},
   {id:'spell',sub:'english',name:'Spelling',glyph:'Ab',desc:'Build words and spot the right spelling',tc:'#FFB08A',gen:gSpell},
   {id:'sounds',sub:'english',name:'Rhymes and syllables',glyph:'♪',desc:'Rhyming words and word beats',tc:'#C9AEFF',gen:gSounds},
   {id:'grammar',sub:'english',name:'Grammar',glyph:'Aa',desc:'Nouns, verbs, plurals and past tense',tc:'#7FE0B2',gen:gGrammar},
@@ -2939,7 +3021,7 @@ function planFor(id,n=10){
     /* one question from each of the five science topics, in a new order every day */
     return shuffle(['living','forces','materials','change','earth']).map(mk);
   }
-  if(id==='daily'){const n=pick([2,3,4,5,6,7,8,9,10,11,12]);return [{tid:'tt',mk:()=>gTT(n)},mk('addsub'),mk(pick(['place','skip'])),mk(pick(['multi','frac','money','time','length','shapes','data'])),mk(pick(['div','big','time3','pull','dec']))]}
+  if(id==='daily'){const n=pick([2,3,4,5,6,7,8,9,10,11,12]);return [{tid:'tt',mk:()=>gTT(n)},mk('addsub'),mk(pick(['place','skip'])),mk(pick(['multi','frac','money','time','length','shapes','data'])),mk(pick(['div','big','time3','pull','dec','graphs']))]}
   return Array.from({length:n},()=>mk(id));
 }
 function start(id){
@@ -4494,7 +4576,7 @@ document.addEventListener('keydown',e=>{
 
 /* ======================= v9 additions ======================= */
 /* ---------- double carrots for Year 3 and 4 work ---------- */
-const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3','pull','dec'];
+const Y34=[4,6,7,8,9,11,12],Y3IDS=['div','big','time3','pull','dec','graphs'];
 const isY34=q=>!!q&&(Y3IDS.includes(q.tid)||(q.tid==='tt'&&Y34.includes(q.tt)));
 function nudgeHtml(){
   if(S.y3n||S.mode!=='topic'||S.mainN<1)return '';
